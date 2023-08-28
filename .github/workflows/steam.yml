@@ -21,7 +21,7 @@ on:
 
 env:
   WORKFLOW_ID: 583765
-  GIT_NIGHTLY_BRANCH: master
+  GIT_NIGHTLY_BRANCH: main
   STEAM_NIGHTLY_BRANCH: nightly
   STEAM_STABLE_BRANCH: staging
   STEAM_BETA_BRANCH: beta_staging

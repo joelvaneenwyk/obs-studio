@@ -5,13 +5,15 @@ on:
     paths-ignore: ['**.md']
     branches:
       - master
+      - main
+      - mycoshiro
       - 'release/**'
     tags: ['*']
   pull_request:
     paths-ignore: ['**.md']
-    branches: [master]
+    branches: [master, main, mycoshiro, 'release/**']
   merge_group:
-    branches: [master]
+    branches: [master, main, mycoshiro, 'release/**']
 
 env:
   CACHE_REVISION: '006'
@@ -383,7 +385,7 @@ jobs:
           git config --global --add safe.directory $GITHUB_WORKSPACE
 
           KEY="$CACHE_KEY-x86_64"
-          CACHE_HIT=$(gh actions-cache list -B master --key $KEY | grep -q $KEY && echo 'true' || echo 'false')
+          CACHE_HIT=$(gh actions-cache list -B main --key $KEY | grep -q $KEY && echo 'true' || echo 'false')
 
           echo "git_hash=$(git rev-parse --short=9 HEAD)" >> $GITHUB_OUTPUT
           echo "cache_key=$CACHE_KEY" >> $GITHUB_OUTPUT
@@ -395,7 +397,7 @@ jobs:
           build-bundle: ${{ fromJSON(needs.config.outputs.create_artifacts) }}
           bundle: obs-studio-flatpak-${{ steps.setup.outputs.git_hash }}.flatpak
           manifest-path: CI/flatpak/com.obsproject.Studio.json
-          cache: ${{ fromJSON(steps.setup.outputs.cache_hit) || (github.event_name == 'push' && github.ref == 'refs/heads/master') }}
+          cache: ${{ fromJSON(steps.setup.outputs.cache_hit) || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
           restore-cache: ${{ fromJSON(steps.setup.outputs.cache_hit) }}
           cache-key: ${{ steps.setup.outputs.cache_key }}
 

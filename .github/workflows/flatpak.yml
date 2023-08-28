@@ -5,7 +5,7 @@ name: Flatpak
 on:
   release:
     types: [published]
-    branches: [master, 'release/**']
+    branches: [main, master, 'release/**']
 
 env:
   TWITCH_CLIENTID: ${{ secrets.TWITCH_CLIENT_ID }}
