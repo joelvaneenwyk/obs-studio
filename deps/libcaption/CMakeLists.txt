@@ -32,7 +32,6 @@ target_include_directories(
   PRIVATE caption
   PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
-add_library(caption STATIC ${CAPTION_SOURCES})
 set_target_properties(caption PROPERTIES
 	FOLDER "deps"
 	POSITION_INDEPENDENT_CODE ON)

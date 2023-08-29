@@ -43,3 +43,5 @@ elseif(OS_LINUX OR OS_FREEBSD)
     target_link_libraries(obsglad PRIVATE OpenGL::EGL)
   endif()
 endif()
+
+set_target_properties(obsglad PROPERTIES FOLDER deps POSITION_INDEPENDENT_CODE TRUE)
