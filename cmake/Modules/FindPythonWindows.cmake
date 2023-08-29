@@ -23,18 +23,18 @@ find_library(
   NAMES ${_PYTHON_LIBRARIES} python3
   HINTS ${_PYTHON_LIBRARY_DIRS}
   PATH_SUFFIXES
-    lib${_lib_suffix}
-    lib
-    libs${_lib_suffix}
-    libs
-    bin${_lib_suffix}
-    bin
-    ../lib${_lib_suffix}
-    ../lib
-    ../libs${_lib_suffix}
-    ../libs
-    ../bin${_lib_suffix}
-    ../bin)
+  lib${_lib_suffix}
+  lib
+  libs${_lib_suffix}
+  libs
+  bin${_lib_suffix}
+  bin
+  ../lib${_lib_suffix}
+  ../lib
+  ../libs${_lib_suffix}
+  ../libs
+  ../bin${_lib_suffix}
+  ../bin)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(PythonWindows DEFAULT_MSG PYTHON_LIB PYTHON_INCLUDE_DIR)
