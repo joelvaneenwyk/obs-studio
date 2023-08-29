@@ -1,0 +1,42 @@
+{
+    "cmake.environment": {
+        "ENABLE_PIPEWIRE": "OFF",
+        "ENABLE_ALSA": "OFF"
+    },
+    "cmake.buildEnvironment": {
+        "ENABLE_PIPEWIRE": "OFF",
+        "ENABLE_ALSA": "OFF"
+    },
+    "[json]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.experimentalWhitespaceRendering": "font",
+    },
+    "[jsonc]": {
+        "editor.tabSize": 2,
+        "editor.experimentalWhitespaceRendering": "font",
+    },
+    "cmake.configureEnvironment": {
+        "ENABLE_PIPEWIRE": "OFF",
+        "ENABLE_ALSA": "OFF"
+    },
+    "terminal.integrated.env.linux": {
+        "DISABLE_PIPEWIRE": "TRUE"
+    },
+    "editor.detectIndentation": false,
+    "cmake.automaticReconfigure": true,
+    "cmake.allowCommentsInPresetsFile": true,
+    "cmake.buildTask": true,
+    "cmake.buildToolArgs": [
+        "-DENABLE_ALSA=OFF"
+    ],
+    "cmake.buildArgs": [
+        "-DENABLE_ALSA=OFF"
+    ],
+    "cmake.configureSettings": {
+        "ENABLE_ALSA": "OFF",
+        "ENABLE_PIPEWIRE": "OFF"
+    },
+    "json.format.keepLines": true,
+    "json.trace.server": "messages"
+}

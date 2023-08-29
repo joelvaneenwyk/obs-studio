@@ -77,7 +77,7 @@ function convert_submodule_to_subtree() {
 function build() {
     git submodule update --init --recursive
 
-    DISABLE_PIPEWIRE=1
+    DISABLE_PIPEWIRE=TRUE
     export DISABLE_PIPEWIRE
 
     # shellcheck source=/dev/null
