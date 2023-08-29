@@ -21,4 +21,17 @@ target_include_directories(media-playback INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}
 target_compile_options(media-playback INTERFACE ${ARCH_SIMD_FLAGS})
 target_compile_definitions(media-playback INTERFACE ${ARCH_SIMD_DEFINES})
 
-target_link_libraries(media-playback INTERFACE FFmpeg::avcodec FFmpeg::avdevice FFmpeg::avutil FFmpeg::avformat)
+target_compile_options(media-playback
+	PUBLIC
+	${ARCH_SIMD_FLAGS})
+
+target_include_directories(media-playback
+	PUBLIC .
+	)
+
+target_link_libraries(media-playback
+	${FFMPEG_LIBRARIES}
+	)
+set_target_properties(media-playback PROPERTIES
+	FOLDER "deps"
+	POSITION_INDEPENDENT_CODE ON)
