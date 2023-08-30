@@ -26,8 +26,7 @@
 /xcodebuild/
 
 #clion
-.idea/
-cmake-build-debug/
+/cmake-*/
 
 #other stuff (windows stuff, qt moc stuff, etc)
 Release_MD/
@@ -75,7 +74,6 @@ tags
 *.tlog
 *.sdf
 *.opensdf
-*.xml
 *.ipch
 *.css
 *.xslt

@@ -126,7 +126,7 @@ function Invoke-External {
     $_EAP = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
 
-    Write-Debug "Invoke-External: ${Command} ${CommandArgs}"
+    Write-Info "Invoke-External: ${Command} ${CommandArgs}"
 
     & $command $commandArgs
     $Result = $LASTEXITCODE
