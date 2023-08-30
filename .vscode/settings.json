@@ -16,6 +16,7 @@
         "editor.tabSize": 2,
         "editor.experimentalWhitespaceRendering": "font",
     },
+    "cmake.buildDirectory": "${workspaceFolder}/.build/vscode",
     "cmake.configureEnvironment": {
         "ENABLE_PIPEWIRE": "OFF",
         "ENABLE_ALSA": "OFF"
@@ -25,7 +26,16 @@
     },
     "editor.detectIndentation": false,
     "cmake.automaticReconfigure": true,
+    "cmake.cmakeCommunicationMode": "automatic",
+    "cmake.configureOnEdit": true,
+    "cmake.configureOnOpen": true,
+    "cmake.autoSelectActiveFolder": true,
+    "cmake.enableTraceLogging": true,
+    "cmake.revealLog": "always",
     "cmake.allowCommentsInPresetsFile": true,
+    "cmake.configureArgs": [
+        "--debug-output"
+    ],
     "cmake.buildTask": true,
     "cmake.buildToolArgs": [
         "-DENABLE_ALSA=OFF"
