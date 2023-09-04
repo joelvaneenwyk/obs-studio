@@ -18,12 +18,8 @@ target_sources(
             media-playback/closest-format.h)
 
 target_include_directories(media-playback INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
-target_compile_options(media-playback
-  PUBLIC
-  ${ARCH_SIMD_FLAGS})
+target_compile_options(media-playback PUBLIC ${ARCH_SIMD_FLAGS})
 target_compile_definitions(media-playback INTERFACE ${ARCH_SIMD_DEFINES})
-set_target_properties(media-playback PROPERTIES
-	FOLDER "deps"
-	POSITION_INDEPENDENT_CODE ON)
+set_target_properties(media-playback PROPERTIES FOLDER "deps" POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(media-playback INTERFACE FFmpeg::avcodec FFmpeg::avdevice FFmpeg::avutil FFmpeg::avformat)

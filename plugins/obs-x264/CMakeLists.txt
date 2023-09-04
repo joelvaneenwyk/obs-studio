@@ -11,13 +11,9 @@ endif()
 add_library(obs-x264 MODULE)
 add_library(OBS::x264 ALIAS obs-x264)
 
-add_library(obs-x264-util STATIC
-	${obs-x264-util_HEADERS}
-	${obs-x264-util_SOURCES})
+add_library(obs-x264-util STATIC ${obs-x264-util_HEADERS} ${obs-x264-util_SOURCES})
 target_link_libraries(obs-x264-util PRIVATE libobs)
-set_target_properties(obs-x264-util PROPERTIES
-	FOLDER "plugins"
-	POSITION_INDEPENDENT_CODE ON)
+set_target_properties(obs-x264-util PROPERTIES FOLDER "plugins" POSITION_INDEPENDENT_CODE ON)
 
 if(OS_WINDOWS)
   configure_file(cmake/windows/obs-module.rc.in obs-x264.rc)

@@ -15,6 +15,4 @@ if(OS_WINDOWS)
   add_definitions(-Dinline=__inline)
 endif()
 
-set_target_properties(libff PROPERTIES
-  FOLDER "deps"
-  POSITION_INDEPENDENT_CODE ON)
+set_target_properties(libff PROPERTIES FOLDER "deps" POSITION_INDEPENDENT_CODE ON)

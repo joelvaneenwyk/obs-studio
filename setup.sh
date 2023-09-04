@@ -10,6 +10,8 @@ function setup() {
     ./CI/linux/00_install_llvm.sh 13 all
     sudo apt install clang-format-13
 
+    python3 -m pip install cmakelang --user --verbose
+
     # shellcheck source=/dev/null
     source ./CI/linux/01_install_dependencies.sh
 }
