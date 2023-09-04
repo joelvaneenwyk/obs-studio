@@ -17,7 +17,7 @@ usage() {
     echo -e "-n=code_name\t\tSpecifies the distro codename, for example bionic" 1>&2
     echo -e "-h\t\t\tPrints this help." 1>&2
     echo -e "-m=repo_base_url\tSpecifies the base URL from which to download." 1>&2
-    exit 1;
+    exit 1
 }
 
 CURRENT_LLVM_STABLE=17
@@ -27,11 +27,11 @@ BASE_URL="http://apt.llvm.org"
 needed_binaries=(lsb_release wget add-apt-repository gpg)
 missing_binaries=()
 for binary in "${needed_binaries[@]}"; do
-    if ! which $binary &>/dev/null ; then
+    if ! which $binary &>/dev/null; then
         missing_binaries+=($binary)
     fi
 done
-if [[ ${#missing_binaries[@]} -gt 0 ]] ; then
+if [[ ${#missing_binaries[@]} -gt 0 ]]; then
     echo "You are missing some tools this script requires: ${missing_binaries[@]}"
     echo "(hint: apt install lsb-release wget software-properties-common gnupg)"
     exit 4
@@ -49,27 +49,27 @@ CODENAME_FROM_ARGUMENTS=""
 source /etc/os-release
 DISTRO=${DISTRO,,}
 case ${DISTRO} in
-    debian)
-        # Debian Trixie has a workaround because of
-        # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1038383
-        if [[ "${VERSION}" == "unstable" ]] || [[ "${VERSION}" == "testing" ]] || [[ "${VERSION_CODENAME}" == "trixie" ]]; then
-            CODENAME=unstable
-            LINKNAME=
-        else
-            # "stable" Debian release
-            CODENAME=${VERSION_CODENAME}
+debian)
+    # Debian Trixie has a workaround because of
+    # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1038383
+    if [[ "${VERSION}" == "unstable" ]] || [[ "${VERSION}" == "testing" ]] || [[ "${VERSION_CODENAME}" == "trixie" ]]; then
+        CODENAME=unstable
+        LINKNAME=
+    else
+        # "stable" Debian release
+        CODENAME=${VERSION_CODENAME}
+        LINKNAME=-${CODENAME}
+    fi
+    ;;
+*)
+    # ubuntu and its derivatives
+    if [[ -n "${UBUNTU_CODENAME}" ]]; then
+        CODENAME=${UBUNTU_CODENAME}
+        if [[ -n "${CODENAME}" ]]; then
             LINKNAME=-${CODENAME}
         fi
-        ;;
-    *)
-        # ubuntu and its derivatives
-        if [[ -n "${UBUNTU_CODENAME}" ]]; then
-            CODENAME=${UBUNTU_CODENAME}
-            if [[ -n "${CODENAME}" ]]; then
-                LINKNAME=-${CODENAME}
-            fi
-        fi
-        ;;
+    fi
+    ;;
 esac
 
 # read optional command line arguments
@@ -82,11 +82,11 @@ if [ "$#" -ge 1 ] && [ "${1::1}" != "-" ]; then
     fi
     OPTIND=2
     if [ "$#" -ge 2 ]; then
-      if [ "$2" == "all" ]; then
-          # Install all packages
-          ALL=1
-          OPTIND=3
-      fi
+        if [ "$2" == "all" ]; then
+            # Install all packages
+            ALL=1
+            OPTIND=3
+        fi
     fi
 fi
 
@@ -112,8 +112,8 @@ while getopts ":hm:n:" arg; do
 done
 
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root!"
-   exit 1
+    echo "This script must be run as root!"
+    exit 1
 fi
 
 declare -A LLVM_VERSION_PATTERNS
@@ -140,7 +140,7 @@ if [[ -n "${CODENAME}" ]]; then
     REPO_NAME="deb ${BASE_URL}/${CODENAME}/  llvm-toolchain${LINKNAME}${LLVM_VERSION_STRING} main"
 
     # check if the repository exists for the distro and version
-    if ! wget -q --method=HEAD ${BASE_URL}/${CODENAME} &> /dev/null; then
+    if ! wget -q --method=HEAD ${BASE_URL}/${CODENAME} &>/dev/null; then
         if [[ -n "${CODENAME_FROM_ARGUMENTS}" ]]; then
             echo "Specified codename '${CODENAME}' is not supported by this script."
         else
@@ -150,7 +150,6 @@ if [[ -n "${CODENAME}" ]]; then
     fi
 fi
 
-
 # install everything
 
 if [[ ! -f /etc/apt/trusted.gpg.d/apt.llvm.org.asc ]]; then
@@ -158,7 +157,7 @@ if [[ ! -f /etc/apt/trusted.gpg.d/apt.llvm.org.asc ]]; then
     wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
 fi
 
-if [[ -z "`apt-key list 2> /dev/null | grep -i llvm`" ]]; then
+if [[ -z "$(apt-key list 2>/dev/null | grep -i llvm)" ]]; then
     # Delete the key in the old format
     apt-key del AF4F7421
 fi
