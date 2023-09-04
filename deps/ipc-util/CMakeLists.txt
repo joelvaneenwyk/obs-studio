@@ -19,6 +19,4 @@ else()
   target_sources(ipc-util PRIVATE ipc-util/pipe-posix.c ipc-util/pipe-posic.h)
 endif()
 
-set_target_properties(ipc-util PROPERTIES
-  FOLDER "deps"
-  POSITION_INDEPENDENT_CODE ON)
+set_target_properties(ipc-util PROPERTIES FOLDER "deps" POSITION_INDEPENDENT_CODE ON)

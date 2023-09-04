@@ -28,17 +28,12 @@ jobs:
       matrix:
         runner: [ "windows-2022" ]
         name: [ "Windows" ]
-        compiler: [ "MSVC", "Clang" ]
+        compiler: [ "MSVC" ]
         qt: [ 6 ]
         include:
           - compiler: "MSVC"
             CMAKE_SYSTEM_VERSION: "10.0.20348.0"
             CMAKE_GENERATOR: "Visual Studio 17 2022"
-            CMAKE_GENERATOR_PLATFORM: "x64"
-          - compiler: "Clang"
-            CMAKE_SYSTEM_VERSION: "10.0.20348.0"
-            CMAKE_GENERATOR: "Visual Studio 17 2022"
-            CMAKE_GENERATOR_TOOLSET: "ClangCL"
             CMAKE_GENERATOR_PLATFORM: "x64"
     runs-on: "${{ matrix.runner }}"
     name: "${{ matrix.name }} (${{ matrix.compiler }})"
@@ -58,22 +53,22 @@ jobs:
       shell: bash
       run: |
         # Define buildspec file
-        buildspec="${{ github.workspace }}/third-party/obs-studio/buildspec.json"
+        buildspec="${{ github.workspace }}/buildspec.json"
 
         # Prebuilt Dependencies Version
-        IFS=$'\n' buildspecdata=($(node tools/buildspec.js "${buildspec}" "prebuilt" "windows-x64"))
+        IFS=$'\n' buildspecdata=($(node UI/frontend-plugins/streamfx/tools/buildspec.js "${buildspec}" "prebuilt" "windows-x64"))
         echo "obs_deps_version=${buildspecdata[0]}" >> "$GITHUB_ENV"
         echo "obs_deps_hash=${buildspecdata[1]}" >> "$GITHUB_ENV"
         echo "obs_deps_url=${buildspecdata[2]}" >> "$GITHUB_ENV"
 
         # Qt Version
-        IFS=$'\n' buildspecdata=($(node tools/buildspec.js "${buildspec}" "qt${{ matrix.qt }}" "windows-x64"))
+        IFS=$'\n' buildspecdata=($(node UI/frontend-plugins/streamfx/tools/buildspec.js "${buildspec}" "qt${{ matrix.qt }}" "windows-x64"))
         echo "qt_version=${buildspecdata[0]}" >> "$GITHUB_ENV"
         echo "qt_hash=${buildspecdata[1]}" >> "$GITHUB_ENV"
         echo "qt_url=${buildspecdata[2]}" >> "$GITHUB_ENV"
 
         # libOBS Version
-        echo "obs_version=$(cd "${{ github.workspace }}/third-party/obs-studio" && git describe --tags --long)" >> "$GITHUB_ENV"
+        echo "obs_version=$(cd "${{ github.workspace }}" && git describe --tags --long)" >> "$GITHUB_ENV"
     - name: "Dependency: Qt (Cache)"
       id: qt-cache
       uses: actions/cache@v3
@@ -116,18 +111,9 @@ jobs:
         CMAKE_GENERATOR_TOOLSET: ""
       shell: bash
       run: |
-        # Apply patches to obs-studio
-        pushd "${{ github.workspace }}/third-party/obs-studio" > /dev/null
-        for f in ../../patches/obs-studio/*.patch; do
-          echo "Applying patch '${f}''..."
-          [ -e "$f" ] || continue
-          git apply "$f"
-        done
-        popd > /dev/null
-
         # Build obs-studio
         cmake \
-          -S "${{ github.workspace }}/third-party/obs-studio" \
+          -S "${{ github.workspace }}" \
           -B "${{ github.workspace }}/build/obs" \
           -DCMAKE_SYSTEM_VERSION="${{ env.CMAKE_SYSTEM_VERSION }}" \
           -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/build/obs/install" \
@@ -266,15 +252,6 @@ jobs:
       if: ${{ steps.obs-cache.outputs.cache-hit != 'true' }}
       shell: bash
       run: |
-        # Apply patches to obs-studio
-        pushd "${{ github.workspace }}/third-party/obs-studio" > /dev/null
-        for f in ../../patches/obs-studio/*.patch; do
-          echo "Applying patch '${f}''..."
-          [ -e "$f" ] || continue
-          git apply "$f"
-        done
-        popd > /dev/null
-
         # Extra requirements by libobs on Linux.
         sudo apt-get install \
           libavcodec-dev libavdevice-dev libavfilter-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev \
@@ -287,7 +264,7 @@ jobs:
 
         # Build obs-studio
         cmake \
-          -S "${{ github.workspace }}/third-party/obs-studio" \
+          -S "${{ github.workspace }}" \
           -B "${{ github.workspace }}/build/obs" \
           -G "Unix Makefiles" \
           -DCMAKE_BUILD_TYPE="Release" \

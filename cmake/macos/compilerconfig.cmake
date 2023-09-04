@@ -33,7 +33,6 @@ if(NOT XCODE)
   list(
     APPEND
     _obs_c_options
-    -Werror
     -Wextra
     -Wvla
     -Wswitch
