@@ -28,17 +28,12 @@ jobs:
       matrix:
         runner: [ "windows-2022" ]
         name: [ "Windows" ]
-        compiler: [ "MSVC", "Clang" ]
+        compiler: [ "MSVC" ]
         qt: [ 6 ]
         include:
           - compiler: "MSVC"
             CMAKE_SYSTEM_VERSION: "10.0.20348.0"
             CMAKE_GENERATOR: "Visual Studio 17 2022"
-            CMAKE_GENERATOR_PLATFORM: "x64"
-          - compiler: "Clang"
-            CMAKE_SYSTEM_VERSION: "10.0.20348.0"
-            CMAKE_GENERATOR: "Visual Studio 17 2022"
-            CMAKE_GENERATOR_TOOLSET: "ClangCL"
             CMAKE_GENERATOR_PLATFORM: "x64"
     runs-on: "${{ matrix.runner }}"
     name: "${{ matrix.name }} (${{ matrix.compiler }})"
@@ -61,13 +56,13 @@ jobs:
         buildspec="${{ github.workspace }}/buildspec.json"
 
         # Prebuilt Dependencies Version
-        IFS=$'\n' buildspecdata=($(node tools/buildspec.js "${buildspec}" "prebuilt" "windows-x64"))
+        IFS=$'\n' buildspecdata=($(node UI/frontend-plugins/streamfx/tools/buildspec.js "${buildspec}" "prebuilt" "windows-x64"))
         echo "obs_deps_version=${buildspecdata[0]}" >> "$GITHUB_ENV"
         echo "obs_deps_hash=${buildspecdata[1]}" >> "$GITHUB_ENV"
         echo "obs_deps_url=${buildspecdata[2]}" >> "$GITHUB_ENV"
 
         # Qt Version
-        IFS=$'\n' buildspecdata=($(node tools/buildspec.js "${buildspec}" "qt${{ matrix.qt }}" "windows-x64"))
+        IFS=$'\n' buildspecdata=($(node UI/frontend-plugins/streamfx/tools/buildspec.js "${buildspec}" "qt${{ matrix.qt }}" "windows-x64"))
         echo "qt_version=${buildspecdata[0]}" >> "$GITHUB_ENV"
         echo "qt_hash=${buildspecdata[1]}" >> "$GITHUB_ENV"
         echo "qt_url=${buildspecdata[2]}" >> "$GITHUB_ENV"
