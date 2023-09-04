@@ -59,32 +59,31 @@ if(OS_WINDOWS AND MSVC)
                "Please download the most recent Windows 10 SDK in order to compile.")
   endif()
 
-  add_compile_options(
-    /Brepro
-    /MP
-    /W3
-    /WX
-    /wd4127
-    /wd4201
-    /wd4456
-    /wd4457
-    /wd4458
-    /wd4459
-    /wd4595
-    "$<$<CONFIG:DEBUG>:/DDEBUG=1;/D_DEBUG=1>"
-    "$<$<CONFIG:RELWITHDEBINFO>:/Ob2>"
-    /DUNICODE
-    /D_UNICODE
-    /D_CRT_SECURE_NO_WARNINGS
-    /D_CRT_NONSTDC_NO_WARNINGS
-    /utf-8
-    /permissive-
-    /Zc:__cplusplus
-    /Zc:preprocessor)
+    add_compile_options(
+        /Brepro
+        /MP
+        /W3
+        /wd4127
+        /wd4201
+        /wd4456
+        /wd4457
+        /wd4458
+        /wd4459
+        /wd4595
+        "$<$<CONFIG:DEBUG>:/DDEBUG=1;/D_DEBUG=1>"
+        "$<$<CONFIG:RELWITHDEBINFO>:/Ob2>"
+        /DUNICODE
+        /D_UNICODE
+        /D_CRT_SECURE_NO_WARNINGS
+        /D_CRT_NONSTDC_NO_WARNINGS
+        /utf-8
+        /permissive-
+        /Zc:__cplusplus
+        /Zc:preprocessor)
 
-  add_link_options(
-    "LINKER:/Brepro" "LINKER:/OPT:REF" "LINKER:/WX" "$<$<NOT:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>>:LINKER\:/SAFESEH\:NO>"
-    "$<$<CONFIG:DEBUG>:LINKER\:/INCREMENTAL\:NO>" "$<$<CONFIG:RELWITHDEBINFO>:LINKER\:/INCREMENTAL\:NO;/OPT:ICF>")
+    add_link_options(
+        "LINKER:/Brepro" "LINKER:/OPT:REF" "$<$<NOT:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>>:LINKER\:/SAFESEH\:NO>"
+        "$<$<CONFIG:DEBUG>:LINKER\:/INCREMENTAL\:NO>" "$<$<CONFIG:RELWITHDEBINFO>:LINKER\:/INCREMENTAL\:NO;/OPT:ICF>")
 else()
   find_program(CCACHE_PROGRAM "ccache")
   set(CCACHE_SUPPORT
@@ -100,33 +99,33 @@ else()
   endif()
 
   option(CALM_DEPRECATION "Keep deprecated-declarations as warnings" OFF)
-  #[[
+
+    #[[
     Note about -Wmaybe-uninitialized on GCC, this warning seems to be subject of various regressions and false positives. This
     warning is set to not turn into an error.
 
     - https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105562 for 12.1.0
     - https://github.com/obsproject/obs-studio/issues/8850 for 13.1.1
   ]]
-  add_compile_options(
-    -Werror
-    -Wextra
-    -Wvla
-    -Wswitch
-    -Wno-error=switch
-    -Wformat
-    -Wformat-security
-    -Wunused-parameter
-    -Wno-unused-function
-    -Wno-missing-field-initializers
-    -fno-strict-aliasing
-    "$<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration;-Wno-missing-braces>"
-    "$<$<BOOL:${USE_LIBCXX}>:-stdlib=libc++>"
-    "$<$<CONFIG:DEBUG>:-DDEBUG=1;-D_DEBUG=1>"
-    "$<$<COMPILE_LANG_AND_ID:CXX,AppleClang,Clang>:-Wnull-conversion;-fcolor-diagnostics;-Wno-error=shorten-64-to-32>"
-    "$<$<COMPILE_LANG_AND_ID:C,AppleClang,Clang>:-Wnull-conversion;-fcolor-diagnostics;-Wno-error=shorten-64-to-32>"
-    "$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wconversion-null;-Wno-error=maybe-uninitialized>"
-    "$<$<COMPILE_LANG_AND_ID:C,GNU>:-Wno-error=maybe-uninitialized>"
-    "$<$<BOOL:${CALM_DEPRECATION}>:-Wno-error=deprecated-declarations>")
+    add_compile_options(
+        -Wextra
+        -Wvla
+        -Wswitch
+        -Wno-error=switch
+        -Wformat
+        -Wformat-security
+        -Wunused-parameter
+        -Wno-unused-function
+        -Wno-missing-field-initializers
+        -fno-strict-aliasing
+        "$<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration;-Wno-missing-braces>"
+        "$<$<BOOL:${USE_LIBCXX}>:-stdlib=libc++>"
+        "$<$<CONFIG:DEBUG>:-DDEBUG=1;-D_DEBUG=1>"
+        "$<$<COMPILE_LANG_AND_ID:CXX,AppleClang,Clang>:-Wnull-conversion;-fcolor-diagnostics;-Wno-error=shorten-64-to-32>"
+        "$<$<COMPILE_LANG_AND_ID:C,AppleClang,Clang>:-Wnull-conversion;-fcolor-diagnostics;-Wno-error=shorten-64-to-32>"
+        "$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wconversion-null;-Wno-error=maybe-uninitialized>"
+        "$<$<COMPILE_LANG_AND_ID:C,GNU>:-Wno-error=maybe-uninitialized>"
+        "$<$<BOOL:${CALM_DEPRECATION}>:-Wno-error=deprecated-declarations>")
 
   # GCC on aarch64 emits type-limits warnings that do not appear on x86_64
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
@@ -153,7 +152,7 @@ endif()
 
 if(LOWERCASE_CMAKE_SYSTEM_PROCESSOR MATCHES "(i[3-6]86|x86|x64|x86_64|amd64|e2k)")
   if(NOT MSVC AND NOT CMAKE_OSX_ARCHITECTURES STREQUAL "arm64")
-    set(ARCH_SIMD_FLAGS -mmmx -msse -msse2)
+#    set(ARCH_SIMD_FLAGS -mmmx -msse -msse2)
   endif()
 elseif(LOWERCASE_CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64(le)?")
   set(ARCH_SIMD_DEFINES -DNO_WARN_X86_INTRINSICS)
