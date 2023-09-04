@@ -345,8 +345,7 @@ static bool init_screen_stream(struct screen_capture *sc)
 	sc->stream_properties = [[SCStreamConfiguration alloc] init];
 	os_sem_wait(sc->shareable_content_available);
 
-	SCDisplay * (^get_target_display)() = ^SCDisplay *()
-	{
+	SCDisplay * (^get_target_display)() = ^SCDisplay *() {
 		__block SCDisplay *target_display = nil;
 		[sc->shareable_content.displays
 			indexOfObjectPassingTest:^BOOL(

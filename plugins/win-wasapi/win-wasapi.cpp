@@ -73,7 +73,7 @@ private:
 };
 
 WASAPIActivateAudioInterfaceCompletionHandler::
-	WASAPIActivateAudioInterfaceCompletionHandler()
+WASAPIActivateAudioInterfaceCompletionHandler()
 {
 	activationSignal = CreateEvent(nullptr, false, false, nullptr);
 	if (!activationSignal.Valid())
