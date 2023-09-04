@@ -17,10 +17,6 @@
         "editor.experimentalWhitespaceRendering": "font",
     },
     "cmake.buildDirectory": "${workspaceFolder}/.build/vscode",
-    "cmake.configureEnvironment": {
-        "ENABLE_PIPEWIRE": "OFF",
-        "ENABLE_ALSA": "OFF"
-    },
     "terminal.integrated.env.linux": {
         "DISABLE_PIPEWIRE": "TRUE"
     },
@@ -37,15 +33,16 @@
         "--debug-output"
     ],
     "cmake.buildTask": true,
-    "cmake.buildToolArgs": [
-        "-DENABLE_ALSA=OFF"
-    ],
-    "cmake.buildArgs": [
-        "-DENABLE_ALSA=OFF"
-    ],
     "cmake.configureSettings": {
+        "CMAKE_PREFIX_PATH": "${workspaceFolder}/../obs-build-dependencies/windows-deps-2023-04-12-x64",
+        "CEF_ROOT_DIR": "${workspaceFolder}/../obs-build-dependencies/cef_binary_5060_windows_x64",
+        "VLC_PATH": "${workspaceFolder}/../obs-build-dependencies/vlc-3.0.0-git",
+        "ENABLE_PIPEWIRE": "OFF",
         "ENABLE_ALSA": "OFF",
-        "ENABLE_PIPEWIRE": "OFF"
+        "ENABLE_RELEASE_BUILD": "ON",
+        "ENABLE_BROWSER": "ON",
+        "ENABLE_VLC": "ON",
+        "VIRTUALCAM-GUID": "A3FCE0F5-3493-419F-958A-ABA1250EC20B"
     },
     "json.format.keepLines": true,
     "json.trace.server": "messages"
