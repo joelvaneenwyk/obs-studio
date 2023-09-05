@@ -42,3 +42,7 @@ indent_size = 2
 indent_style = space
 indent_size = 4
 line_ending = lf
+
+[.github/**/*.yaml]
+indent_style = space
+indent_size = 2
