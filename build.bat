@@ -10,7 +10,6 @@ call :RunCommand git pull --rebase
 call :RunCommand git submodule update --init --recursive
 call :RunCommand pwsh -NoProfile -File "%~dp0CI/windows/01_install_dependencies.ps1"
 
-
 REM --log-level=ERROR
 REM -B build64
 REM -DBUILD_FOR_DISTRIBUTION="OFF"
