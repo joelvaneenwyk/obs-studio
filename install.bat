@@ -2,7 +2,6 @@
 setlocal EnableDelayedExpansion
 
 call :InstallVirtualCamera "%~dp0"
-REM call :InstallVirtualCameraExternal
 
 endlocal & (
     exit /b %ERRORLEVEL%
@@ -20,69 +19,58 @@ endlocal & (
     set "win_dshow=!root!\build64\install\data\obs-plugins\win-dshow"
     @cd /d "!win_dshow!"
 
-    :checkDLL
-        echo Checking for 32-bit Virtual Cam registration...
-        gsudo reg query "HKLM\SOFTWARE\Classes\WOW6432Node\CLSID\{A3FCE0F5-3493-419F-958A-ABA1250EC20B}" >nul 2>&1
-        if "%ERRORLEVEL%"=="0" (
-            echo 32-bit Virtual Cam found, skipped install...
-        ) else (
-            echo 32-bit Virtual Cam not found, installing...
-            goto install32DLL
-        )
+    gsudo cache on
+    call :Install32BitVirtualCamera "!win_dshow!"
+    call :Install64BitVirtualCamera "!win_dshow!"
+    :: call :InstallVirtualCameraExternal
+    gsudo cache off
+exit /b
 
-    :CheckDLLContinue
-        echo Checking for 64-bit Virtual Cam registration...
-        gsudo reg query "HKLM\SOFTWARE\Classes\CLSID\{A3FCE0F5-3493-419F-958A-ABA1250EC20B}" >nul 2>&1
-        if "%ERRORLEVEL%"=="0" (
-            echo 64-bit Virtual Cam found, skipping install...
-            echo.
-        ) else (
-            echo 64-bit Virtual Cam not found, installing...
-            goto install64DLL
-        )
-        goto endSuccess
+:Install32BitVirtualCamera
+    echo Checking for 32-bit Virtual Cam registration...
+    gsudo reg query "HKLM\SOFTWARE\Classes\WOW6432Node\CLSID\{A3FCE0F5-3493-419F-958A-ABA1250EC20B}" >nul 2>&1
+    if "%ERRORLEVEL%"=="0" (
+        echo 32-bit Virtual Cam found, skipped install...
+        exit /b 0
+    )
 
-    :install32DLL
-        echo Installing 32-bit Virtual Cam...
-        if exist "%~dp0\data\obs-plugins\win-dshow\obs-virtualcam-module32.dll" (
-            gsudo regsvr32.exe /i /s "%~dp0\data\obs-plugins\win-dshow\obs-virtualcam-module32.dll"
-        ) else (
-            gsudo regsvr32.exe /i /s obs-virtualcam-module32.dll
-        )
-        reg query "HKLM\SOFTWARE\Classes\WOW6432Node\CLSID\{A3FCE0F5-3493-419F-958A-ABA1250EC20B}" >nul 2>&1
-        if "%ERRORLEVEL%"=="0" (
-            echo 32-bit Virtual Cam successfully installed
-        ) else (
-            echo 32-bit Virtual Cam installation failed
-            goto end
-        )
-        goto checkDLLContinue
+    echo 32-bit Virtual Cam not found, installing...
+    if exist "%~1\data\obs-plugins\win-dshow\obs-virtualcam-module32.dll" (
+        gsudo regsvr32.exe /i /s "%~1\data\obs-plugins\win-dshow\obs-virtualcam-module32.dll"
+    ) else (
+        gsudo regsvr32.exe /i /s obs-virtualcam-module32.dll
+    )
 
-    :install64DLL
-        echo Installing 64-bit Virtual Cam...
-        if exist "%~dp0\data\obs-plugins\win-dshow\obs-virtualcam-module64.dll" (
-            gsudo regsvr32.exe /i /s "%~dp0\data\obs-plugins\win-dshow\obs-virtualcam-module64.dll"
-        ) else (
-            gsudo regsvr32.exe /i /s obs-virtualcam-module64.dll
-        )
-        reg query "HKLM\SOFTWARE\Classes\CLSID\{A3FCE0F5-3493-419F-958A-ABA1250EC20B}" >nul 2>&1
-        if "%ERRORLEVEL%"=="0" (
-            echo 64-bit Virtual Cam successfully installed
-            echo.
-            goto endSuccess
-        ) else (
-            echo 64-bit Virtual Cam installation failed
-            echo.
-            goto end
-        )
+    gsudo reg query "HKLM\SOFTWARE\Classes\WOW6432Node\CLSID\{A3FCE0F5-3493-419F-958A-ABA1250EC20B}" >nul 2>&1
+    if "%ERRORLEVEL%"=="0" (
+        echo 32-bit Virtual Cam successfully installed
+        exit /b 0
+    )
 
-    :endSuccess
-        echo Virtual Cam installed!
-        echo.
+    echo 32-bit Virtual Cam installation failed
+exit /b 88
 
-    :end
-        pause
-        exit
+:Install64BitVirtualCamera
+    echo Checking for 64-bit Virtual Cam registration...
+    gsudo reg query "HKLM\SOFTWARE\Classes\CLSID\{A3FCE0F5-3493-419F-958A-ABA1250EC20B}" >nul 2>&1
+    if "%ERRORLEVEL%"=="0" (
+        echo 64-bit Virtual Cam found, skipped install...
+        exit /b 0
+    )
+
+    echo 64-bit Virtual Cam not found, installing...
+    if exist "%~1\data\obs-plugins\win-dshow\obs-virtualcam-module64.dll" (
+        gsudo regsvr32.exe /i /s "%~1\data\obs-plugins\win-dshow\obs-virtualcam-module64.dll"
+    ) else (
+        gsudo regsvr32.exe /i /s obs-virtualcam-module64.dll
+    )
+    gsudo reg query "HKLM\SOFTWARE\Classes\CLSID\{A3FCE0F5-3493-419F-958A-ABA1250EC20B}" >nul 2>&1
+    if "%ERRORLEVEL%"=="0" (
+        echo 64-bit Virtual Cam successfully installed
+        exit /b 0
+    )
+    echo 64-bit Virtual Cam installation failed
+exit /b 89
 
 :InstallVirtualCameraExternal
     setlocal EnableDelayedExpansion
