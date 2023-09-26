@@ -6,6 +6,7 @@ set "ENABLE_BROWSER=ON"
 set "ENABLE_VLC=ON"
 set "VIRTUALCAM-GUID=A3FCE0F5-3493-419F-958A-ABA1250EC20B"
 
+if "%~1"=="clean" call :Clean
 call :RunCommand git pull --rebase
 call :RunCommand git submodule update --init --recursive
 call :RunCommand pwsh -NoProfile -File "%~dp0CI/windows/01_install_dependencies.ps1"
@@ -14,11 +15,19 @@ call :RunCommand pwsh -NoProfile -File "%~dp0CI/build-windows.ps1" -Package -Ver
 
 goto:eof
 
+:Clean
+    if exist "%~dp0build32" call :RunCommand rmdir /s /q "%~dp0build32"
+    if exist "%~dp0build64" call :RunCommand rmdir /s /q "%~dp0build64"
+    if exist "%~dp0.build" call :RunCommand rmdir /s /q "%~dp0.build"
+exit /b
+
 :RunCommand
-    setlocal EnableDelayedExpansion
-    set "_cmd=%*"
-    echo ##[cmd] %_cmd%
-    %_cmd%
+setlocal EnableDelayedExpansion
+    set "_command=%*"
+    set "_command=!_command:   = !"
+    set "_command=!_command:  = !"
+    echo ##[cmd] !_command!
+    !_command!
 exit /b
 
 ::
