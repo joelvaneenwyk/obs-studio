@@ -1,9 +1,9 @@
 OBS Studio <https://obsproject.com>
 ===================================
 
-.. image:: https://github.com/obsproject/obs-studio/actions/workflows/main.yml/badge.svg?branch=master&event=push
+.. image:: https://github.com/joelvaneenwyk/obs-studio/actions/workflows/main.yml/badge.svg?branch=main&event=push
    :alt: OBS Studio Build Status - GitHub Actions
-   :target: https://github.com/obsproject/obs-studio/actions/workflows/main.yml?query=event%3Apush+branch%3Amaster
+   :target: https://github.com/joelvaneenwyk/obs-studio/actions/workflows/main.yml?query=event%3Apush+branch%3Amain
 
 .. image:: https://badges.crowdin.net/obs-studio/localized.svg
    :alt: OBS Studio Translation Project Progress
@@ -22,21 +22,23 @@ recording, and streaming video content, efficiently.
 It's distributed under the GNU General Public License v2 (or any later
 version) - see the accompanying COPYING file for more details.
 
+Setup
+-----
+
+1. Install https://international.download.nvidia.com/Windows/broadcast/sdk/VFX/nvidia_video_effects_sdk_installer_v0.7.2_turing.exe
+2. Install https://international.download.nvidia.com/Windows/broadcast/sdk/AR/nvidia_ar_sdk_installer_v0.8.2_turing.exe
+3. Install https://international.download.nvidia.com/Windows/broadcast/sdk/AFX/2022-12-22_nvidia_afx_sdk_win_v1.3.0.21_turing.exe
+4. Run `build.bat` from the root of the repository
+
 Quick Links
 -----------
 
 - Website: https://obsproject.com
-
 - Help/Documentation/Guides: https://github.com/obsproject/obs-studio/wiki
-
 - Forums: https://obsproject.com/forum/
-
 - Build Instructions: https://github.com/obsproject/obs-studio/wiki/Install-Instructions
-
 - Developer/API Documentation: https://obsproject.com/docs
-
 - Donating/backing/sponsoring: https://obsproject.com/contribute
-
 - Bug Tracker: https://github.com/obsproject/obs-studio/issues
 
 Contributing
