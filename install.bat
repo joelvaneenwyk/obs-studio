@@ -16,20 +16,19 @@ endlocal & (
 
     set "root=%~dp1"
     set "root=!root:~0,-1!"
-    set "win_dshow=!root!\build64\install\data\obs-plugins\win-dshow"
-    @cd /d "!win_dshow!"
 
     call :Command gsudo cache on
     set "virtual_cam_guid=A3FCE0F5-3493-419F-958A-ABA1250EC20B"
-    call :Install32BitVirtualCamera "!win_dshow!" "%virtual_cam_guid%"
-    call :Install64BitVirtualCamera "!win_dshow!" "%virtual_cam_guid%"
-    :: call :InstallVirtualCameraExternal
+    call :Install32BitVirtualCamera "!root!" "%virtual_cam_guid%"
+    call :Install64BitVirtualCamera "!root!" "%virtual_cam_guid%"
     call :Command gsudo cache off
 exit /b
 
 :Install32BitVirtualCamera
-    set "win_dshow_root=%~1"
+    set "win_dshow_root=%~1\build32\install\data\obs-plugins\win-dshow"
     set "virtual_cam_guid_value=%~2"
+
+    cd /d "%win_dshow_root%"
     echo Checking for 32-bit Virtual Cam registration...
     call :Command gsudo reg query "HKLM\SOFTWARE\Classes\WOW6432Node\CLSID\{%virtual_cam_guid_value%}" >nul 2>&1
     if "%ERRORLEVEL%"=="0" (
@@ -38,8 +37,8 @@ exit /b
     )
 
     echo 32-bit Virtual Cam not found, installing...
-    if exist "%win_dshow_root%\data\obs-plugins\win-dshow\obs-virtualcam-module32.dll" (
-        call :Command gsudo regsvr32.exe /i /s "%win_dshow_root%\data\obs-plugins\win-dshow\obs-virtualcam-module32.dll"
+    if exist "%win_dshow_root%\obs-virtualcam-module32.dll" (
+        call :Command gsudo regsvr32.exe /i /s "%win_dshow_root%\obs-virtualcam-module32.dll"
     ) else (
         call :Command gsudo regsvr32.exe /i /s obs-virtualcam-module32.dll
     )
@@ -54,8 +53,9 @@ exit /b
 exit /b 88
 
 :Install64BitVirtualCamera
-    set "win_dshow_root=%~1"
+    set "win_dshow_root=%~1\build64\install\data\obs-plugins\win-dshow"
     set "virtual_cam_guid_value=%~2"
+    cd /d "%win_dshow_root%"
     echo Checking for 64-bit Virtual Cam registration...
     call :Command gsudo reg query "HKLM\SOFTWARE\Classes\CLSID\{%virtual_cam_guid_value%}" >nul 2>&1
     if "%ERRORLEVEL%"=="0" (
@@ -64,8 +64,8 @@ exit /b 88
     )
 
     echo 64-bit Virtual Cam not found, installing...
-    if exist "%win_dshow_root%\data\obs-plugins\win-dshow\obs-virtualcam-module64.dll" (
-        call :Command gsudo regsvr32.exe /i /s "%win_dshow_root%\data\obs-plugins\win-dshow\obs-virtualcam-module64.dll"
+    if exist "%win_dshow_root%\obs-virtualcam-module64.dll" (
+        call :Command gsudo regsvr32.exe /i /s "%win_dshow_root%\obs-virtualcam-module64.dll"
     ) else (
         call :Command gsudo regsvr32.exe /i /s obs-virtualcam-module64.dll
     )

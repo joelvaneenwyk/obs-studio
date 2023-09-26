@@ -23,7 +23,7 @@ exit /b
     echo [obs-studio] Closing open instances of OBS Studio...
     taskkill /im "obs-browser-page.exe" /f > nul 2>&1
     taskkill /im "D:\Projects\obs-studio\build64\install\bin\64bit\obs64.exe" /f > nul 2>&1
-    taskkill /im "obs64.exe" /f > nul 2>&1
+    sudo taskkill /im "obs64.exe" /f > nul 2>&1
     taskkill /im "OBS Studio" /f > nul 2>&1
 
     call :TryRunOBS "%~dp0build64\install\bin\64bit"
