@@ -1,14 +1,6 @@
 @echo off
 goto:$Main
 
-:TryRunOBS
-    setlocal EnableDelayedExpansion
-    set "obs_path=%~1"
-    if not exist "%obs_path%\obs64.exe" exit /b 10
-    set cmd_args=start "OBS" /D "%obs_path%" "%obs_path%\obs64.exe" --startvirtualcam --minimize-to-tray
-    echo ##[cmd] !cmd_args!
-    !cmd_args!
-exit /b 0
 
 :Command
     setlocal EnableDelayedExpansion
@@ -18,6 +10,13 @@ exit /b 0
     echo ##[cmd] !command!
     !command!
 exit /b
+
+:TryRunOBS
+    setlocal EnableDelayedExpansion
+    set "obs_path=%~1"
+    if not exist "%obs_path%\obs64.exe" exit /b 10
+    call :Command start "OBS" /D "%obs_path%" "%obs_path%\obs64.exe" --startvirtualcam --minimize-to-tray
+exit /b 0
 
 :StartOBS
     echo [obs-studio] Closing open instances of OBS Studio...
@@ -40,21 +39,19 @@ exit /b
 exit /b 0
 
 :$Main
-
-call :StartOBS
-if "%ERRORLEVEL%"=="0" (
-    goto:$End
-)
-:: ) else (
-    echo [obs-studio] WARNING: Failed to find OBS Studio executable. Attempting to build from source...
-    if exist "%~dp0build.bat" call "%~dp0build.bat"
     call :StartOBS
-
-    if errorlevel 1 (
-        echo [obs-studio] ERROR: Failed to find OBS Studio executable even after building source.
-        exit /b 98
+    if "%ERRORLEVEL%"=="0" (
+        goto:$End
     )
-:: )
+    :: ) else (
+        echo [obs-studio] WARNING: Failed to find OBS Studio executable. Attempting to build from source...
+        if exist "%~dp0build.bat" call "%~dp0build.bat"
+        call :StartOBS
 
+        if errorlevel 1 (
+            echo [obs-studio] ERROR: Failed to find OBS Studio executable even after building source.
+            exit /b 98
+        )
+    :: )
 :$End
 echo [obs-studio] Launch complete.
