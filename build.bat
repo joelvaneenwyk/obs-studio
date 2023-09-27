@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal EnableDelayedExpansion
 
 set "ENABLE_RELEASE_BUILD=ON"
 set "ENABLE_BROWSER=ON"
@@ -8,11 +8,17 @@ set "VIRTUALCAM-GUID=A3FCE0F5-3493-419F-958A-ABA1250EC20B"
 
 if "%~1"=="clean" call :Clean
 call :RunCommand git pull --rebase
-call :RunCommand git submodule update --init --recursive
+
+if not exist "%~dp0UI\frontend-plugins\streamfx" (
+    call :RunCommand git submodule update --init --recursive
+)
+
+call :RunCommand git submodule update --remote
 call :RunCommand pwsh -NoProfile -File "%~dp0CI/windows/01_install_dependencies.ps1"
 call :RunCommand pwsh -NoProfile -File "%~dp0CI/build-windows.ps1" -Package -Verbose -BuildArch x64 -BuildConfiguration Release
 call :RunCommand pwsh -NoProfile -File "%~dp0CI/build-windows.ps1" -Package -Verbose -BuildArch x86 -BuildConfiguration Release
 
+echo OBS Studio build complete.
 goto:eof
 
 :Clean
