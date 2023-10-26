@@ -14,12 +14,16 @@ if not exist "%~dp0UI\frontend-plugins\streamfx" (
 )
 
 call :RunCommand git submodule update --remote
-call :RunCommand pwsh -NoProfile -File "%~dp0CI/windows/01_install_dependencies.ps1"
-call :RunCommand pwsh -NoProfile -File "%~dp0CI/build-windows.ps1" -Package -Verbose -BuildArch x64 -BuildConfiguration Release
-call :RunCommand pwsh -NoProfile -File "%~dp0CI/build-windows.ps1" -Package -Verbose -BuildArch x86 -BuildConfiguration Release
-
+call :Build x64
+call :Build x86
 echo OBS Studio build complete.
 goto:eof
+
+:Build
+    set build_architecture=%~1
+    call :RunCommand pwsh -NoProfile -File "%~dp0CI/windows/01_install_dependencies.ps1" -BuildArch %build_architecture%
+    call :RunCommand pwsh -NoProfile -File "%~dp0CI/build-windows.ps1" -Package -Verbose -BuildArch %build_architecture% -BuildConfiguration Release
+exit /b
 
 :Clean
     if exist "%~dp0build32" call :RunCommand rmdir /s /q "%~dp0build32"
