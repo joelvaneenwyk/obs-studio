@@ -1,0 +1,70 @@
+{
+    "[json][jsonc]": {
+        "cSpell.fixSpellingWithRenameProvider": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit"
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.experimentalWhitespaceRendering": "font",
+        "editor.formatOnSave": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2
+    },
+    "[jsonc]": {
+        "editor.experimentalWhitespaceRendering": "font",
+        "editor.tabSize": 2
+    },
+    "[shellscript]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.fixAll.shellcheck": true
+        },
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "modificationsIfAvailable",
+        "editor.formatOnType": false,
+        "files.eol": "\n"
+    },
+    "cmake.allowCommentsInPresetsFile": true,
+    "cmake.automaticReconfigure": true,
+    "cmake.autoSelectActiveFolder": true,
+    "cmake.buildDirectory": "${workspaceFolder}/.build/vscode",
+    "cmake.buildEnvironment": {
+        "ENABLE_ALSA": "OFF",
+        "ENABLE_PIPEWIRE": "OFF"
+    },
+    "cmake.buildTask": true,
+    "cmake.cmakeCommunicationMode": "automatic",
+    "cmake.configureArgs": [
+        "--debug-output"
+    ],
+    "cmake.configureOnEdit": true,
+    "cmake.configureOnOpen": true,
+    "cmake.configureSettings": {
+        "CEF_ROOT_DIR": "${workspaceFolder}/../obs-build-dependencies/cef_binary_5060_windows_x64",
+        "CMAKE_PREFIX_PATH": "${workspaceFolder}/../obs-build-dependencies/windows-deps-2023-04-12-x64",
+        "ENABLE_ALSA": "OFF",
+        "ENABLE_BROWSER": "ON",
+        "ENABLE_PIPEWIRE": "OFF",
+        "ENABLE_RELEASE_BUILD": "ON",
+        "ENABLE_VLC": "ON",
+        "VIRTUALCAM-GUID": "A3FCE0F5-3493-419F-958A-ABA1250EC20B",
+        "VLC_PATH": "${workspaceFolder}/../obs-build-dependencies/vlc-3.0.0-git"
+    },
+    "cmake.enableTraceLogging": true,
+    "cmake.environment": {
+        "ENABLE_ALSA": "OFF",
+        "ENABLE_PIPEWIRE": "OFF"
+    },
+    "cmake.revealLog": "always",
+    "editor.detectIndentation": false,
+    "editor.experimentalWhitespaceRendering": "font",
+    "editor.trimAutoWhitespace": false,
+    "files.trimFinalNewlines": false,
+    "files.trimTrailingWhitespace": false,
+    "json.format.keepLines": true,
+    "json.trace.server": "messages",
+    "terminal.integrated.env.linux": {
+        "DISABLE_PIPEWIRE": "TRUE"
+    }
+}
