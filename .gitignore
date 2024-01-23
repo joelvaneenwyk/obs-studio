@@ -17,15 +17,16 @@
 .ninja*
 .dirstamp
 /cmake/.CMakeBuildNumber
-.deps
+/cmake*/
+.deps/
+.build/
 
 #xcode
 *.xcodeproj/
 /xcodebuild/
 
 #clion
-.idea/
-cmake-build-debug/
+/cmake-*/
 
 #other stuff (windows stuff, qt moc stuff, etc)
 Release_MD/
@@ -36,7 +37,6 @@ ipch/
 GeneratedFiles/
 .moc/
 /UI/obs.rc
-.vscode/
 /CI/include/*.lock.json
 install_temp/
 
