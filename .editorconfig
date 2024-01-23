@@ -7,26 +7,29 @@ root = true
 
 # Unix-style newlines with a newline ending every file.
 [*]
-insert_final_newline = true
-trim_trailing_whitespace = true
-charset = utf-8
-indent_style = tab
-indent_size = 8
-
-# As per notr1ch, for 3rd party code that's a part of obs-outputs.
-[plugins/obs-outputs/librtmp/*.{cpp,c,h}]
+insert_final_newline = false
+trim_trailing_whitespace = false
 indent_style = space
 indent_size = 4
 
-[CMakeLists.txt]
+[*.{txt,md,cpp,c,h}]
+indent_style = tab
+indent_size = 8
+
+[*.{json}]
 indent_style = space
-indent_size = 2
+indent_size = 4
+
+# As per notr1ch, for 3rd party code that's a part of obs-outputs.
+[plugins/obs-outputs/librtmp/**/*.{cpp,c,h}]
+indent_style = space
+indent_size = 4
 
 [**/CMakeLists.txt]
 indent_style = space
 indent_size = 2
 
-[cmake/**/*.cmake]
+[*.cmake]
 indent_style = space
 indent_size = 2
 
@@ -46,7 +49,7 @@ indent_size = 4
 indent_style = space
 indent_size = 4
 
-[*.yaml]
+[*.{yml,yaml}]
 indent_style = space
 indent_size = 2
 
