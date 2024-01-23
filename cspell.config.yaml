@@ -1,0 +1,11 @@
+version: "0.2"
+ignorePaths: []
+dictionaryDefinitions:
+  - name: obs-studio-dictionary
+    path: ./.cspell/obs-studio-dictionary.txt
+    addWords: true
+dictionaries:
+  - obs-studio-dictionary
+words: []
+ignoreWords: []
+import: []
