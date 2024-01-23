@@ -2,7 +2,7 @@ name: Cache Cleanup
 
 on:
   schedule:
-  - cron: 0 0 * * *
+    - cron: 0 0 * * *
   workflow_dispatch:
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
           flatpak_last_ts = None
           flatpak_key = None
           for cache in caches:
-              if not cache['ref'] == 'refs/heads/master' or not cache['key'].startswith('flatpak-builder'):
+              if not cache['ref'] == 'refs/heads/main' or not cache['key'].startswith('flatpak-builder'):
                   continue
               ts = datetime.fromisoformat(cache['created_at'])
               if not flatpak_last_ts or ts > flatpak_last_ts:
@@ -55,11 +55,11 @@ jobs:
               
               if flatpak_key and cache['key'].startswith('flatpak-builder'):
                   # add non-master flatpak caches that match latest key
-                  if cache['key'] == flatpak_key and not cache['ref'] == 'refs/heads/master':
+                  if cache['key'] == flatpak_key and not cache['ref'] == 'refs/heads/main':
                       to_be_removed.append(cache)
                       continue
-                  # add master flatpak caches that do not match the latest key    
-                  elif cache['key'] != flatpak_key and cache['ref'] == 'refs/heads/master':
+                  # add master flatpak caches that do not match the latest key
+                  elif cache['key'] != flatpak_key and cache['ref'] == 'refs/heads/main':
                       to_be_removed.append(cache)
                       continue
               
