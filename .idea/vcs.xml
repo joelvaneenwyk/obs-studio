@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/UI/frontend-plugins/streamfx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/UI/frontend-plugins/streamfx/cmake/clang" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/UI/frontend-plugins/streamfx/cmake/version" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/UI/frontend-plugins/streamfx/third-party/msvc-redist-helper" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/UI/frontend-plugins/streamfx/third-party/msvc-redist-helper/cmake/clang" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/UI/frontend-plugins/streamfx/third-party/msvc-redist-helper/third-party/curl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/UI/frontend-plugins/streamfx/third-party/nlohmann-json" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/enc-amf" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/mac-syphon/syphon-framework" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-browser" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-outputs/ftl-sdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-outputs/ftl-sdk/libcurl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-outputs/ftl-sdk/libjansson" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-websocket" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-websocket/deps/qr" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/win-dshow/libdshowcapture" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/win-dshow/libdshowcapture/external/capture-device-support" vcs="Git" />
+  </component>
+</project>

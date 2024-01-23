@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CidrRootsConfiguration">
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/.build" />
+      <file path="$PROJECT_DIR$/.deps" />
+      <file path="$PROJECT_DIR$/build" />
+      <file path="$PROJECT_DIR$/build-aux" />
+      <file path="$PROJECT_DIR$/build64" />
+      <file path="$PROJECT_DIR$/build_x64" />
+      <file path="$PROJECT_DIR$/build_x86" />
+      <file path="$PROJECT_DIR$/cmake-build-release" />
+      <file path="$PROJECT_DIR$/cmake-build-windows-debug-event-trace" />
+    </excludeRoots>
+  </component>
+</project>

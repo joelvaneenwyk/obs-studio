@@ -75,6 +75,8 @@ tags
 *.sdf
 *.opensdf
 *.xml
+!.idea/**/*.xml
+!.run/**/*.xml
 *.ipch
 *.css
 *.xslt
