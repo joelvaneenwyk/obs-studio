@@ -31,6 +31,14 @@
 !INSTALL
 !README.rst
 
+# Specific to 'github.com/joelvaneenwyk'
+!/.vscode
+!/.idea
+!/.gitattributes
+!/*.bat
+!/*.cmd
+!/*.sh
+
 # Exclude lock files
 *.lock.json
 
