@@ -1,6 +1,12 @@
 * text=auto
 
-*.sh              text eol=lf
+*.zsh                               text eol=lf
+.*.zsh                              text eol=lf
+build-aux/.functions/*              text eol=lf
+.github/scripts/utils.zsh/*         text eol=lf
+.github/scripts/build-*             text eol=lf
+.github/scripts/package-*           text eol=lf
+
 *.sln             text eol=crlf
 *.vcproj          text eol=crlf
 *.vcxproj         text eol=crlf
