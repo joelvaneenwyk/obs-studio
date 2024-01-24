@@ -12,10 +12,6 @@ trim_trailing_whitespace = false
 indent_style = space
 indent_size = 4
 
-[*.{txt,md,cpp,c,h}]
-indent_style = tab
-indent_size = 8
-
 [*.{json}]
 indent_style = space
 indent_size = 4
@@ -25,7 +21,7 @@ indent_size = 4
 indent_style = space
 indent_size = 4
 
-[**/CMakeLists.txt]
+[CMakeLists.txt]
 indent_style = space
 indent_size = 2
 
@@ -53,7 +49,8 @@ indent_size = 4
 indent_style = space
 indent_size = 2
 
-[{*.zsh,.*.zsh,build-aux/.functions/*,.github/scripts/utils.zsh/*}]
+[{*.zsh,.*.zsh,build-aux/.functions/*,.github/scripts/utils.zsh/*,.github/scripts/{build,package}-*}]
+end_of_line = lf
 indent_style = space
 indent_size = 2
 
