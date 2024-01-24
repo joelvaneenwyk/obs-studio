@@ -6,13 +6,11 @@ name: StreamFX
 
 on:
   push:
-    branches:
-      - [main, develop, 'feature/*', 'release/*']
+    branches: [main, develop, 'feature/*', 'release/*']
     tags:
       - "*"
   pull_request:
-    branches:
-      - [main, develop]
+    branches: [main, develop]
 
 concurrency:
   group: build-${{ github.ref_name }}
