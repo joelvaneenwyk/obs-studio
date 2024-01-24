@@ -15,14 +15,17 @@ if not exist "%~dp0UI\frontend-plugins\streamfx" (
 
 call :RunCommand git submodule update --remote
 call :Build x64
-call :Build x86
 echo OBS Studio build complete.
 goto:eof
 
 :Build
+    setlocal EnableExtensions
     set build_architecture=%~1
-    call :RunCommand pwsh -NoProfile -File "%~dp0CI/windows/01_install_dependencies.ps1" -BuildArch %build_architecture%
-    call :RunCommand pwsh -NoProfile -File "%~dp0CI/build-windows.ps1" -Package -Verbose -BuildArch %build_architecture% -BuildConfiguration Release
+    set CI=1
+    call :RunCommand pwsh -NoProfile -File "%~dp0.github/scripts/Build-Windows.ps1" ^
+        -Verbose ^
+        -Target "%build_architecture%" ^
+        -Configuration Release
 exit /b
 
 :Clean
@@ -36,6 +39,7 @@ setlocal EnableDelayedExpansion
     set "_command=%*"
     set "_command=!_command:   = !"
     set "_command=!_command:  = !"
+    set "_command=!_command:/=\!"
     echo ##[cmd] !_command!
     !_command!
 exit /b
