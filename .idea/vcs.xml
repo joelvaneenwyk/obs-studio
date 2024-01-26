@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-browser" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-outputs/ftl-sdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-websocket" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/win-dshow/libdshowcapture" vcs="Git" />
+  </component>
+</project>
