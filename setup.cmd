@@ -1,24 +1,81 @@
-git submodule deinit --force -- "UI/frontend-plugins/streamfx/cmake/clang"
-git submodule add --force -b master --name "UI/frontend-plugins/streamfx/cmake/clang" -- "https://github.com/Xaymar/cmake-clang.git" "UI/frontend-plugins/streamfx/cmake/"
-git submodule set-url -- "UI/frontend-plugins/streamfx/cmake/" "https://github.com/Xaymar/cmake-clang.git"
-git submodule deinit --force -- "UI/frontend-plugins/streamfx/cmake/version"
-git submodule add --force -b master --name "UI/frontend-plugins/streamfx/cmake/version" -- "https://github.com/Xaymar/cmake-version.git" "UI/frontend-plugins/streamfx/cmake/version"
-git submodule set-url -- "UI/frontend-plugins/streamfx/cmake/version" "https://github.com/Xaymar/cmake-version.git"
-git submodule deinit --force -- "UI/frontend-plugins/streamfx/third-party/nlohmann-json"
-git submodule add --force -b master --name "UI/frontend-plugins/streamfx/third-party/nlohmann-json" -- "https://github.com/nlohmann/json.git" "UI/frontend-plugins/streamfx/third-party/nlohmann-json"
-git submodule set-url -- "UI/frontend-plugins/streamfx/third-party/nlohmann-json" "https://github.com/nlohmann/json.git"
-git submodule deinit --force -- "UI/frontend-plugins/streamfx/third-party/msvc-redist-helper"
-git submodule add --force -b master --name "UI/frontend-plugins/streamfx/third-party/msvc-redist-helper" -- "https://github.com/Xaymar/msvc-redist-helper.git" "UI/frontend-plugins/streamfx/third-party/msvc-redist-helper"
-git submodule set-url --  "UI/frontend-plugins/streamfx/third-party/msvc-redist-helper" "https://github.com/Xaymar/msvc-redist-helper.git
-git submodule deinit --force -- "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk"
-git submodule add --force -b master --name "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk" -- "https://github.com/NVIDIA/MAXINE-AR-SDK.git" "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk"
-git submodule set-url -- "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk" "https://github.com/NVIDIA/MAXINE-AR-SDK.git"
-git submodule deinit --force -- "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk"
-git submodule add --force -b master --name "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk" -- "https://github.com/NVIDIA/MAXINE-VFX-SDK.git" "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk"
-git submodule set-url -- "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk" "https://github.com/NVIDIA/MAXINE-VFX-SDK.git"
-git submodule deinit --force -- "UI/frontend-plugins/streamfx/third-party/obs-studio"
-git submodule add --force -b master --name "UI/frontend-plugins/streamfx/third-party/obs-studio" -- "https://github.com/obsproject/obs-studio.git" "UI/frontend-plugins/streamfx/third-party/obs-studio"
-git submodule set-url -- "UI/frontend-plugins/streamfx/third-party/obs-studio" "https://github.com/obsproject/obs-studio.git"
-git submodule deinit --force -- "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-afx-sdk"
-git submodule add --force -b master --name "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-afx-sdk" -- "https://github.com/NVIDIA/MAXINE-AFX-SDK.git" "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-afx-sdk"
-git submodule set-url -- "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-afx-sdk" "https://github.com/NVIDIA/MAXINE-AFX-SDK.git"
+@echo off
+goto:$Main
+
+:SetSubmodule %BRANCH% %NAME% %URL% %PATH%
+setlocal EnableDelayedExpansion
+    set "_branch=%~1"
+    set "_repository=%~2"
+    set "_path=%~3"
+    set "_local_path=!_path:/=\!"
+    echo Set submodule "!_repository!" on branch "!_branch!" at path "!_path!".
+    git rm -r --cached "!_path!"
+    if exist "!_local_path!" rmdir /q /s "!_local_path!"
+    if exist "!_local_path!" del "!_local_path!"
+    git submodule deinit --force -- "!_path!"
+    git submodule add --branch "!_branch!" --force -- "!_repository!" "!_path!"
+    git submodule set-url -- "!_path!" "!_repository!"
+endlocal & exit /b %ERRORLEVEL%
+
+:$Main
+setlocal EnableExtensions
+    call :SetSubmodule ^
+            "master" ^
+            "https://github.com/Xaymar/cmake-clang.git" ^
+	    "UI/frontend-plugins/streamfx/cmake/"
+    call :SetSubmodule ^
+            "master" ^
+            "https://github.com/Xaymar/cmake-version.git" ^
+	    "UI/frontend-plugins/streamfx/cmake/version/"
+    call :SetSubmodule ^
+            "master" ^
+            "https://github.com/nlohmann/json.git" ^
+	    "UI/frontend-plugins/streamfx/third-party/nlohmann-json/"
+    call :SetSubmodule ^
+            "master" ^
+            "https://github.com/Xaymar/msvc-redist-helper.git" ^
+	    "UI/frontend-plugins/streamfx/third-party/msvc-redist-helper/"
+    call :SetSubmodule ^
+            "master" ^
+            "https://github.com/NVIDIA/MAXINE-AR-SDK.git" ^
+	    "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk/"
+    call :SetSubmodule ^
+            "master" ^
+            "https://github.com/NVIDIA/MAXINE-VFX-SDK.git" ^
+	    "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk/"
+    call :SetSubmodule ^
+            "master" ^
+            "https://github.com/obsproject/obs-studio.git" ^
+	    "UI/frontend-plugins/streamfx/third-party/obs-studio/"
+    call :SetSubmodule ^
+            "master" ^
+            "https://github.com/NVIDIA/MAXINE-AFX-SDK.git" ^
+	    "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-afx-sdk/"
+endlocal & exit /b %ERRORLEVEL%
+
+REM AUTOGENERATED COPYRIGHT HEADER START
+REM Copyright (C) 2020-2023 Michael Fabian 'Xaymar' Dirks <info@xaymar.com>
+REM AUTOGENERATED COPYRIGHT HEADER END
+REM [submodule "cmake/clang"]
+REM 	path = cmake/clang
+REM 	url = https://github.com/Xaymar/cmake-clang.git
+REM [submodule "cmake/version"]
+REM 	path = cmake/version
+REM 	url = https://github.com/Xaymar/cmake-version.git
+REM [submodule "third-party/nlohmann-json"]
+REM 	path = third-party/nlohmann-json
+REM 	url = https://github.com/nlohmann/json.git
+REM [submodule "third-party/msvc-redist-helper"]
+REM 	path = third-party/msvc-redist-helper
+REM 	url = https://github.com/Xaymar/msvc-redist-helper.git
+REM [submodule "third-party/nvidia-maxine-ar-sdk"]
+REM 	path = third-party/nvidia-maxine-ar-sdk
+REM 	url = https://github.com/NVIDIA/MAXINE-AR-SDK.git
+REM [submodule "third-party/nvidia-maxine-vfx-sdk"]
+REM 	path = third-party/nvidia-maxine-vfx-sdk
+REM 	url = https://github.com/NVIDIA/MAXINE-VFX-SDK.git
+REM [submodule "third-party/obs-studio"]
+REM 	path = third-party/obs-studio
+REM 	url = https://github.com/obsproject/obs-studio.git
+REM [submodule "third-party/nvidia-maxine-afx-sdk"]
+REM 	path = third-party/nvidia-maxine-afx-sdk
+REM 	url = https://github.com/NVIDIA/MAXINE-AFX-SDK.git
