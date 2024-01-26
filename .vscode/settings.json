@@ -17,7 +17,7 @@
   "[shellscript]": {
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
-      "source.fixAll.shellcheck": true
+      "source.fixAll.shellcheck": "explicit"
     },
     "editor.formatOnPaste": false,
     "editor.formatOnSave": true,
