@@ -33,6 +33,7 @@
 
 # Specific to 'github.com/joelvaneenwyk'
 !/.vscode
+/.vscode/*.json
 !/.idea
 !/.gitattributes
 !/*.bat

@@ -1,4 +1,8 @@
 {
-	"cmake.buildToolArgs": ["-Wno-dev"],
-	"cmake.configureArgs": ["-Wno-dev"]
+    "cmake.buildToolArgs": [
+        "-Wno-dev"
+    ],
+    "cmake.configureArgs": [
+        "-Wno-dev"
+    ]
 }

@@ -7,6 +7,7 @@
       <file path="$PROJECT_DIR$/.deps" />
       <file path="$PROJECT_DIR$/.output" />
       <file path="$PROJECT_DIR$/.output/clion" />
+      <file path="$PROJECT_DIR$/.vs" />
       <file path="$PROJECT_DIR$/build32" />
       <file path="$PROJECT_DIR$/build64" />
       <file path="$PROJECT_DIR$/build_x86" />
