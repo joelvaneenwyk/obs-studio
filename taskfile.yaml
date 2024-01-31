@@ -6,7 +6,8 @@ vars:
   RM1: '{{if eq .OS "Windows_NT"}}powershell -NoProfile -Command Remove-Item -Recurse -Force {{else}}rm -rf{{end}}'
   RM: '{{if eq .OS "Windows_NT"}}cmd /d /c rmdir /q /s{{else}}rm -rf{{end}}'
   OUTPUT_DIRECTORY: "{{.USER_WORKING_DIR}}/.build"
-  PROJECT_ROOT: "{{.TASKS_DIR}}"
+  PROJECT_ROOT: "{{.TASKFILE_DIR}}"
+  STREAMFX_DIR: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx"
 
 env:
   UnityPath: C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor\Unity.exe
@@ -28,7 +29,15 @@ tasks:
 
   streamfx-add:
     cmds:
-      - cmd: git -C "{{fromSlash .PROJECT_ROOT}}" subtree add --prefix "UI/frontend-plugins/streamfx" "https://github.com/joelvaneenwyk/obs-StreamFX.git" "develop"
+      - cmd: git -C "{{fromSlash .PROJECT_ROOT}}" subtree add --prefix "UI/frontend-plugins/streamfx" "https://github.com/joelvaneenwyk/obs-StreamFX.git" "develop" --squash
+    status:
+      # If directory exists, this task will be skipped
+      - test -d {{toSlash .STREAMFX_DIR}}
+
+  streamfx-update:
+    deps: [streamfx-add]
+    cmds:
+      - cmd: git -C "{{fromSlash .PROJECT_ROOT}}" subtree pull --prefix "UI/frontend-plugins/streamfx" "https://github.com/joelvaneenwyk/obs-StreamFX.git" "develop" --squash
 
   #
   # Internal helper tasks
