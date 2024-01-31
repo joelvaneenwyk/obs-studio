@@ -31,6 +31,9 @@
 !INSTALL
 !README.rst
 
+# [joelvaneenwyk]
+!/taskfile.yaml
+
 # Exclude lock files
 *.lock.json
 

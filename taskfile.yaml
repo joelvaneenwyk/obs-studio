@@ -1,0 +1,66 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  RM1: '{{if eq .OS "Windows_NT"}}powershell -NoProfile -Command Remove-Item -Recurse -Force {{else}}rm -rf{{end}}'
+  RM: '{{if eq .OS "Windows_NT"}}cmd /d /c rmdir /q /s{{else}}rm -rf{{end}}'
+  OUTPUT_DIRECTORY: "{{.USER_WORKING_DIR}}/.build"
+  PROJECT_ROOT: "{{.TASKS_DIR}}"
+
+env:
+  UnityPath: C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor\Unity.exe
+
+tasks:
+  default:
+    cmds:
+      - task: build
+
+  pull:
+    cmds:
+      - cmd: git pull --rebase --autostash
+
+  build:
+    cmds:
+      - echo "Building..."
+    internal: true
+    silent: false
+
+  streamfx-add:
+    cmds:
+      - cmd: git -C "{{fromSlash .PROJECT_ROOT}}" subtree add --prefix "UI/frontend-plugins/streamfx" "https://github.com/joelvaneenwyk/obs-StreamFX.git" "develop"
+
+  #
+  # Internal helper tasks
+  #
+
+  kill-process:
+    internal: true
+    vars:
+      TARGET: '{{default "[Invalid_Process_Target]" .TARGET}}'
+    cmds:
+      - cmd: '{{if eq .OS "Windows_NT"}}powershell -NoProfile -Command Stop-Process -ErrorAction SilentlyContinue -Name "{{.TARGET}}" -Force{{else}}pkill -f "{{.TARGET}}"{{end}}'
+        ignore_error: true
+
+  kill-obs:
+    silent: false
+    internal: true
+    cmds:
+      - task: kill-process
+        vars: { TARGET: "obs64" }
+      - task: kill-process
+        vars: { TARGET: "obs" }
+
+  remove-directory:
+    internal: true
+    vars:
+      TARGET: '{{default "[DIR_NAME]" .TARGET}}'
+    cmds:
+      - '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{.TARGET}}" rmdir /q /s "{{.TARGET}}"{{else}}rm -rf {{.TARGET}}{{end}}'
+
+  make-directory:
+    internal: true
+    vars:
+      TARGET: '{{default "[DIR_NAME]" .TARGET}}'
+    cmds:
+      - '{{if eq .OS "Windows_NT"}}cmd /d /c if not exist "{{.TARGET}}" mkdir "{{.TARGET}}"{{else}}mkdir -p "{{.TARGET}}"{{end}}'
