@@ -1,0 +1,7 @@
+# Custom Dictionary Words
+autostash
+cmds
+pkill
+streamfx
+STREAMFX
+TASKFILE

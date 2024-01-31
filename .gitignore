@@ -33,6 +33,9 @@
 
 # [joelvaneenwyk]
 !/taskfile.yaml
+!/.vscode/
+!/.cspell/
+!/cspell.config.yaml
 
 # Exclude lock files
 *.lock.json
