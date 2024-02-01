@@ -29,15 +29,25 @@ tasks:
 
   streamfx-add:
     cmds:
-      - cmd: git -C "{{fromSlash .PROJECT_ROOT}}" subtree add --prefix "UI/frontend-plugins/streamfx" "https://github.com/joelvaneenwyk/obs-StreamFX.git" "develop" --squash
-    status:
-      # If directory exists, this task will be skipped
-      - test -d {{toSlash .STREAMFX_DIR}}
+      # - cmd: 'cmd /D /C rmdir /Q /S "{{fromSlash .STREAMFX_DIR}}"'
+      - cmd: >-
+          git -C "{{fromSlash .PROJECT_ROOT}}" subtree add
+          --debug
+          --prefix="UI/frontend-plugins/streamfx"
+          --message="Add 'obs-StreamFX' subtree from GitHub to 'UI/frontend-plugins/streamfx'"
+          https://github.com/joelvaneenwyk/obs-StreamFX.git develop
+    # status:
+    #   # If directory exists, this task will be skipped
+    #   - test -d {{toSlash .STREAMFX_DIR}}
+    silent: false
 
   streamfx-update:
     deps: [streamfx-add]
     cmds:
-      - cmd: git -C "{{fromSlash .PROJECT_ROOT}}" subtree pull --prefix "UI/frontend-plugins/streamfx" "https://github.com/joelvaneenwyk/obs-StreamFX.git" "develop" --squash
+      - cmd: >-
+          git -C "{{fromSlash .PROJECT_ROOT}}" subtree pull
+            --prefix="UI/frontend-plugins/streamfx"
+          https://github.com/joelvaneenwyk/obs-StreamFX.git develop
 
   streamfx-remove-cached:
     cmds:
