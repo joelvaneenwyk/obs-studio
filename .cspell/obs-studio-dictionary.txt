@@ -1,7 +1,13 @@
 # Custom Dictionary Words
 autostash
 cmds
+deinit
+dshow
+libdshowcapture
+msvc
+nlohmann
 pkill
+redist
 streamfx
 STREAMFX
 TASKFILE
