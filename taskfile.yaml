@@ -62,14 +62,17 @@ tasks:
     desc: "Build a go binary specific to an architecture and operating system"
     requires:
       vars: [SUBMODULE_PATH, SUBMODULE_URL]
+    vars:
+      ROOT: '{{.TASKFILE_DIR}}'
+      STREAMFX_ROOT: '{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx'
     cmds:
       - cmd: >-
-          git -C "{{ .TASKFILE_DIR }}/UI/frontend-plugins/streamfx" subtree add
+          git -C "{{fromSlash .ROOT}}" subtree add
           --debug
-          --prefix="{{ .SUBMODULE_PATH }}"
-          --message="Add '{{ .SUBMODULE_URL }}' to '{{ .SUBMODULE_PATH }}'"
+          --prefix="{{.SUBMODULE_PATH}}"
+          --message="Add '{{.SUBMODULE_URL}}' to '{{.SUBMODULE_PATH}}'"
           --squash
-          {{ .SUBMODULE_URL }}
+          {{.SUBMODULE_URL}}
 
   streamfx-update-submodules:
     vars:
