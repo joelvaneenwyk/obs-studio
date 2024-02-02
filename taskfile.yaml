@@ -69,7 +69,7 @@ tasks:
       - cmd: >-
           git -C "{{fromSlash .ROOT}}" subtree add
           --debug
-          --prefix="{{.SUBMODULE_PATH}}"
+          --prefix="UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
           --message="Add '{{.SUBMODULE_URL}}' to '{{.SUBMODULE_PATH}}'"
           --squash
           {{.SUBMODULE_URL}}
