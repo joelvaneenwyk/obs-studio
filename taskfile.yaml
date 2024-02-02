@@ -75,16 +75,16 @@ tasks:
     cmds:
       - cmd: git rm --cached -r "{{.PREFIX}}"
         ignore_error: true
-      - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .SUBMODULE_ABS_PATH}}" rmdir /q /s "{{fromSlash .SUBMODULE_ABS_PATH}}"{{end}}'
-      - task: commit-changes
-      - cmd: >-
-          git -C "{{fromSlash .ROOT}}" subtree add
-          --debug
-          --prefix="UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
-          --message="Add '{{.SUBMODULE_URL}}' to '{{.SUBMODULE_PATH}}'"
-          --squash
-          {{.SUBMODULE_URL}}
-          {{.SUBMODULE_COMMIT}}
+      # - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .SUBMODULE_ABS_PATH}}" rmdir /q /s "{{fromSlash .SUBMODULE_ABS_PATH}}"{{end}}'
+      # - task: commit-changes
+      # - cmd: >-
+      #     git -C "{{fromSlash .ROOT}}" subtree add
+      #     --debug
+      #     --prefix="UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
+      #     --message="Add '{{.SUBMODULE_URL}}' to '{{.SUBMODULE_PATH}}'"
+      #     --squash
+      #     {{.SUBMODULE_URL}}
+      #     {{.SUBMODULE_COMMIT}}
 
   commit-taskfile:
     cmds:
@@ -128,17 +128,6 @@ tasks:
           SUBMODULE_PATH: "{{ .ITEM.path }}"
           SUBMODULE_COMMIT: "{{ .ITEM.commit }}"
           SUBMODULE_BRANCH: "master"
-
-  add-submodule:
-    internal: true
-    vars:
-      TARGET: '{{default "[DIR_NAME]" .TARGET}}'
-      URL: '{{default "[URL]" .URL}}'
-    cmds:
-      - cmd: git rm --cached "{{.TARGET}}"
-        ignore_error: true
-      - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .TARGET}}" rmdir /q /s "{{fromSlash .TARGET}}"{{else}}rm -rf {{toSlash .TARGET}}{{end}}'
-      - cmd: git submodule add {{.URL}} "{{.TARGET}}"
 
   streamfx-add-submodules:
     # deps: [streamfx-remove-cached]
