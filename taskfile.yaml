@@ -58,42 +58,43 @@ tasks:
       - test ! -d {{toSlash .STREAMFX_DIR}}
     silent: false
 
-  git-rm-cached:
+  streamfx-update-submodule:
     desc: "Build a go binary specific to an architecture and operating system"
     requires:
-      vars: [SUBMODULE_PATH]
+      vars: [SUBMODULE_PATH, SUBMODULE_URL]
     cmds:
-      - cmd: git rm --cached "{{.SUBMODULE_PATH}}"
-        ignore_error: true
+      - cmd: >-
+          git -C "{{ .TASKFILE_DIR }}/UI/frontend-plugins/streamfx" subtree add
+          --debug
+          --prefix="{{ .SUBMODULE_PATH }}"
+          --message="Add '{{ .SUBMODULE_URL }}' to '{{ .SUBMODULE_PATH }}'"
+          --squash
+          {{ .SUBMODULE_URL }}
 
-  streamfx-remove-cached:
+  streamfx-update-submodules:
     vars:
     cmds:
       - for:
-          - path: "UI/frontend-plugins/streamfx/cmake/clang"
+          - path: "cmake/clang"
             url: "https://github.com/Xaymar/cmake-clang.git"
-          - path: "UI/frontend-plugins/streamfx/cmake/version"
+          - path: "cmake/version"
             url: "https://github.com/Xaymar/cmake-version.git"
-          - path: "UI/frontend-plugins/streamfx/third-party/nlohmann-json"
+          - path: "third-party/nlohmann-json"
             url: "https://github.com/nlohmann/json.git"
-          - path: "UI/frontend-plugins/streamfx/third-party/msvc-redist-helper"
+          - path: "third-party/msvc-redist-helper"
             url: "https://github.com/Xaymar/msvc-redist-helper.git"
-          - path: "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk"
+          - path: "third-party/nvidia-maxine-ar-sdk"
             url: "https://github.com/NVIDIA/MAXINE-AR-SDK.git"
-          - path: "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk"
+          - path: "third-party/nvidia-maxine-vfx-sdk"
             url: "https://github.com/NVIDIA/MAXINE-VFX-SDK.git"
-          - path: "UI/frontend-plugins/streamfx/third-party/obs-studio"
-            url: "https://github.com/obsproject/obs-studio.git"
-          - path: "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-afx-sdk"
+          # - path: "third-party/obs-studio"
+          #   url: "https://github.com/obsproject/obs-studio.git"
+          - path: "third-party/nvidia-maxine-afx-sdk"
             url: "https://github.com/NVIDIA/MAXINE-AFX-SDK.git"
-        task: git-rm-cached
+        task: streamfx-update-submodule
         vars:
+          SUBMODULE_URL: "{{ .ITEM.url }}"
           SUBMODULE_PATH: "{{ .ITEM.path }}"
-      # - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .TARGET}}" rmdir /q /s "{{fromSlash .TARGET}}"{{end}}'
-      #   vars:
-      #     TARGET: '{{joinPath .TASKFILE_DIR .ITEM.path}}'
-      # - cmd: 'git submodule add "{{ .ITEM.url }}" "{{ .ITEM.path }}"'
-      #   dir: "{{ .TASKFILE_DIR }}"
 
   add-submodule:
     internal: true
