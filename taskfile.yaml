@@ -58,41 +58,89 @@ tasks:
       - test ! -d {{toSlash .STREAMFX_DIR}}
     silent: false
 
-  streamfx-remove-cached:
+  git-rm-cached:
+    desc: "Build a go binary specific to an architecture and operating system"
+    requires:
+      vars: [SUBMODULE_PATH]
     cmds:
-      # url = https://github.com/Xaymar/cmake-clang.git
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/cmake/clang"
+      - cmd: git rm --cached "{{.SUBMODULE_PATH}}"
         ignore_error: true
-      # url = https://github.com/Xaymar/cmake-version.git
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/cmake/version"
+
+  streamfx-remove-cached:
+    vars:
+    cmds:
+      - for:
+          - path: "UI/frontend-plugins/streamfx/cmake/clang"
+            url: "https://github.com/Xaymar/cmake-clang.git"
+          - path: "UI/frontend-plugins/streamfx/cmake/version"
+            url: "https://github.com/Xaymar/cmake-version.git"
+          - path: "UI/frontend-plugins/streamfx/third-party/nlohmann-json"
+            url: "https://github.com/nlohmann/json.git"
+          - path: "UI/frontend-plugins/streamfx/third-party/msvc-redist-helper"
+            url: "https://github.com/Xaymar/msvc-redist-helper.git"
+          - path: "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk"
+            url: "https://github.com/NVIDIA/MAXINE-AR-SDK.git"
+          - path: "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk"
+            url: "https://github.com/NVIDIA/MAXINE-VFX-SDK.git"
+          - path: "UI/frontend-plugins/streamfx/third-party/obs-studio"
+            url: "https://github.com/obsproject/obs-studio.git"
+          - path: "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-afx-sdk"
+            url: "https://github.com/NVIDIA/MAXINE-AFX-SDK.git"
+        task: git-rm-cached
+        vars:
+          SUBMODULE_PATH: "{{ .ITEM.path }}"
+      # - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .TARGET}}" rmdir /q /s "{{fromSlash .TARGET}}"{{end}}'
+      #   vars:
+      #     TARGET: '{{joinPath .TASKFILE_DIR .ITEM.path}}'
+      # - cmd: 'git submodule add "{{ .ITEM.url }}" "{{ .ITEM.path }}"'
+      #   dir: "{{ .TASKFILE_DIR }}"
+
+  add-submodule:
+    internal: true
+    vars:
+      TARGET: '{{default "[DIR_NAME]" .TARGET}}'
+      URL: '{{default "[URL]" .URL}}'
+    cmds:
+      - cmd: git rm --cached "{{.TARGET}}"
         ignore_error: true
-      # url = https://github.com/nlohmann/json.git
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nlohmann-json"
-        ignore_error: true
-      # url = https://github.com/Xaymar/msvc-redist-helper.git
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/msvc-redist-helper"
-        ignore_error: true
-      # url = https://github.com/NVIDIA/MAXINE-AR-SDK.git
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk"
-        ignore_error: true
-      # url = https://github.com/NVIDIA/MAXINE-VFX-SDK.git
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk"
-        ignore_error: true
-      # url = https://github.com/obsproject/obs-studio.git
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/obs-studio"
-        ignore_error: true
-      # url = https://github.com/NVIDIA/MAXINE-AFX-SDK.git
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-afx-sdk"
-        ignore_error: true
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/obs-outputs/ftl-sdk"
-        ignore_error: true
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/obs-websocket"
-        ignore_error: true
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/obs-browser"
-        ignore_error: true
-      - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/win-dshow/libdshowcapture"
-        ignore_error: true
-      - cmd: git submodule update --init --recursive --checkout
+      - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .TARGET}}" rmdir /q /s "{{fromSlash .TARGET}}"{{else}}rm -rf {{toSlash .TARGET}}{{end}}'
+      - cmd: git submodule add {{.URL}} "{{.TARGET}}"
+
+  streamfx-add-submodules:
+    # deps: [streamfx-remove-cached]
+    cmds:
+      - task: add-submodule
+        vars: { TARGET: "UI/frontend-plugins/streamfx/cmake/clang", URL: "https://github.com/Xaymar/cmake-clang.git" }
+      # # url = https://github.com/Xaymar/cmake-version.git
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/cmake/version"
+      #   ignore_error: true
+      # # url = https://github.com/nlohmann/json.git
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nlohmann-json"
+      #   ignore_error: true
+      # # url = https://github.com/Xaymar/msvc-redist-helper.git
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/msvc-redist-helper"
+      #   ignore_error: true
+      # # url = https://github.com/NVIDIA/MAXINE-AR-SDK.git
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk"
+      #   ignore_error: true
+      # # url = https://github.com/NVIDIA/MAXINE-VFX-SDK.git
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk"
+      #   ignore_error: true
+      # # url = https://github.com/obsproject/obs-studio.git
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/obs-studio"
+      #   ignore_error: true
+      # # url = https://github.com/NVIDIA/MAXINE-AFX-SDK.git
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-afx-sdk"
+      #   ignore_error: true
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/obs-outputs/ftl-sdk"
+      #   ignore_error: true
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/obs-websocket"
+      #   ignore_error: true
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/obs-browser"
+      #   ignore_error: true
+      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/win-dshow/libdshowcapture"
+      #   ignore_error: true
+      # - cmd: git submodule update --init --recursive --checkout
 
   #
   # Internal helper tasks
@@ -128,7 +176,6 @@ tasks:
       TARGET: '{{default "[DIR_NAME]" .TARGET}}'
     cmds:
       - '{{if eq .OS "Windows_NT"}}cmd /d /c if not exist "{{.TARGET}}" mkdir "{{.TARGET}}"{{else}}mkdir -p "{{.TARGET}}"{{end}}'
-
 #
 # Example batch script that sets up Visual Studio CLI
 #
