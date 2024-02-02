@@ -58,6 +58,12 @@ tasks:
       - test ! -d {{toSlash .STREAMFX_DIR}}
     silent: false
 
+  commit-changes:
+    cmds:
+      - git add .
+      - git commit -m "Updated files"
+      - git push
+
   streamfx-update-submodule:
     desc: "Build a go binary specific to an architecture and operating system"
     requires:
@@ -65,7 +71,14 @@ tasks:
     vars:
       ROOT: "{{.TASKFILE_DIR}}"
       STREAMFX_ROOT: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx"
+      PREFIX: "UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
+      SUBMODULE_ABS_PATH: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
     cmds:
+      - cmd: git rm --cached -r "{{.PREFIX}}"
+        ignore_error: true
+      - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .SUBMODULE_ABS_PATH}}" rmdir /q /s "{{fromSlash .SUBMODULE_ABS_PATH}}"{{end}}'
+      - task: commit-changes
+        ignore_error: true
       - cmd: >-
           git -C "{{fromSlash .ROOT}}" subtree add
           --debug
