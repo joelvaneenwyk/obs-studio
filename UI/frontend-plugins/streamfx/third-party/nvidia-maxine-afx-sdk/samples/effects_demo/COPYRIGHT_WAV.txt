@@ -1,0 +1,90 @@
+/*###############################################################################
+#
+# Copyright(c) 2022 NVIDIA CORPORATION.All Rights Reserved.
+#
+# NVIDIA CORPORATION and its licensors retain all intellectual property
+# and proprietary rights to the provided wav files and any modifications
+# thereto. Any use, reproduction, disclosure or distribution of the wav files
+# without an express license agreement from NVIDIA CORPORATION is
+# strictly prohibited.
+###############################################################################*/
+
+This copyright applies to following wav files:
+├───aec
+│   ├───16k
+│   │   ├───farend
+│   │   │       farend_16k.wav
+│   │   │       farend_16k_2.wav
+│   │   │
+│   │   └───nearend
+│   │           nearend_16k.wav
+│   │           nearend_16k_2.wav
+│   │
+│   └───48k
+│       ├───farend
+│       │       farend_48k.wav
+│       │
+│       └───nearend
+│               nearend_48k.wav
+│
+├───chaining
+│   ├───denoiser_16k_superres_48k
+│   │       Chip_Bag_16k.wav
+│   │       Typing_16k.wav
+│   │
+│   ├───dereverb_16k_superres_48k
+│   │       Echo_Craig_16k.wav
+│   │
+│   ├───dereverb_denoiser_16k_superres_48k
+│   │       Craig_Echo_ChipBag_16k.wav
+│   │
+│   ├───superres_8k_denoiser_16k
+│   │       Chip_Bag_8k.wav
+│   │       Typing_8k.wav
+│   │
+│   ├───superres_8k_dereverb_16k
+│   │       Echo_Craig_8k.wav
+│   │
+│   └───superres_8k_dereverb_denoiser_16k
+│           Air_Conditioning_8k.wav
+│
+├───denoiser
+│   ├───16k
+│   │       Air_Conditioning_16k.wav
+│   │       Chip_Bag_16k.wav
+│   │       Fan_16k.wav
+│   │       Typing_16k.wav
+│   │       VAD_Rain_16k.wav
+│   │
+│   └───48k
+│           Air_Conditioning_48k.wav
+│           Chip_Bag_48k.wav
+│           Fan_48k.wav
+│           Typing_48k.wav
+│           VAD_Rain_48k.wav
+│
+├───dereverb
+│   ├───16k
+│   │       Echo_Craig_16k.wav
+│   │
+│   └───48k
+│           Echo_Craig_48k.wav
+│
+├───dereverb_denoiser
+│   ├───16k
+│   │       Echo_AirConditioner_16k.wav
+│   │       Echo_Fan_16k.wav
+│   │       VAD_Echo_Fan.wav
+│   │       VAD_Echo_Typing.wav
+│   │
+│   └───48k
+│           Echo_AirConditioner_48k.wav
+│           VAD_Echo_Fan.wav
+│           VAD_Echo_Typing.wav
+│
+└───superres
+    ├───16k
+    │       superres_16k.wav
+    │
+    └───8k
+            superres_8k.wav
