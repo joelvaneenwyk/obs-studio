@@ -61,7 +61,7 @@ tasks:
   streamfx-update-submodule:
     desc: "Build a go binary specific to an architecture and operating system"
     requires:
-      vars: [SUBMODULE_PATH, SUBMODULE_URL]
+      vars: [SUBMODULE_PATH, SUBMODULE_URL, SUBMODULE_COMMIT, SUBMODULE_BRANCH]
     vars:
       ROOT: "{{.TASKFILE_DIR}}"
       STREAMFX_ROOT: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx"
@@ -73,6 +73,7 @@ tasks:
           --message="Add '{{.SUBMODULE_URL}}' to '{{.SUBMODULE_PATH}}'"
           --squash
           {{.SUBMODULE_URL}}
+          {{.SUBMODULE_COMMIT}}
 
   commit-taskfile:
     cmds:
@@ -114,6 +115,8 @@ tasks:
         vars:
           SUBMODULE_URL: "{{ .ITEM.url }}"
           SUBMODULE_PATH: "{{ .ITEM.path }}"
+          SUBMODULE_COMMIT: "{{ .ITEM.commit }}"
+          SUBMODULE_BRANCH: "master"
 
   add-submodule:
     internal: true
