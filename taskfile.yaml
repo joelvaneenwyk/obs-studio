@@ -62,7 +62,6 @@ tasks:
     cmds:
       - git add .
       - git commit -m "Updated files"
-      - git push
 
   streamfx-update-submodule:
     desc: "Build a go binary specific to an architecture and operating system"
