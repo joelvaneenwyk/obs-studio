@@ -60,8 +60,8 @@ tasks:
 
   commit-changes:
     cmds:
-      - git add .
-      - git commit -m "Updated files"
+      - git add . && git commit -m "Updated files"
+    ignore_error: true
 
   streamfx-update-submodule:
     desc: "Build a go binary specific to an architecture and operating system"
@@ -77,7 +77,6 @@ tasks:
         ignore_error: true
       - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .SUBMODULE_ABS_PATH}}" rmdir /q /s "{{fromSlash .SUBMODULE_ABS_PATH}}"{{end}}'
       - task: commit-changes
-        ignore_error: true
       - cmd: >-
           git -C "{{fromSlash .ROOT}}" subtree add
           --debug
