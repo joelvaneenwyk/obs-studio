@@ -13,12 +13,12 @@ if ( $DebugPreference -eq 'Continue' ) {
     $InformationPreference = 'Continue'
 }
 
-if ( $env:CI -eq $null ) {
-    throw "Build-Windows.ps1 requires CI environment"
+if ( $null -eq $env:CI ) {
+    throw 'Build-Windows.ps1 requires CI environment'
 }
 
 if ( ! ( [System.Environment]::Is64BitOperatingSystem ) ) {
-    throw "obs-studio requires a 64-bit system to build and run."
+    throw 'obs-studio requires a 64-bit system to build and run.'
 }
 
 if ( $PSVersionTable.PSVersion -lt '7.2.0' ) {
@@ -40,7 +40,7 @@ function Build {
 
     $UtilityFunctions = Get-ChildItem -Path $PSScriptRoot/utils.pwsh/*.ps1 -Recurse
 
-    foreach($Utility in $UtilityFunctions) {
+    foreach ($Utility in $UtilityFunctions) {
         Write-Debug "Loading $($Utility.FullName)"
         . $Utility.FullName
     }
@@ -75,13 +75,13 @@ function Build {
         '--config', $Configuration
     )
 
-    Log-Group "Configuring obs-studio..."
+    Log-Group 'Configuring obs-studio...'
     Invoke-External cmake @CmakeArgs
 
-    Log-Group "Building obs-studio..."
+    Log-Group 'Building obs-studio...'
     Invoke-External cmake @CmakeBuildArgs
 
-    Log-Group "Installing obs-studio..."
+    Log-Group 'Installing obs-studio...'
     Invoke-External cmake @CmakeInstallArgs
 
     Pop-Location -Stack BuildTemp
