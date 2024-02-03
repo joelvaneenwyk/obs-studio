@@ -95,6 +95,15 @@ tasks:
       - cmd: git add taskfile.yaml && git commit -m "Update taskfile.yaml"
         ignore_error: true
 
+  refresh:
+    deps: [commit-taskfile]
+    cmds:
+      - cmd: git add --renormalize . # Update index with renormalized files
+      - cmd: git status # Show the files that will be normalized
+      # - cmd: git commit -m "Introduce end-of-line normalization"
+      # - cmd: git rm --cached -r .
+      # - cmd: git reset --hard
+
   git-add-streamfx-subtree:
     internal: true
     requires:
