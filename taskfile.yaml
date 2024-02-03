@@ -15,6 +15,7 @@ env:
 tasks:
   default:
     cmds:
+      - task: pull
       - task: build
 
   pull:
@@ -22,12 +23,23 @@ tasks:
       - cmd: "{{.GIT}} pull --rebase --autostash"
 
   build:
+    vars:
+      PRESET: '{{if eq .OS "Windows_NT"}}windows-x64{{else}}linux-x64{{end}}'
     cmds:
       # https://github.com/obsproject/obs-studio/wiki/build-instructions-for-windows
-      - "{{.GIT}} submodule update --init --recursive"
-      - cmake --preset windows-x64
-      - cmake --build --preset windows-x64
+      - cmd: "{{.GIT}} submodule update --init --recursive"
+      - cmd: cmake --preset "{{.PRESET}}"
+      - cmd: cmake --build --preset "{{.PRESET}}"
     silent: false
+
+  build-ci:
+    env:
+      CI: 1
+      CMAKE_SUPPRESS_DEVELOPER_WARNINGS: 1
+    cmds:
+      - cmd: pwsh -NoProfile -File .github/scripts/Build-Windows.ps1
+        platforms: [windows]
+      # - '{{if eq .OS "Windows_NT"}}cmd /d /c "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" && cmake --build --preset windows-x64{{else}}cmake --build --preset linux-x64{{end}}'
 
   install:
     deps: [install-llvm]
@@ -52,6 +64,10 @@ tasks:
       - cmd: ./build-aux/run-clang-format
         platforms: [linux, darwin]
 
+  #
+  # Internal helper tasks
+  #
+
   streamfx-add:
     internal: true
     cmds:
@@ -75,14 +91,6 @@ tasks:
             --prefix="UI/frontend-plugins/streamfx"
           https://github.com/joelvaneenwyk/obs-StreamFX.git develop
 
-  streamfx-remove:
-    internal: true
-    cmds:
-      - cmd: 'cmd /D /C rmdir /Q /S "{{fromSlash .STREAMFX_DIR}}"'
-    status:
-      - test ! -d {{toSlash .STREAMFX_DIR}}
-    silent: false
-
   commit-changes:
     internal: true
     cmds:
@@ -99,13 +107,12 @@ tasks:
     deps: [commit-taskfile]
     cmds:
       # https://stackoverflow.com/a/15646791/6994974
-      - cmd: git read-tree --empty # Clean index, force re-scan of working directory
-      - cmd: git add .
-      # - cmd: git add --renormalize . # Update index with renormalized files
+      - cmd: git add --renormalize . # Update index with renormalized files
       - cmd: git status # Show the files that will be normalized
-      # - cmd: git commit -m "Introduce end-of-line normalization"
-      # - cmd: git rm --cached -r .
-      # - cmd: git reset --hard
+      - cmd: git commit -m "Introduce end-of-line normalization"
+        ignore_error: true
+      - cmd: git rm --cached -r .
+      - cmd: git reset --hard
 
   git-add-streamfx-subtree:
     internal: true
