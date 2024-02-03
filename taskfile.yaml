@@ -105,6 +105,7 @@ tasks:
         ignore_error: true
       - task: git-add-streamfx-subtree
         vars:
+          PREFIX: "{{ .PREFIX }}"
           SUBMODULE_URL: "{{ .SUBMODULE_URL }}"
           SUBMODULE_PATH: "{{ .SUBMODULE_PATH }}"
           SUBMODULE_COMMIT: "{{ .SUBMODULE_COMMIT }}"
