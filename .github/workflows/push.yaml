@@ -5,7 +5,7 @@ on:
     paths-ignore:
       - '**.md'
     branches:
-      - master
+      - main
       - 'release/**'
     tags:
       - '*'
@@ -234,7 +234,7 @@ jobs:
           $shortHash = $env:GITHUB_SHA.Substring(0,9)
           "channel=${channel}" >> $env:GITHUB_OUTPUT
           "commitHash=${shortHash}" >> $env:GITHUB_OUTPUT
-          
+
           # Ensure files in action haven't been modified
           $folderHash = ''
           $files = Get-ChildItem "${{ github.workspace }}\repo\.github\actions\bouf"
