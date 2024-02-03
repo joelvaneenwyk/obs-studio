@@ -143,8 +143,8 @@ tasks:
       vars: [SUBMODULE_PATH, SUBMODULE_URL, SUBMODULE_BRANCH]
     cmds:
       - task: commit-taskfile
-      - cmd: git submodule set-url -- "{{.SUBMODULE_PATH}}" "{{.SUBMODULE_URL}}"
-      - cmd: git submodule set-branch --branch "{{.SUBMODULE_BRANCH}}" -- "{{.SUBMODULE_PATH}}" "{{.SUBMODULE_URL}}"
+      - cmd: git submodule set-url "{{.SUBMODULE_PATH}}" "{{.SUBMODULE_URL}}"
+      - cmd: git submodule set-branch --branch "{{.SUBMODULE_BRANCH}}" "{{.SUBMODULE_PATH}}"
 
   update-submodules:
     vars:
