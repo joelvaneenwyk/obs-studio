@@ -31,7 +31,11 @@ tasks:
     silent: false
 
   install:
+    deps: [install-llvm]
+
+  install-llvm:
     cmds:
+      - cmd: sudo bash -c "{{.PROJECT_ROOT}}/build-aux/install-llvm.sh"
       - cmd: sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
       - cmd: >-
           sudo apt-get update
@@ -40,7 +44,8 @@ tasks:
           && sudo apt-get upgrade -y
           && (sudo ln -s "$(command -v clang-format-18)" /usr/local/bin/clang-format || true)
     status:
-      - test -x "/usr/local/bin/clang-format"
+      - test -x $(command -v clang-format-18)
+      - test -x $(command -v clang-format)
 
   format:
     deps: [install]
