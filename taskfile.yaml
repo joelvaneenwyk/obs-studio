@@ -108,9 +108,8 @@ tasks:
         ignore_error: true
       - cmd: git rm --cached -r {{.PREFIX}}
         ignore_error: true
-      - cmd: git add .
+      - cmd: git add . && git commit -m "Updated submodule '{{.PREFIX}}'"
         ignore_error: true
-      - cmd: git commit -m "Updated submodule '{{.PREFIX}}'"
       # - task: git-add-streamfx-subtree
       #   vars:
       #     SUBMODULE_URL: "{{ .SUBMODULE_URL }}"
