@@ -109,12 +109,12 @@ tasks:
         ignore_error: true
       - cmd: git add . && git commit -m "Updated submodule '{{.PREFIX}}'"
         ignore_error: true
-      # - task: git-add-streamfx-subtree
-      #   vars:
-      #     SUBMODULE_URL: "{{ .SUBMODULE_URL }}"
-      #     SUBMODULE_PATH: "{{ .SUBMODULE_PATH }}"
-      #     SUBMODULE_COMMIT: "{{ .SUBMODULE_COMMIT }}"
-      #     SUBMODULE_BRANCH: "{{ .SUBMODULE_BRANCH }}"
+      - task: git-add-streamfx-subtree
+        vars:
+          SUBMODULE_URL: "{{ .SUBMODULE_URL }}"
+          SUBMODULE_PATH: "{{ .SUBMODULE_PATH }}"
+          SUBMODULE_COMMIT: "{{ .SUBMODULE_COMMIT }}"
+          SUBMODULE_BRANCH: "{{ .SUBMODULE_BRANCH }}"
 
   streamfx-update-submodules:
     vars:
@@ -126,24 +126,24 @@ tasks:
           - path: "cmake/version"
             commit: 3bef96bafab04161991c2cd98a1ed51f6362d670
             url: "https://github.com/Xaymar/cmake-version.git"
-          # - path: "third-party/nlohmann-json"
-          #   commit: db78ac1d7716f56fc9f1b030b715f872f93964e4
-          #   url: "https://github.com/nlohmann/json.git"
-          # - path: "third-party/msvc-redist-helper"
-          #   commit: aa4665ccf68a382f1c2b115fb6c9668b6a8bd64d
-          #   url: "https://github.com/Xaymar/msvc-redist-helper.git"
-          # - path: "third-party/nvidia-maxine-ar-sdk"
-          #   commit: ca10ac3b3984357aab84b3c6319d35c82d49e836
-          #   url: "https://github.com/NVIDIA/MAXINE-AR-SDK.git"
-          # - path: "third-party/nvidia-maxine-vfx-sdk"
-          #   commit: f63d9d1dbd14c905d56648817f132d3eb9a8690d
-          #   url: "https://github.com/NVIDIA/MAXINE-VFX-SDK.git"
-          # - path: "third-party/obs-studio"
-          #   commit: abb80571351438bebd018a45d896b26f95881fbe
-          #   url: "https://github.com/obsproject/obs-studio.git"
-          # - path: "third-party/nvidia-maxine-afx-sdk"
-          #   commit: 4d4ed8d8aca914f4dbf8570f1626cf4108e19bb4
-          #   url: "https://github.com/NVIDIA/MAXINE-AFX-SDK.git"
+          - path: "third-party/nlohmann-json"
+            commit: db78ac1d7716f56fc9f1b030b715f872f93964e4
+            url: "https://github.com/nlohmann/json.git"
+          - path: "third-party/msvc-redist-helper"
+            commit: aa4665ccf68a382f1c2b115fb6c9668b6a8bd64d
+            url: "https://github.com/Xaymar/msvc-redist-helper.git"
+          - path: "third-party/nvidia-maxine-ar-sdk"
+            commit: ca10ac3b3984357aab84b3c6319d35c82d49e836
+            url: "https://github.com/NVIDIA/MAXINE-AR-SDK.git"
+          - path: "third-party/nvidia-maxine-vfx-sdk"
+            commit: f63d9d1dbd14c905d56648817f132d3eb9a8690d
+            url: "https://github.com/NVIDIA/MAXINE-VFX-SDK.git"
+          - path: "third-party/obs-studio"
+            commit: abb80571351438bebd018a45d896b26f95881fbe
+            url: "https://github.com/obsproject/obs-studio.git"
+          - path: "third-party/nvidia-maxine-afx-sdk"
+            commit: 4d4ed8d8aca914f4dbf8570f1626cf4108e19bb4
+            url: "https://github.com/NVIDIA/MAXINE-AFX-SDK.git"
         task: streamfx-update-submodule
         vars:
           SUBMODULE_URL: "{{ .ITEM.url }}"
