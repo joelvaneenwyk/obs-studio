@@ -33,6 +33,8 @@
 
 # [joelvaneenwyk]
 !/taskfile.yaml
+!/llvm.sh
+!/.gitignore
 !/.idea/
 !/.vscode/
 !/.cspell/

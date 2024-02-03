@@ -57,7 +57,7 @@ indent_size = 4
 indent_style = space
 indent_size = 2
 
-[{*.zsh,.*.zsh,build-aux/run-*,build-aux/.functions/*,.github/scripts/utils.zsh/*}]
+[{*.sh,*.zsh,.*.zsh,build-aux/run-*,build-aux/.functions/*,.github/scripts/utils.zsh/*}]
 indent_style = space
 indent_size = 2
 end_of_line = lf
