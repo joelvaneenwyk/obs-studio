@@ -33,6 +33,7 @@
 
 # [joelvaneenwyk]
 !/taskfile.yaml
+!/.idea/
 !/.vscode/
 !/.cspell/
 !/cspell.config.yaml
