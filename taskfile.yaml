@@ -69,21 +69,19 @@ tasks:
         ignore_error: true
 
   git-add-streamfx-subtree:
+    internal: true
     requires:
-      vars: [SUBMODULE_PATH, SUBMODULE_URL, SUBMODULE_COMMIT, SUBMODULE_BRANCH]
+      vars: [PREFIX, SUBMODULE_PATH, SUBMODULE_URL, SUBMODULE_COMMIT, SUBMODULE_BRANCH]
     vars:
-      ROOT: "{{.TASKFILE_DIR}}"
       STREAMFX_ROOT: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx"
-      PREFIX: "UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
       SUBMODULE_ABS_PATH: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
     cmds:
-      - cmd: echo hi
       # - cmd: git rm --cached -r "{{.PREFIX}}"
       #   ignore_error: true
       # - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .SUBMODULE_ABS_PATH}}" rmdir /q /s "{{fromSlash .SUBMODULE_ABS_PATH}}"{{end}}'
       # - task: commit-changes
       # - cmd: >-
-      #     git -C "{{fromSlash .ROOT}}" subtree add
+      #     git -C "{{fromSlash .TASKFILE_DIR}}" subtree add
       #     --debug
       #     --prefix="UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
       #     --message="Add '{{.SUBMODULE_URL}}' to '{{.SUBMODULE_PATH}}'"
@@ -99,10 +97,7 @@ tasks:
     requires:
       vars: [SUBMODULE_PATH, SUBMODULE_URL, SUBMODULE_COMMIT, SUBMODULE_BRANCH]
     vars:
-      ROOT: "{{.TASKFILE_DIR}}"
-      STREAMFX_ROOT: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx"
       PREFIX: "UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
-      SUBMODULE_ABS_PATH: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
     cmds:
       - task: commit-taskfile
       - cmd: git rm --cached -r {{.PREFIX}}
@@ -150,42 +145,6 @@ tasks:
           SUBMODULE_PATH: "{{ .ITEM.path }}"
           SUBMODULE_COMMIT: "{{ .ITEM.commit }}"
           SUBMODULE_BRANCH: "master"
-
-  streamfx-add-submodules:
-    # deps: [streamfx-remove-cached]
-    cmds:
-      - task: add-submodule
-        vars: { TARGET: "UI/frontend-plugins/streamfx/cmake/clang", URL: "https://github.com/Xaymar/cmake-clang.git" }
-      # # url = https://github.com/Xaymar/cmake-version.git
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/cmake/version"
-      #   ignore_error: true
-      # # url = https://github.com/nlohmann/json.git
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nlohmann-json"
-      #   ignore_error: true
-      # # url = https://github.com/Xaymar/msvc-redist-helper.git
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/msvc-redist-helper"
-      #   ignore_error: true
-      # # url = https://github.com/NVIDIA/MAXINE-AR-SDK.git
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-ar-sdk"
-      #   ignore_error: true
-      # # url = https://github.com/NVIDIA/MAXINE-VFX-SDK.git
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-vfx-sdk"
-      #   ignore_error: true
-      # # url = https://github.com/obsproject/obs-studio.git
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/obs-studio"
-      #   ignore_error: true
-      # # url = https://github.com/NVIDIA/MAXINE-AFX-SDK.git
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/third-party/nvidia-maxine-afx-sdk"
-      #   ignore_error: true
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/obs-outputs/ftl-sdk"
-      #   ignore_error: true
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/obs-websocket"
-      #   ignore_error: true
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/obs-browser"
-      #   ignore_error: true
-      # - cmd: git rm --cached "UI/frontend-plugins/streamfx/plugins/win-dshow/libdshowcapture"
-      #   ignore_error: true
-      # - cmd: git submodule update --init --recursive --checkout
 
   #
   # Internal helper tasks
