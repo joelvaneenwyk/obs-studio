@@ -167,6 +167,7 @@ tasks:
           SUBMODULE_URL: "{{ .ITEM.url }}"
           SUBMODULE_PATH: "{{ .ITEM.path }}"
           SUBMODULE_BRANCH: "{{ .ITEM.branch }}"
+      - cmd: git submodule update --init --recursive --checkout
 
   streamfx-update-submodules:
     vars:
