@@ -1,13 +1,24 @@
 # Custom Dictionary Words
+adoc
 autostash
 cmds
 deinit
 dshow
+endlocal
+ERRORLEVEL
+gitmodules
 libdshowcapture
 msvc
 nlohmann
 pkill
 redist
+setlocal
+startdir
+STARTDIR
 streamfx
 STREAMFX
 TASKFILE
+USERPROFILE
+VSCMD
+VSINSTALLDIR
+wbem

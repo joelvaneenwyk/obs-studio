@@ -73,18 +73,23 @@ tasks:
       PREFIX: "UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
       SUBMODULE_ABS_PATH: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
     cmds:
-      - cmd: git rm --cached -r "{{.PREFIX}}"
-        ignore_error: true
-      # - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .SUBMODULE_ABS_PATH}}" rmdir /q /s "{{fromSlash .SUBMODULE_ABS_PATH}}"{{end}}'
-      # - task: commit-changes
-      # - cmd: >-
-      #     git -C "{{fromSlash .ROOT}}" subtree add
-      #     --debug
-      #     --prefix="UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
-      #     --message="Add '{{.SUBMODULE_URL}}' to '{{.SUBMODULE_PATH}}'"
-      #     --squash
-      #     {{.SUBMODULE_URL}}
-      #     {{.SUBMODULE_COMMIT}}
+      - cmd: echo '{{joinPath .STREAMFX_ROOT "README.adoc"}}'
+      #- cmd: git rm --cached -r "{{.PREFIX}}"
+      #  ignore_error: true
+      #- cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .SUBMODULE_ABS_PATH}}" rmdir /q /s "{{fromSlash .SUBMODULE_ABS_PATH}}"{{end}}'
+      #- task: commit-changes
+      #- cmd: >-
+      #    git -C "{{fromSlash .ROOT}}" subtree add
+      #    --debug
+      #    --prefix="UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
+      #    --message="Add '{{.SUBMODULE_URL}}' to '{{.SUBMODULE_PATH}}'"
+      #    --squash
+      #    {{.SUBMODULE_URL}}
+      #    {{.SUBMODULE_COMMIT}}
+    status:
+      # Submodule is considered updated if the path exists and the '.gitmodules' file does not exist since
+      # it means we have removed the submodule already and now using a subtree.
+      - 'test ! -d {{.STREAMFX_ROOT}} || test ! -f {{joinPath .STREAMFX_ROOT ".gitmodules"}}'
 
   commit-taskfile:
     cmds:
@@ -95,8 +100,8 @@ tasks:
   streamfx-update-submodules:
     vars:
     cmds:
-      - task: commit-taskfile
-        ignore_error: true
+      # - task: commit-taskfile
+      #   ignore_error: true
       - for:
           - path: "cmake/clang"
             commit: 7e577af2e963e3dfcce611942fce305c70583b2a
