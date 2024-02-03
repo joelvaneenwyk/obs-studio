@@ -13,6 +13,9 @@ charset = utf-8
 indent_style = tab
 indent_size = 8
 
+[.gitattributes]
+indent_style = space
+
 # As per notr1ch, for 3rd party code that's a part of obs-outputs.
 [plugins/obs-outputs/librtmp/*.{cpp,c,h}]
 indent_style = space
