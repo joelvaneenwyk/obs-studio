@@ -63,8 +63,12 @@ tasks:
       - git add . && git commit -m "Updated files"
     ignore_error: true
 
-  streamfx-update-submodule:
-    desc: "Build a go binary specific to an architecture and operating system"
+  commit-taskfile:
+    cmds:
+      - git add taskfile.yaml
+      - git commit -m "Update taskfile.yaml"
+
+  git-add-streamfx-subtree:
     requires:
       vars: [SUBMODULE_PATH, SUBMODULE_URL, SUBMODULE_COMMIT, SUBMODULE_BRANCH]
     vars:
@@ -73,35 +77,50 @@ tasks:
       PREFIX: "UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
       SUBMODULE_ABS_PATH: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
     cmds:
-      - cmd: echo '{{joinPath .STREAMFX_ROOT "README.adoc"}}'
-      #- cmd: git rm --cached -r "{{.PREFIX}}"
-      #  ignore_error: true
-      #- cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .SUBMODULE_ABS_PATH}}" rmdir /q /s "{{fromSlash .SUBMODULE_ABS_PATH}}"{{end}}'
-      #- task: commit-changes
-      #- cmd: >-
-      #    git -C "{{fromSlash .ROOT}}" subtree add
-      #    --debug
-      #    --prefix="UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
-      #    --message="Add '{{.SUBMODULE_URL}}' to '{{.SUBMODULE_PATH}}'"
-      #    --squash
-      #    {{.SUBMODULE_URL}}
-      #    {{.SUBMODULE_COMMIT}}
+      - cmd: echo hi
+      # - cmd: git rm --cached -r "{{.PREFIX}}"
+      #   ignore_error: true
+      # - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .SUBMODULE_ABS_PATH}}" rmdir /q /s "{{fromSlash .SUBMODULE_ABS_PATH}}"{{end}}'
+      # - task: commit-changes
+      # - cmd: >-
+      #     git -C "{{fromSlash .ROOT}}" subtree add
+      #     --debug
+      #     --prefix="UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
+      #     --message="Add '{{.SUBMODULE_URL}}' to '{{.SUBMODULE_PATH}}'"
+      #     --squash
+      #     {{.SUBMODULE_URL}}
+      #     {{.SUBMODULE_COMMIT}}
     status:
       # Submodule is considered updated if the path exists and the '.gitmodules' file does not exist since
       # it means we have removed the submodule already and now using a subtree.
       - 'test ! -d {{.STREAMFX_ROOT}} || test ! -f {{joinPath .STREAMFX_ROOT ".gitmodules"}}'
 
-  commit-taskfile:
+  streamfx-update-submodule:
+    requires:
+      vars: [SUBMODULE_PATH, SUBMODULE_URL, SUBMODULE_COMMIT, SUBMODULE_BRANCH]
+    vars:
+      ROOT: "{{.TASKFILE_DIR}}"
+      STREAMFX_ROOT: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx"
+      PREFIX: "UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
+      SUBMODULE_ABS_PATH: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx/{{.SUBMODULE_PATH}}"
     cmds:
-      - git add taskfile.yaml
-      - git commit -m "Update taskfile.yaml"
-      - git push
+      - task: commit-taskfile
+        ignore_error: true
+      - cmd: git rm --cached -r {{.PREFIX}}
+        ignore_error: true
+      - cmd: git add .
+        ignore_error: true
+      - cmd: git commit -m "Updated submodule '{{.PREFIX}}'"
+      # - task: git-add-streamfx-subtree
+      #   vars:
+      #     SUBMODULE_URL: "{{ .SUBMODULE_URL }}"
+      #     SUBMODULE_PATH: "{{ .SUBMODULE_PATH }}"
+      #     SUBMODULE_COMMIT: "{{ .SUBMODULE_COMMIT }}"
+      #     SUBMODULE_BRANCH: "{{ .SUBMODULE_BRANCH }}"
 
   streamfx-update-submodules:
     vars:
     cmds:
-      - task: commit-taskfile
-        ignore_error: true
       - for:
           - path: "cmake/clang"
             commit: 7e577af2e963e3dfcce611942fce305c70583b2a
