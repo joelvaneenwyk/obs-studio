@@ -33,12 +33,13 @@
 
 # [joelvaneenwyk]
 !/taskfile.yaml
-!/llvm.sh
 !/.gitignore
 !/.idea/
 !/.vscode/
 !/.cspell/
 !/cspell.config.yaml
+!/*.bat
+!/*.cmd
 
 # Exclude lock files
 *.lock.json

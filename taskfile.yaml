@@ -8,7 +8,7 @@ vars:
   OUTPUT_DIRECTORY: "{{.USER_WORKING_DIR}}/.build"
   PROJECT_ROOT: "{{.TASKFILE_DIR}}"
   STREAMFX_DIR: "{{.TASKFILE_DIR}}/UI/frontend-plugins/streamfx"
-
+  GIT: 'git -C "{{fromSlash .PROJECT_ROOT}}"'
 env:
   UnityPath: C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor\Unity.exe
 
@@ -19,13 +19,12 @@ tasks:
 
   pull:
     cmds:
-      - cmd: git pull --rebase --autostash
+      - cmd: "{{.GIT}} pull --rebase --autostash"
 
   build:
     cmds:
       # https://github.com/obsproject/obs-studio/wiki/build-instructions-for-windows
-      # - git -C "{{fromSlash .PROJECT_ROOT}}" submodule init
-      - git -C "{{fromSlash .PROJECT_ROOT}}" submodule update --init --recursive
+      - '{{.GIT}} submodule update --init --recursive'
       - cmake --preset windows-x64
       - cmake --build --preset windows-x64
     silent: false
@@ -54,6 +53,7 @@ tasks:
         platforms: [linux, darwin]
 
   streamfx-add:
+    internal: true
     cmds:
       - cmd: >-
           git -C "{{fromSlash .PROJECT_ROOT}}" subtree add
@@ -67,6 +67,7 @@ tasks:
     silent: false
 
   streamfx-update:
+    internal: true
     deps: [streamfx-add]
     cmds:
       - cmd: >-
@@ -75,6 +76,7 @@ tasks:
           https://github.com/joelvaneenwyk/obs-StreamFX.git develop
 
   streamfx-remove:
+    internal: true
     cmds:
       - cmd: 'cmd /D /C rmdir /Q /S "{{fromSlash .STREAMFX_DIR}}"'
     status:
@@ -82,11 +84,13 @@ tasks:
     silent: false
 
   commit-changes:
+    internal: true
     cmds:
       - git add . && git commit -m "Updated files"
     ignore_error: true
 
   commit-taskfile:
+    internal: true
     cmds:
       - cmd: git add taskfile.yaml && git commit -m "Update taskfile.yaml"
         ignore_error: true

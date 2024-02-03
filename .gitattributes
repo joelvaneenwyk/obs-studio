@@ -1,17 +1,14 @@
 *                                   text=auto
 ####################################
-run-*                               text eol=lf
-build-aux/.functions/*              text eol=lf
-*.zsh                               text eol=lf
 .*.zsh                              text eol=lf
-build-aux/run-*                     text eol=lf
-build-aux/.functions/*              text eol=lf
 .github/scripts/utils.zsh/*         text eol=lf
 *.zsh                               text eol=lf
+build-aux/.functions/*              text eol=lf
+build-aux/run-*                     text eol=lf
+run-*                               text eol=lf
+####################################
 *.sln                               text eol=crlf
 *.vcproj                            text eol=crlf
 *.vcxproj                           text eol=crlf
-*.vcxproj                           text eol=crlf
 *.vcxproj.filters                   text eol=crlf
-####################################
 cmake/ALL_BUILD.vcxproj.user.in     text eol=crlf
