@@ -100,8 +100,8 @@ tasks:
   streamfx-update-submodules:
     vars:
     cmds:
-      # - task: commit-taskfile
-      #   ignore_error: true
+      - task: commit-taskfile
+        ignore_error: true
       - for:
           - path: "cmake/clang"
             commit: 7e577af2e963e3dfcce611942fce305c70583b2a
