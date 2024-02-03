@@ -98,7 +98,10 @@ tasks:
   refresh:
     deps: [commit-taskfile]
     cmds:
-      - cmd: git add --renormalize . # Update index with renormalized files
+      # https://stackoverflow.com/a/15646791/6994974
+      - cmd: git read-tree --empty # Clean index, force re-scan of working directory
+      - cmd: git add .
+      # - cmd: git add --renormalize . # Update index with renormalized files
       - cmd: git status # Show the files that will be normalized
       # - cmd: git commit -m "Introduce end-of-line normalization"
       # - cmd: git rm --cached -r .
