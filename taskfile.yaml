@@ -3,7 +3,7 @@
 version: "3"
 
 vars:
-  RM1: '{{if eq .OS "Windows_NT"}}powershell -NoProfile -Command Remove-Item -Recurse -Force {{else}}rm -rf{{end}}'
+  RMF: '{{if eq .OS "Windows_NT"}}powershell -NoProfile -Command Remove-Item -Recurse -Force {{else}}rm -rf{{end}}'
   RM: '{{if eq .OS "Windows_NT"}}cmd /d /c rmdir /q /s{{else}}rm -rf{{end}}'
   OUTPUT_DIRECTORY: "{{.USER_WORKING_DIR}}/.build"
   PROJECT_ROOT: "{{.TASKFILE_DIR}}"
@@ -12,6 +12,9 @@ vars:
   OBS_INSTALL_PATH: "{{.TASKFILE_DIR}}/build_x64/install"
   OBS_INSTALL_BIN_PATH: "{{.TASKFILE_DIR}}/build_x64/install/bin/64bit"
   OBS_INSTALL_BIN_EXE: "{{.OBS_INSTALL_BIN_PATH}}/obs64.exe"
+  VS2019: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+  VS2022: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+  DEV_RUN: '{{if eq .OS "Windows_NT"}}cmd /d /c "{{fromSlash .VS2022}}" && cmake --build --preset windows-x64{{else}}cmake --build --preset linux-x64{{end}}'
 
 env:
   UnityPath: C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor\Unity.exe
@@ -49,7 +52,7 @@ tasks:
     cmds:
       - cmd: pwsh -NoProfile -File .github/scripts/Build-Windows.ps1
         platforms: [windows]
-      # - '{{if eq .OS "Windows_NT"}}cmd /d /c "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" && cmake --build --preset windows-x64{{else}}cmake --build --preset linux-x64{{end}}'
+      -
 
   install:
     deps: [install-llvm]
