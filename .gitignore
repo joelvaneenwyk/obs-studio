@@ -33,6 +33,7 @@
 
 # [joelvaneenwyk]
 !/taskfile.yaml
+!/.env
 !/.gitignore
 !/.idea/
 !/.vscode/
