@@ -8,6 +8,7 @@ endlocal
 ERRORLEVEL
 gitmodules
 libdshowcapture
+msbuild
 msvc
 nlohmann
 pkill
