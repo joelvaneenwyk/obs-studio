@@ -14,10 +14,9 @@ vars:
   OBS_INSTALL_BIN_EXE: "{{.OBS_INSTALL_BIN_PATH}}/obs64.exe"
   VS2019: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
   VS2022: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-  DEV_RUN: '{{if eq .OS "Windows_NT"}}cmd /d /c "{{fromSlash .VS2022}}" && cmake --build --preset windows-x64{{else}}cmake --build --preset linux-x64{{end}}'
+  DEV_RUN: '{{if eq .OS "Windows_NT"}}cmd /d /c call "{{fromSlash .VS2022}}" -startdir="${PROJECT_ROOT}" -app_platform=Desktop -no_logo -no_ext -arch=x64 -host_arch=x64" &&{{end}}'
 
 env:
-  UnityPath: C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor\Unity.exe
   InstallPath: "{{.TASKFILE_DIR}}/build_x64/install/bin/64bit"
 
 tasks:
@@ -30,6 +29,10 @@ tasks:
     deps: [build-ci]
     cmds:
       - cmd: "{{fromSlash .OBS_INSTALL_BIN_EXE}}"
+
+  msbuild:
+    cmds:
+      - cmd: "{{.DEV_RUN}} msbuild --version"
 
   pull:
     cmds:
