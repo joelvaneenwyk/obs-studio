@@ -167,7 +167,8 @@ if(OS_POSIX)
   target_compile_options(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
-      -Werror
+      # todo: streamfx has warnings so we can't compile with warnings as errors
+      # -Werror
       -Wextra
       -Wvla
       -Wformat

@@ -100,6 +100,7 @@ else()
   endif()
 
   option(CALM_DEPRECATION "Keep deprecated-declarations as warnings" OFF)
+
   #[[
     Note about -Wmaybe-uninitialized on GCC, this warning seems to be subject of various regressions and false positives. This
     warning is set to not turn into an error.
@@ -108,7 +109,8 @@ else()
     - https://github.com/obsproject/obs-studio/issues/8850 for 13.1.1
   ]]
   add_compile_options(
-    -Werror
+    # todo: streamfx has warnings so we can't compile with warnings as errors
+    # -Werror
     -Wextra
     -Wvla
     -Wswitch

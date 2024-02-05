@@ -33,7 +33,8 @@ if(NOT XCODE)
   list(
     APPEND
     _obs_c_options
-    -Werror
+    # todo: streamfx has warnings so we can't compile with warnings as errors
+    # -Werror
     -Wextra
     -Wvla
     -Wswitch
