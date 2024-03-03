@@ -36,8 +36,15 @@ tasks:
       # https://github.com/obsproject/obs-studio/wiki/build-instructions-for-windows
       - cmd: "{{.GIT}} submodule update --init --recursive"
       - cmd: cmake --preset "{{.PRESET}}"
-      - cmd: cmake --build --preset "{{.PRESET}}" --Wno-dev
+      # - cmd: cmake --build --preset "{{.PRESET}}" --Wno-dev
+      - cmd: cmake --build --preset "{{.PRESET}}" --target install --config RelWithDebInfo
     silent: false
+
+  run:
+    # deps: [build-ci]
+    cmds:
+      - cmd: build_x64/rundir/RelWithDebInfo/bin/64bit/obs64.exe # "{{fromSlash .OBS_INSTALL_BIN_EXE}}"
+        cwd: build_x64/rundir/RelWithDebInfo/bin/64bit/
 
   push:
     cmds:
@@ -50,12 +57,6 @@ tasks:
     cmds:
       - cmd: pwsh -NoProfile -File .github/scripts/Build-Windows.ps1
         platforms: [windows]
-      -
-
-  run:
-    deps: [build-ci]
-    cmds:
-      - cmd: "{{fromSlash .OBS_INSTALL_BIN_EXE}}"
 
   msbuild:
     cmds:
