@@ -35,8 +35,8 @@ tasks:
     cmds:
       # https://github.com/obsproject/obs-studio/wiki/build-instructions-for-windows
       - cmd: "{{.GIT}} submodule update --init --recursive"
-      - cmd: cmake --no-dev --preset "{{.PRESET}}"
-      - cmd: cmake --no-dev --build --preset "{{.PRESET}}"
+      - cmd: cmake --preset "{{.PRESET}}"
+      - cmd: cmake --build --preset "{{.PRESET}}" --Wno-dev
     silent: false
 
   push:
