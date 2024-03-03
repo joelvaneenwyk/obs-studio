@@ -84,7 +84,7 @@ if(OS_WINDOWS AND MSVC)
     /Zc:preprocessor)
 
   add_link_options(
-    "LINKER:/Brepro" "LINKER:/OPT:REF" "LINKER:/WX" "$<$<NOT:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>>:LINKER\:/SAFESEH\:NO>"
+    "LINKER:/Brepro" "LINKER:/OPT:REF" "$<$<NOT:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>>:LINKER\:/SAFESEH\:NO>"
     "$<$<CONFIG:DEBUG>:LINKER\:/INCREMENTAL\:NO>" "$<$<CONFIG:RELWITHDEBINFO>:LINKER\:/INCREMENTAL\:NO;/OPT:ICF>")
 else()
   find_program(CCACHE_PROGRAM "ccache")
@@ -156,7 +156,7 @@ endif()
 
 if(LOWERCASE_CMAKE_SYSTEM_PROCESSOR MATCHES "(i[3-6]86|x86|x64|x86_64|amd64|e2k)")
   if(NOT MSVC AND NOT CMAKE_OSX_ARCHITECTURES STREQUAL "arm64")
-    set(ARCH_SIMD_FLAGS -mmmx -msse -msse2)
+    #set(ARCH_SIMD_FLAGS -mmmx -msse -msse2)
   endif()
 elseif(LOWERCASE_CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64(le)?")
   set(ARCH_SIMD_DEFINES -DNO_WARN_X86_INTRINSICS)

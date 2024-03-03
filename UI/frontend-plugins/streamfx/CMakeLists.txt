@@ -523,6 +523,7 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 
 		# - Disable useless warnings
 		set(DISABLED_WARNINGS
+
 			# Don't warn about unused variables, parameters, labels, functions, or typedefs.
 			"4100"
 			"4101"
@@ -531,36 +532,55 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 			"4514"
 			"5245"
 			"5264"
+
 			# Don't warn about unreferenced variables or parameters which are assigned/initialized.
 			"4189"
+
 			# Don't warn about not-explicitly-handled enumeration identifiers
 			"4061"
+
 			# Ignore automatic padding warnings.
 			"4820"
+
 			# Ignore assignment/move/copy being implicit '= delete;'.
 			"4623"
 			"4625"
 			"4626"
 			"5026"
 			"5027"
+
 			# Relative include paths are fine.
 			"4464"
+
 			# Buggy warning: printf expects string literal
 			"4774"
+
 			# Buggy warning: subobject initialization should be wrapped in braces
 			"5246"
+
 			# Ignore undefined, unused or unreferenced pre-processor macros
 			"4688"
+
 			# Ignore non-inlined functions
 			"4710"
+
 			# Ignore Spectre mitigation insertions
 			"5045"
+
 			# Ignore inserted padding.
 			"4324"
+
 			# Ignore non-standard nameless struct/union.
 			"4201"
+
 			# Intended behavior: Replace undefined macros with 0
 			"4668"
+
+			# Implicit assignment operator
+			"5267"
+
+			# Fallthrough
+			"5262"
 		)
 		foreach(WARN ${DISABLED_WARNINGS})
 			target_compile_options(${TARGET_NAME} PRIVATE "/wd${WARN}")
@@ -803,10 +823,10 @@ function(streamfx_add_component COMPONENT_NAME)
 	else()
 		set(_DEPENDS "${COMPONENT_SANITIZED_NAME}")
 	endif()
-	set_target_properties(StreamFX PROPERTIES 
+	set_target_properties(StreamFX PROPERTIES
 		COMPONENT_DEPENDS "${_DEPENDS}"
 	)
-	
+
 	# If there is a resolver function, register it.
 	if(_ARG_RESOLVER)
 		set_target_properties(${COMPONENT_TARGET} PROPERTIES
@@ -847,7 +867,7 @@ function(streamfx_add_component COMPONENT_NAME)
 	file(GLOB_RECURSE UI_PUBLIC FOLLOW_SYMLINKS CONFIGURE_DEPENDS "include/ui/*")
 	file(GLOB_RECURSE GENERATED_PUBLIC FOLLOW_SYMLINKS CONFIGURE_DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/include/*")
 	source_group(TREE "${CMAKE_CURRENT_BINARY_DIR}/include" PREFIX "Public Files/Generated" FILES ${GENERATED_PUBLIC})
-	
+
 	target_sources(${COMPONENT_TARGET}
 		PRIVATE
 			${DATA}
@@ -867,7 +887,7 @@ function(streamfx_add_component COMPONENT_NAME)
 		PROPERTIES
 			HEADER_FILE_ONLY ON
 	)
-	
+
 	# Enable Qt if needed
 	set_target_properties(${TARGET_NAME} PROPERTIES
 		AUTOUIC ON
@@ -903,7 +923,7 @@ function(streamfx_has_component _NAME _OUTPUT)
 	streamfx_sanitize_name("${_NAME}" _NAME _TARGET _OPTION)
 
 	set(${_OUTPUT} OFF PARENT_SCOPE)
-	if(TARGET "StreamFX_${_TARGET}")		
+	if(TARGET "StreamFX_${_TARGET}")
 		set(${_OUTPUT} ON PARENT_SCOPE)
 	endif()
 endfunction()
@@ -918,7 +938,7 @@ function(streamfx_enabled_component _NAME _OUTPUT)
 	set(${_OUTPUT} OFF PARENT_SCOPE)
 	if(${_OPTION} AND NOT (${_OPTION}_DISABLED))
 		set(${_OUTPUT} ON PARENT_SCOPE)
-	endif()	
+	endif()
 endfunction()
 
 # Use this to add a dependency on another component.
@@ -964,7 +984,7 @@ function(streamfx_disable_component _NAME)
 		message(WARNING "Not disabling invalid component '${_NAME}'.")
 		return()
 	endif()
-	
+
 	get_target_property(_LABEL ${_TARGET} COMPONENT_LABEL)
 	get_target_property(_OPTION ${_TARGET} COMPONENT_OPTION)
 
@@ -1044,7 +1064,7 @@ target_link_libraries(StreamFX_Core
 )
 
 # Default Include Dirs
-target_include_directories(StreamFX_Core 
+target_include_directories(StreamFX_Core
 	PRIVATE
 		"${PROJECT_SOURCE_DIR}/source/ui"
 		"${PROJECT_BINARY_DIR}/qt"
@@ -1240,7 +1260,7 @@ endforeach()
 #- Resolve Dependencies in a loop
 set(_UNRESOLVED_LOOP 0)
 while(_UNRESOLVED)
-	MATH(EXPR _UNRESOLVED_LOOP "${_UNRESOLVED_LOOP}+1")	
+	MATH(EXPR _UNRESOLVED_LOOP "${_UNRESOLVED_LOOP}+1")
 	if(_UNRESOLVED_LOOP GREATER_EQUAL 10)
 		message(FATAL_ERROR "Infinite loop while resolving components: ${_UNRESOLVED}")
 	endif()
@@ -1248,13 +1268,13 @@ while(_UNRESOLVED)
 	# Attempt to resolve while there are still unresolved entries.
 	foreach(_ENTITY ${_UNRESOLVED})
 		set(RENTITY "StreamFX_${_ENTITY}")
-		
+
 		get_target_property(_ALIAS "${RENTITY}" COMPONENT_NAME)
 		get_target_property(_LABEL "${RENTITY}" COMPONENT_LABEL)
 		get_target_property(_OPTION "${RENTITY}" COMPONENT_OPTION)
 		get_target_property(_DEPENDS "${RENTITY}" COMPONENT_DEPENDS)
 		get_target_property(_RESOLVER "${RENTITY}" COMPONENT_RESOLVER)
-	
+
 		# Remove any that have been disabled.
 		if(NOT ${_OPTION})
 			message(STATUS "[${_LABEL}] Disabled by user.")
@@ -1276,7 +1296,7 @@ while(_UNRESOLVED)
 			foreach(_DEPEND ${_DEPENDS})
 				list(GET _DEPEND 0 _ENTITY2)
 				set(RENTITY2 "StreamFX_${_ENTITY2}")
-				
+
 				get_target_property(_ENTITY2_LABEL "${RENTITY2}" COMPONENT_LABEL)
 
 				if(NOT ("OPTIONAL" IN_LIST _DEPEND))
@@ -1357,7 +1377,7 @@ target_link_libraries(StreamFX PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,StreamFX_Core
 ################################################################################
 # Resources
 ################################################################################
-# This needs to be handled separately, as CMake does not propagate Resources 
+# This needs to be handled separately, as CMake does not propagate Resources
 # between dependencies. This feels like a bug in CMake, but it is better than
 # not doing anything at all. Might eventually need to revise this when we start
 # generating data files.

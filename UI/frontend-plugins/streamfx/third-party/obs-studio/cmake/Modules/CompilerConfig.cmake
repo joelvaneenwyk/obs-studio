@@ -42,6 +42,7 @@ if(OS_WINDOWS AND MSVC)
   list(GET WINAPI_VER 2 WINAPI_VER_BUILD)
 
   set(WINAPI_COMPATIBLE FALSE)
+
   if(WINAPI_VER_MAJOR EQUAL 10)
     if(WINAPI_VER_MINOR EQUAL 0)
       if(WINAPI_VER_BUILD GREATER_EQUAL 20348)
@@ -56,14 +57,16 @@ if(OS_WINDOWS AND MSVC)
 
   if(NOT WINAPI_COMPATIBLE)
     obs_status(FATAL_ERROR "OBS requires Windows 10 SDK version 10.0.20348.0 and above to compile.\n"
-               "Please download the most recent Windows 10 SDK in order to compile.")
+      "Please download the most recent Windows 10 SDK in order to compile.")
   endif()
 
   add_compile_options(
     /Brepro
     /MP
     /W3
-    /WX
+
+    # todo: streamfx has warnings so we can't compile with warnings as errors
+    # /WX
     /wd4127
     /wd4201
     /wd4456
@@ -83,14 +86,15 @@ if(OS_WINDOWS AND MSVC)
     /Zc:preprocessor)
 
   add_link_options(
-    "LINKER:/Brepro" "LINKER:/OPT:REF" "LINKER:/WX" "$<$<NOT:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>>:LINKER\:/SAFESEH\:NO>"
+    "LINKER:/Brepro" "LINKER:/OPT:REF" "$<$<NOT:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>>:LINKER\:/SAFESEH\:NO>"
     "$<$<CONFIG:DEBUG>:LINKER\:/INCREMENTAL\:NO>" "$<$<CONFIG:RELWITHDEBINFO>:LINKER\:/INCREMENTAL\:NO;/OPT:ICF>")
 else()
   find_program(CCACHE_PROGRAM "ccache")
   set(CCACHE_SUPPORT
-      ON
-      CACHE BOOL "Enable ccache support")
+    ON
+    CACHE BOOL "Enable ccache support")
   mark_as_advanced(CCACHE_PROGRAM)
+
   if(CCACHE_PROGRAM AND CCACHE_SUPPORT)
     set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
     set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
@@ -109,6 +113,7 @@ else()
     - https://github.com/obsproject/obs-studio/issues/8850 for 13.1.1
   ]]
   add_compile_options(
+
     # todo: streamfx has warnings so we can't compile with warnings as errors
     # -Werror
     -Wextra
@@ -141,8 +146,8 @@ else()
 
   if(MINGW)
     set(CMAKE_WIDL
-        "widl"
-        CACHE INTERNAL "wine IDL header file generation program")
+      "widl"
+      CACHE INTERNAL "wine IDL header file generation program")
     add_compile_definitions("_WIN32_WINNT=0x0600;WINVER=0x0600")
   endif()
 endif()
@@ -155,7 +160,7 @@ endif()
 
 if(LOWERCASE_CMAKE_SYSTEM_PROCESSOR MATCHES "(i[3-6]86|x86|x64|x86_64|amd64|e2k)")
   if(NOT MSVC AND NOT CMAKE_OSX_ARCHITECTURES STREQUAL "arm64")
-    set(ARCH_SIMD_FLAGS -mmmx -msse -msse2)
+    # set(ARCH_SIMD_FLAGS -mmmx -msse -msse2)
   endif()
 elseif(LOWERCASE_CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64(le)?")
   set(ARCH_SIMD_DEFINES -DNO_WARN_X86_INTRINSICS)
@@ -165,8 +170,8 @@ else()
     check_c_compiler_flag("-fopenmp-simd" C_COMPILER_SUPPORTS_OPENMP_SIMD)
     check_cxx_compiler_flag("-fopenmp-simd" CXX_COMPILER_SUPPORTS_OPENMP_SIMD)
     set(ARCH_SIMD_FLAGS
-        -DSIMDE_ENABLE_OPENMP "$<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:C_COMPILER_SUPPORTS_OPENMP_SIMD>>:-fopenmp-simd>"
-        "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:CXX_COMPILER_SUPPORTS_OPENMP_SIMD>>:-fopenmp-simd>")
+      -DSIMDE_ENABLE_OPENMP "$<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:C_COMPILER_SUPPORTS_OPENMP_SIMD>>:-fopenmp-simd>"
+      "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:CXX_COMPILER_SUPPORTS_OPENMP_SIMD>>:-fopenmp-simd>")
   endif()
 endif()
 
@@ -181,12 +186,15 @@ if(LOWERCASE_CMAKE_SYSTEM_PROCESSOR MATCHES "e2k")
     "-Wno-bad-return-value-type"
     "-Wno-maybe-uninitialized")
     check_c_compiler_flag(${TEST_C_FLAG} C_COMPILER_SUPPORTS_FLAG_${TEST_C_FLAG})
+
     if(C_COMPILER_SUPPORTS_FLAG_${TEST_C_FLAG})
       set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${TEST_C_FLAG})
     endif()
   endforeach()
+
   foreach(TEST_CXX_FLAG "-Wno-invalid-offsetof" "-Wno-maybe-uninitialized")
     check_cxx_compiler_flag(${TEST_CXX_FLAG} CXX_COMPILER_SUPPORTS_FLAG_${TEST_CXX_FLAG})
+
     if(CXX_COMPILER_SUPPORTS_FLAG_${TEST_CXX_FLAG})
       set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${TEST_CXX_FLAG})
     endif()
