@@ -18,9 +18,9 @@ cmake_minimum_required(VERSION 3.26)
 list(APPEND CMAKE_MESSAGE_INDENT "[StreamFX] ")
 project(StreamFX)
 
-################################################################################
+# ###############################################################################
 # Modules
-################################################################################
+# ###############################################################################
 
 # Search Paths
 set(CMAKE_MODULE_PATH
@@ -46,9 +46,9 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang/Clang.cmake")
 	include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang/Clang.cmake")
 endif()
 
-################################################################################
+# ###############################################################################
 # Bootstrapping
-################################################################################
+# ###############################################################################
 
 # MacOSX: Require at least MacOSX 10.15 for C++17 support.
 if(APPLE)
@@ -65,7 +65,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_LIST_DIR}")
 else()
 	set(GROUPED ON)
 	set(PREFIX "StreamFX_")
-	if(GROUPED AND ((TARGET libobs) OR (TARGET OBS::libobs)))
+	if(GROUPED AND((TARGET libobs) OR(TARGET OBS::libobs)))
 		set(STANDALONE OFF)
 	endif()
 endif()
@@ -141,25 +141,31 @@ set(D_PLATFORM_INSTR ${ARCH_INST})
 set(D_PLATFORM_ARCH ${ARCH_INST})
 message(STATUS "Target is ${D_PLATFORM_BITS}bit ${ARCH_INST} with a pointer size of ${D_PLATFORM_BITS_PTR}bit.")
 
-################################################################################
+# ###############################################################################
 # Versioning
-################################################################################
-
-version(GENERATE _VERSION COMPRESSED MAJOR 0 MINOR 0 PATCH 0 TWEAK 0 REQUIRE "PATCH;")
+# ###############################################################################
+version(GENERATE _VERSION COMPRESSED MAJOR 99 MINOR 0 PATCH 0 TWEAK 0 REQUIRE "PATCH;")
 version(PARSE _VERSION "${_VERSION}" REQUIRE "PATCH;TWEAK")
 
+if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+	set(GIT_ROOT "${CMAKE_SOURCE_DIR}")
+else()
+	set(GIT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
+endif()
+
 # If possible, automatically generate versions from git.
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/.git")
+if(EXISTS "${GIT_ROOT}/.git")
 	find_program(GIT
 		NAMES
-			git
-			git.exe
+		git
+		git.exe
 	)
 
 	if(EXISTS "${GIT}")
 		# Try and calculate the exist version using git.
-		execute_process(COMMAND "${GIT}" describe --tags --long --abbrev=8 HEAD WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR} RESULT_VARIABLE GIT_RESULT OUTPUT_VARIABLE GIT_OUTPUT ERROR_VARIABLE GIT_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
-		if((GIT_RESULT EQUAL 0) AND (NOT "${GIT_OUTPUT}" STREQUAL ""))
+		execute_process(COMMAND "${GIT}" describe --tags --long --abbrev=8 HEAD WORKING_DIRECTORY ${GIT_ROOT} RESULT_VARIABLE GIT_RESULT OUTPUT_VARIABLE GIT_OUTPUT ERROR_VARIABLE GIT_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+
+		if((GIT_RESULT EQUAL 0) AND(NOT "${GIT_OUTPUT}" STREQUAL ""))
 			# Result will be MAJOR.MINOR.PATCH-TWEAK-gHASH
 			string(REPLACE "-" ";" GIT_OUTPUT "${GIT_OUTPUT}")
 			string(REPLACE "." ";" GIT_OUTPUT "${GIT_OUTPUT}")
@@ -205,8 +211,9 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/.git")
 				)
 			endif()
 		else()
-			execute_process(COMMAND "${GIT}" rev-list --count HEAD WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR} RESULT_VARIABLE GIT_RESULT OUTPUT_VARIABLE GIT_OUTPUT ERROR_VARIABLE GIT_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
-			if((GIT_RESULT EQUAL 0) AND (NOT "${GIT_OUTPUT}" STREQUAL ""))
+			execute_process(COMMAND "${GIT}" rev-list --count HEAD WORKING_DIRECTORY ${GIT_ROOT} RESULT_VARIABLE GIT_RESULT OUTPUT_VARIABLE GIT_OUTPUT ERROR_VARIABLE GIT_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+
+			if((GIT_RESULT EQUAL 0) AND(NOT "${GIT_OUTPUT}" STREQUAL ""))
 				version(MODIFY _VERSION "${_VERSION}" COMPRESS
 					TWEAK "${GIT_OUTPUT}"
 					PRERELEASE "a"
@@ -214,8 +221,9 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/.git")
 				)
 
 				# Determine the build using git.
-				execute_process(COMMAND "${GIT}" log -1 "--pretty=format:g%h" --abbrev=8 HEAD WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR} RESULT_VARIABLE GIT_RESULT OUTPUT_VARIABLE GIT_OUTPUT ERROR_VARIABLE GIT_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
-				if((GIT_RESULT EQUAL 0) AND (NOT "${GIT_OUTPUT}" STREQUAL ""))
+				execute_process(COMMAND "${GIT}" log -1 "--pretty=format:g%h" --abbrev=8 HEAD WORKING_DIRECTORY ${GIT_ROOT} RESULT_VARIABLE GIT_RESULT OUTPUT_VARIABLE GIT_OUTPUT ERROR_VARIABLE GIT_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+
+				if((GIT_RESULT EQUAL 0) AND(NOT "${GIT_OUTPUT}" STREQUAL ""))
 					version(MODIFY _VERSION "${_VERSION}" COMPRESS
 						BUILD "${GIT_OUTPUT}"
 						REQUIRE "PATCH;TWEAK"
@@ -236,7 +244,7 @@ endif()
 version(PARSE _VERSION "${_VERSION}" REQUIRE "PATCH;TWEAK")
 
 # Allow manual overrides of the detected version.
-if(NOT ("${${PREFIX}VERSION}" STREQUAL ""))
+if(NOT("${${PREFIX}VERSION}" STREQUAL ""))
 	version(PARSE _VERSION_CFG "${${PREFIX}VERSION}" REQUIRE "PATCH;TWEAK")
 	if("${_VERSION_CFG_BUILD}" STREQUAL "")
 		set(_VERSION_CFG_BUILD "${_VERSION_BUILD}")
@@ -252,19 +260,19 @@ if(NOT ("${${PREFIX}VERSION}" STREQUAL ""))
 endif()
 
 set(_VERSION_THIN "${_VERSION_MAJOR}.${_VERSION_MINOR}.${_VERSION_PATCH}")
-if(NOT (_VERSION_PRERELEASE STREQUAL ""))
+if(NOT(_VERSION_PRERELEASE STREQUAL ""))
 	set(_VERSION_THIN "${_VERSION_THIN}${_VERSION_PRERELEASE}${_VERSION_TWEAK}")
 endif()
-if(NOT (VERSION_COMMIT STREQUAL ""))
+if(NOT(VERSION_COMMIT STREQUAL ""))
 	set(_VERSION_THIN "${_VERSION_THIN}-${_VERSION_BUILD}")
 endif()
 
 # Parse & Log the detected version.
 message(STATUS "Version ${_VERSION_THIN}")
 
-################################################################################
+# ###############################################################################
 # Options
-################################################################################
+# ###############################################################################
 
 # Don't enable stability affecting features by default.
 if(_VERSION_PRERELEASE STREQUAL "a")
@@ -325,9 +333,9 @@ if(STANDALONE)
 endif()
 set(AOM_DIR "" CACHE PATH "Path to AOM library")
 
-################################################################################
+# ###############################################################################
 # Project
-################################################################################
+# ###############################################################################
 
 # Metadata
 version(GENERATE PROJECT_VERSION
@@ -387,11 +395,11 @@ endif()
 
 set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "User-Interface Files/Generated")
 
-################################################################################
+# ###############################################################################
 # Dependencies
-################################################################################
+# ###############################################################################
 
-#- OBS: Library
+# - OBS: Library
 if(STANDALONE)
 	find_package("libobs" REQUIRED CONFIG)
 elseif(NOT TARGET OBS::libobs)
@@ -409,12 +417,12 @@ if(D_PLATFORM_MAC)
 		set(libobs_IMPORTED_LOCATION_RELEASE "${libobs_IMPORTED_LOCATION_RELEASE}/Headers")
 		set_target_properties(OBS::libobs PROPERTIES
 			INTERFACE_INCLUDE_DIRECTORIES
-				"${libobs_IMPORTED_LOCATION_RELEASE}"
+			"${libobs_IMPORTED_LOCATION_RELEASE}"
 		)
 	endif()
 endif()
 
-#- OBS: Front-End API
+# - OBS: Front-End API
 if(STANDALONE)
 	find_package("obs-frontend-api" CONFIG)
 	set(obs-frontend-api_FOUND "${obs-frontend-api_FOUND}")
@@ -425,10 +433,10 @@ if(NOT TARGET OBS::obs-frontend-api)
 	add_library(OBS::obs-frontend-api ALIAS obs-frontend-api)
 endif()
 
-#- CURL
+# - CURL
 find_package("CURL")
 
-#- JSON
+# - JSON
 if(NOT EXISTS "${PROJECT_SOURCE_DIR}/third-party/nlohmann-json/single_include")
 	message(FATAL_ERROR "Please make sure to update git submodules to their latest supported version.")
 	return()
@@ -436,15 +444,15 @@ else()
 	set(JSON_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/third-party/nlohmann-json/single_include")
 endif()
 
-#- Qt 6
+# - Qt 6
 find_package("Qt6"
 	COMPONENTS Core Gui Widgets
 	CONFIG
 )
 
-################################################################################
+# ###############################################################################
 # Helpers
-################################################################################
+# ###############################################################################
 define_property(TARGET PROPERTY COMPONENT_LABEL)
 define_property(TARGET PROPERTY COMPONENT_NAME)
 define_property(TARGET PROPERTY COMPONENT_OPTION)
@@ -489,21 +497,21 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 	if(D_PLATFORM_WINDOWS)
 		target_compile_definitions(${TARGET_NAME}
 			PUBLIC
-				# Microsoft Visual C++
-				_CRT_SECURE_NO_WARNINGS
-				_ENABLE_EXTENDED_ALIGNED_STORAGE
+			# Microsoft Visual C++
+			_CRT_SECURE_NO_WARNINGS
+			_ENABLE_EXTENDED_ALIGNED_STORAGE
 
 			PUBLIC
-				# windows.h
-				# - Disable MIN/MAX macro as this breaks a lot of code.
-				NOMINMAX
-				# - Disable IN/OUT macro as this breaks a lot of code.
-				NOINOUT
+			# windows.h
+			# - Disable MIN/MAX macro as this breaks a lot of code.
+			NOMINMAX
+			# - Disable IN/OUT macro as this breaks a lot of code.
+			NOINOUT
 		)
 	endif()
 
 	# C/C++ Compiler Adjustments
-	if(D_PLATFORM_WINDOWS AND ((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")))
+	if(D_PLATFORM_WINDOWS AND((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") OR(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")))
 		# MSVC/ClangCL
 
 		# - Dynamically link Microsoft C/C++ Redistributable.
@@ -549,6 +557,17 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 			"5026"
 			"5027"
 
+			# Hides data
+			"4456"
+			"4457"
+			"4496"
+			"4996"
+			"4264"
+			"4267"
+			"4365"
+			"5219"
+			"4714"
+
 			# Relative include paths are fine.
 			"4464"
 
@@ -574,6 +593,9 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 			"4201"
 
 			# Intended behavior: Replace undefined macros with 0
+			"4263"
+
+			# Intended behavior: Replace undefined macros with 0
 			"4668"
 
 			# Implicit assignment operator
@@ -597,7 +619,7 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 			elseif(${PREFIX}TARGET_X86_64_V2)
 				target_compile_options(${TARGET_NAME} PRIVATE "/d2archSSE42")
 			elseif(${PREFIX}TARGET_X86_64)
-				#target_compile_options(${TARGET_NAME} PRIVATE "/arch:SSE2")
+				# target_compile_options(${TARGET_NAME} PRIVATE "/arch:SSE2")
 			endif()
 		endif()
 
@@ -623,7 +645,7 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 
 		# - Enable updated __cplusplus macro
 		target_compile_options(${TARGET_NAME} PRIVATE "/Zc:__cplusplus")
-	elseif(D_PLATFORM_LINUX AND ((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")))
+	elseif(D_PLATFORM_LINUX AND((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")))
 		# GCC/Clang
 
 		# - Enable all warnings.
@@ -721,9 +743,9 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 			)
 		endif()
 
-		# - Don't export by default, require attributes.
-		# add_compile_options("-fvisibility=hidden")
-	elseif(D_PLATFORM_MAC AND (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
+	# - Don't export by default, require attributes.
+	# add_compile_options("-fvisibility=hidden")
+	elseif(D_PLATFORM_MAC AND(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
 		# AppleClang
 
 		# - Enable most useful warnings.
@@ -841,9 +863,9 @@ function(streamfx_add_component COMPONENT_NAME)
 	# Add common include directories
 	target_include_directories(${COMPONENT_TARGET}
 		PRIVATE
-			"${CMAKE_CURRENT_SOURCE_DIR}/source"
+		"${CMAKE_CURRENT_SOURCE_DIR}/source"
 		PUBLIC
-			"${CMAKE_CURRENT_SOURCE_DIR}/include"
+		"${CMAKE_CURRENT_SOURCE_DIR}/include"
 	)
 
 	# Add files in common places.
@@ -870,13 +892,13 @@ function(streamfx_add_component COMPONENT_NAME)
 
 	target_sources(${COMPONENT_TARGET}
 		PRIVATE
-			${DATA}
-			${TEMPLATES}
-			${USERINTERFACE}
-			${SOURCE_PRIVATE}
-			${GENERATED_PRIVATE}
-			${SOURCE_PUBLIC}
-			${GENERATED_PUBLIC}
+		${DATA}
+		${TEMPLATES}
+		${USERINTERFACE}
+		${SOURCE_PRIVATE}
+		${GENERATED_PRIVATE}
+		${SOURCE_PUBLIC}
+		${GENERATED_PUBLIC}
 	)
 
 	# Ignore data only files.
@@ -885,7 +907,7 @@ function(streamfx_add_component COMPONENT_NAME)
 		${TEMPLATES}
 		${USERINTERFACE}
 		PROPERTIES
-			HEADER_FILE_ONLY ON
+		HEADER_FILE_ONLY ON
 	)
 
 	# Enable Qt if needed
@@ -903,19 +925,19 @@ function(streamfx_add_component COMPONENT_NAME)
 		${SOURCE_PUBLIC}
 		${GENERATED_PUBLIC}
 		PROPERTIES
-			SKIP_AUTOGEN ON
-			SKIP_AUTOMOC ON
-			SKIP_AUTORCC ON
-			SKIP_AUTOUIC ON
+		SKIP_AUTOGEN ON
+		SKIP_AUTOMOC ON
+		SKIP_AUTORCC ON
+		SKIP_AUTOUIC ON
 	)
 	set_source_files_properties(
 		${UI_PRIVATE}
 		${UI_PUBLIC}
 		PROPERTIES
-			SKIP_AUTOGEN OFF
-			SKIP_AUTOMOC OFF
-			SKIP_AUTORCC OFF
-			SKIP_AUTOUIC OFF
+		SKIP_AUTOGEN OFF
+		SKIP_AUTOMOC OFF
+		SKIP_AUTORCC OFF
+		SKIP_AUTOUIC OFF
 	)
 endfunction()
 
@@ -936,7 +958,7 @@ function(streamfx_enabled_component _NAME _OUTPUT)
 
 	get_target_property(_OPTION "StreamFX_${_TARGET}" COMPONENT_OPTION)
 	set(${_OUTPUT} OFF PARENT_SCOPE)
-	if(${_OPTION} AND NOT (${_OPTION}_DISABLED))
+	if(${_OPTION} AND NOT(${_OPTION}_DISABLED))
 		set(${_OUTPUT} ON PARENT_SCOPE)
 	endif()
 endfunction()
@@ -975,7 +997,7 @@ function(streamfx_disable_component _NAME)
 	)
 
 	streamfx_sanitize_name("${_NAME}" _NAME _TARGET _OPTION)
-	if(NOT (_TARGET MATCHES "^StreamFX_"))
+	if(NOT(_TARGET MATCHES "^StreamFX_"))
 		set(_TARGET "StreamFX_${_TARGET}")
 	endif()
 
@@ -994,21 +1016,21 @@ function(streamfx_disable_component _NAME)
 	endif()
 endfunction()
 
-################################################################################
+# ###############################################################################
 # Register Library
-################################################################################
+# ###############################################################################
 streamfx_add_library(StreamFX MODULE) # We are a module for libOBS.
 
 # Ensure there is at least one file.
 if(D_PLATFORM_WINDOWS)
 	target_sources(StreamFX
 		PRIVATE
-			"source/windll.cpp"
+		"source/windll.cpp"
 	)
 else()
 	target_sources(StreamFX
 		PRIVATE
-			"/dev/null"
+		"/dev/null"
 	)
 endif()
 
@@ -1037,9 +1059,9 @@ set_target_properties(StreamFX PROPERTIES
 	VERSION ${PROJECT_VERSION}
 )
 
-################################################################################
+# ###############################################################################
 # Add Core
-################################################################################
+# ###############################################################################
 streamfx_add_library(StreamFX_Core STATIC EXCLUDE_FROM_ALL)
 add_library(StreamFX::Core ALIAS StreamFX_Core)
 
@@ -1055,24 +1077,24 @@ set_target_properties(StreamFX_Core PROPERTIES
 # Default Links
 target_link_libraries(StreamFX_Core
 	PUBLIC
-		CURL::libcurl
-		Qt6::Core
-		Qt6::Gui
-		Qt6::Widgets
-		OBS::obs-frontend-api
-		OBS::libobs
+	CURL::libcurl
+	Qt6::Core
+	Qt6::Gui
+	Qt6::Widgets
+	OBS::obs-frontend-api
+	OBS::libobs
 )
 
 # Default Include Dirs
 target_include_directories(StreamFX_Core
 	PRIVATE
-		"${PROJECT_SOURCE_DIR}/source/ui"
-		"${PROJECT_BINARY_DIR}/qt"
+	"${PROJECT_SOURCE_DIR}/source/ui"
+	"${PROJECT_BINARY_DIR}/qt"
 	PUBLIC
-		"${PROJECT_SOURCE_DIR}/source"
-		"${PROJECT_SOURCE_DIR}/include"
-		"${PROJECT_BINARY_DIR}/generated"
-		${JSON_INCLUDE_DIR}
+	"${PROJECT_SOURCE_DIR}/source"
+	"${PROJECT_SOURCE_DIR}/include"
+	"${PROJECT_BINARY_DIR}/generated"
+	${JSON_INCLUDE_DIR}
 )
 
 # Templates
@@ -1088,22 +1110,22 @@ set_source_files_properties(${PROJECT_TEMPLATES} PROPERTIES
 target_sources(StreamFX_Core PRIVATE ${PROJECT_TEMPLATES})
 
 # Generated
-#- config.hpp
+# - config.hpp
 configure_file(
 	"templates/config.hpp.in"
 	"generated/config.hpp"
 )
-#- version.hpp
+# - version.hpp
 configure_file(
 	"templates/version.hpp.in"
 	"generated/version.hpp"
 )
-#- module.cpp
+# - module.cpp
 configure_file(
 	"templates/module.cpp.in"
 	"generated/module.cpp"
 )
-#- Add all generated files
+# - Add all generated files
 file(GLOB_RECURSE PROJECT_PRIVATE_GENERATED FOLLOW_SYMLINKS CONFIGURE_DEPENDS "${PROJECT_BINARY_DIR}/generated/*")
 source_group(TREE "${PROJECT_BINARY_DIR}/generated" PREFIX "Private Files/Generated" FILES ${PROJECT_PRIVATE_GENERATED})
 set_source_files_properties(${PROJECT_PRIVATE_GENERATED} PROPERTIES
@@ -1155,7 +1177,7 @@ if(D_PLATFORM_WINDOWS)
 		WIN32_LEAN_AND_MEAN
 		NOGPICAPMASKS
 		NOVIRTUALKEYCODES
-		#NOWINMESSAGES
+		# NOWINMESSAGES
 		NOWINSTYLES
 		NOSYSMETRICS
 		NOMENUS
@@ -1163,31 +1185,31 @@ if(D_PLATFORM_WINDOWS)
 		NOKEYSTATES
 		NOSYSCOMMANDS
 		NORASTEROPS
-		#NOSHOWWINDOW
+		# NOSHOWWINDOW
 		NOATOM
 		NOCLIPBOARD
 		NOCOLOR
-		#NOCTLMGR
+		# NOCTLMGR
 		NODRAWTEXT
-		#NOGDI
+		# NOGDI
 		NOKERNEL
-		#NOUSER
-		#NONLS
+		# NOUSER
+		# NONLS
 		NOMB
 		NOMEMMGR
 		NOMETAFILE
 		NOMINMAX
-		#NOMSG
+		# NOMSG
 		NOOPENFILE
 		NOSCROLL
 		NOSERVICE
 		NOSOUND
-		#NOTEXTMETRIC
+		# NOTEXTMETRIC
 		NOWH
 		NOWINOFFSETS
 		NOCOMM
 		NOKANJI
-		#NOHELP
+		# NOHELP
 		NOPROFILER
 		NODEFERWINDOWPOS
 		NOMCX
@@ -1204,17 +1226,17 @@ if(NOT TARGET StreamFX::GLAD)
 	)
 	target_include_directories(StreamFX_GLAD
 		PUBLIC
-			"${PROJECT_SOURCE_DIR}/third-party/khronos/glad/include"
+		"${PROJECT_SOURCE_DIR}/third-party/khronos/glad/include"
 	)
 	if(D_PLATFORM_WINDOWS)
 		target_sources(StreamFX_GLAD
 			PRIVATE
-				"${PROJECT_SOURCE_DIR}/third-party/khronos/glad/src/wgl.c"
+			"${PROJECT_SOURCE_DIR}/third-party/khronos/glad/src/wgl.c"
 		)
 	elseif(D_PLATFORM_LINUX)
 		target_sources(StreamFX_GLAD
 			PRIVATE
-				"${PROJECT_SOURCE_DIR}/third-party/khronos/glad/src/glx.c"
+			"${PROJECT_SOURCE_DIR}/third-party/khronos/glad/src/glx.c"
 		)
 	endif()
 
@@ -1226,14 +1248,14 @@ endif()
 
 target_link_libraries(StreamFX_Core PUBLIC StreamFX::GLAD)
 
-################################################################################
+# ###############################################################################
 # Components
-################################################################################
+# ###############################################################################
 # As the above monolithic approach started to show its weaknesses, it was time
 # for an improved system which suffers under less issues. This new component
 # system should address the main necessary parts,
 
-#- Registration
+# - Registration
 file(GLOB COMPONENTS RELATIVE ${PROJECT_SOURCE_DIR} CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/components/*)
 foreach(COMPONENT ${COMPONENTS})
 	# Ignore directories with no CMakeLists.txt
@@ -1246,7 +1268,7 @@ get_target_property(_UNRESOLVED StreamFX COMPONENT_DEPENDS)
 set(_RESOLVED "")
 set(_DISABLED "")
 
-#- Cleanup
+# - Cleanup
 list(REMOVE_DUPLICATES _UNRESOLVED)
 foreach(_ENTITY ${_UNRESOLVED})
 	# Remove any invalid entries.
@@ -1257,7 +1279,7 @@ foreach(_ENTITY ${_UNRESOLVED})
 	endif()
 endforeach()
 
-#- Resolve Dependencies in a loop
+# - Resolve Dependencies in a loop
 set(_UNRESOLVED_LOOP 0)
 while(_UNRESOLVED)
 	MATH(EXPR _UNRESOLVED_LOOP "${_UNRESOLVED_LOOP}+1")
@@ -1299,7 +1321,7 @@ while(_UNRESOLVED)
 
 				get_target_property(_ENTITY2_LABEL "${RENTITY2}" COMPONENT_LABEL)
 
-				if(NOT ("OPTIONAL" IN_LIST _DEPEND))
+				if(NOT("OPTIONAL" IN_LIST _DEPEND))
 					if("${_ENTITY2}" IN_LIST _DISABLED)
 						message("[${_LABEL}] Required dependency '${_ENTITY2_LABEL}' is disabled.")
 						set(_HAS_DISABLED_DEPENDS ON)
@@ -1325,7 +1347,7 @@ while(_UNRESOLVED)
 			continue()
 		elseif(_HAS_UNRESOLVED_DEPENDS)
 			continue()
-		elseif(_HAS_UNRESOLVED_OPTIONAL_DEPENDS AND (_UNRESOLVED_LOOP LESS 8))
+		elseif(_HAS_UNRESOLVED_OPTIONAL_DEPENDS AND(_UNRESOLVED_LOOP LESS 8))
 			# Temporarily skip this element while there are still remaining loops.
 			continue()
 		endif()
@@ -1351,7 +1373,7 @@ while(_UNRESOLVED)
 	endforeach()
 endwhile()
 
-#- Linking
+# - Linking
 foreach(_ENTITY ${_RESOLVED})
 	set(RENTITY "StreamFX_${_ENTITY}")
 	get_target_property(_DEPENDS "${RENTITY}" COMPONENT_DEPENDS)
@@ -1374,9 +1396,9 @@ endforeach()
 
 target_link_libraries(StreamFX PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,StreamFX_Core>)
 
-################################################################################
+# ###############################################################################
 # Resources
-################################################################################
+# ###############################################################################
 # This needs to be handled separately, as CMake does not propagate Resources
 # between dependencies. This feels like a bug in CMake, but it is better than
 # not doing anything at all. Might eventually need to revise this when we start
@@ -1400,7 +1422,7 @@ endif()
 file(GLOB_RECURSE PROJECT_MEDIA "media/*")
 source_group(TREE "${PROJECT_SOURCE_DIR}/media" PREFIX "Media" FILES ${PROJECT_MEDIA})
 if(D_PLATFORM_MAC)
-	#- Bundle Icon location
+	# - Bundle Icon location
 	set_source_files_properties("media/icon.png" PROPERTIES
 		MACOSX_PACKAGE_LOCATION "Resources"
 	)
@@ -1412,9 +1434,9 @@ set_source_files_properties(${PROJECT_DATA} ${PROJECT_MEDIA} PROPERTIES
 )
 target_sources(StreamFX PRIVATE ${PROJECT_DATA} ${PROJECT_MEDIA})
 
-################################################################################
+# ###############################################################################
 # Installation
-################################################################################
+# ###############################################################################
 
 if(STANDALONE)
 	if(D_PLATFORM_WINDOWS)
@@ -1493,15 +1515,15 @@ if(STANDALONE)
 else()
 	if(COMMAND setup_plugin_target)
 		setup_plugin_target(StreamFX)
-		# Seems like we lost the ability to customize which directoy resources are in, and instead are forced to use '/data'.
+	# Seems like we lost the ability to customize which directoy resources are in, and instead are forced to use '/data'.
 	elseif(COMMAND install_obs_plugin_with_data)
 		install_obs_plugin_with_data(StreamFX data)
 	endif()
 endif()
 
-################################################################################
+# ###############################################################################
 # Packaging
-################################################################################
+# ###############################################################################
 
 if(STANDALONE)
 	# Packaging
@@ -1513,7 +1535,7 @@ if(STANDALONE)
 	set(_PACKAGE_FULL_NAME "${PACKAGE_PREFIX}/${PACKAGE_NAME}-${_PACKAGE_SUFFIX_OVERRIDE}")
 
 	if(D_PLATFORM_WINDOWS)
-		## Installer (InnoSetup)
+		# # Installer (InnoSetup)
 		get_filename_component(ISS_FILES_DIR "${CMAKE_INSTALL_PREFIX}" ABSOLUTE)
 		file(TO_NATIVE_PATH "${ISS_FILES_DIR}" ISS_FILES_DIR)
 
@@ -1542,7 +1564,7 @@ if(STANDALONE)
 		add_custom_target(
 			PACKAGE
 			${CMAKE_COMMAND} -E tar cfv "${_PACKAGE_FULL_NAME}.7z" --format=7zip --
-				"."
+			"."
 			WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}"
 		)
 	endif()
