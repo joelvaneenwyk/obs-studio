@@ -116,9 +116,9 @@ dynamic_mask_instance::dynamic_mask_instance(obs_data_t* settings, obs_source_t*
 	  _have_final(false), //
 	  _final_rt(), //
 	  _final_tex(), //
+	  _debug_texture(-1),//
 	  _channels(), //
-	  _precalc(), //
-	  _debug_texture(-1) //
+	  _precalc() //
 {
 	update(settings);
 }

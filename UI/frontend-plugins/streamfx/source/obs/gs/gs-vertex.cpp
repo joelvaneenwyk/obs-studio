@@ -39,7 +39,7 @@ streamfx::obs::gs::vertex::~vertex()
 	}
 }
 
-streamfx::obs::gs::vertex::vertex(vec3* p, vec3* n, vec3* t, uint32_t* col, vec4* uvs[MAXIMUM_UVW_LAYERS]) : position(p), normal(n), tangent(t), color(col), _has_store(false)
+streamfx::obs::gs::vertex::vertex(vec3* const p, vec3* const n, vec3* const t, uint32_t* const col, vec4* const uvs[MAXIMUM_UVW_LAYERS]) : position(p), normal(n), tangent(t), color(col), uv {}, _has_store(false), _store(nullptr)
 {
 	if (uvs != nullptr) {
 		for (std::size_t idx = 0; idx < MAXIMUM_UVW_LAYERS; idx++) {

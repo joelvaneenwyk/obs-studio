@@ -14,8 +14,9 @@ namespace streamfx::obs::gs {
 		uint32_t* color;
 		vec4*     uv[MAXIMUM_UVW_LAYERS];
 
-		vertex();
-		vertex(vec3* p, vec3* n, vec3* t, uint32_t* col, vec4* uv[MAXIMUM_UVW_LAYERS]);
+		explicit vertex();
+		vertex(const vertex& other) : vertex(other.position, other.normal, other.tangent, other.color, other.uv) {}
+		vertex(vec3* const p, vec3* const n, vec3* const t, uint32_t* const col, vec4* const uv[MAXIMUM_UVW_LAYERS]);
 		~vertex();
 
 		private:

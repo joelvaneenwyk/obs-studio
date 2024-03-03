@@ -24,6 +24,10 @@ namespace streamfx::obs::gs {
 		type          _type     = type::Normal;
 
 		public:
+		texture() : texture(0, 0, gs_color_format::GS_BGRA, 0, nullptr, streamfx::obs::gs::texture::flags::None) {
+
+		}
+		texture(const texture& other);
 		~texture();
 
 		/*!
@@ -82,6 +86,8 @@ namespace streamfx::obs::gs {
 		void load(int32_t unit);
 
 		gs_texture_t* get_object();
+
+		const gs_texture_t* get_object() const;
 
 		uint32_t get_width();
 

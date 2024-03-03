@@ -67,8 +67,8 @@ streamfx::ui::about::about() : QDialog(reinterpret_cast<QWidget*>(obs_frontend_g
 			throw std::runtime_error("File 'thanks.json' is corrupted.");
 		}
 
-		auto data = nlohmann::json::parse(fils);
-		if (auto iter = data.find("contributor"); iter != data.end()) {
+		auto json_data = nlohmann::json::parse(fils);
+		if (auto iter = json_data.find("contributor"); iter != json_data.end()) {
 			D_LOG_DEBUG("  Found %" PRIu64 " contributor entries.", iter->size());
 			auto kvs = iter->items();
 			for (auto kv : kvs) {
@@ -76,7 +76,7 @@ streamfx::ui::about::about() : QDialog(reinterpret_cast<QWidget*>(obs_frontend_g
 				entries.push_back(ui::about::entry{kv.key(), role_type::CONTRIBUTOR, "", kv.value().get<std::string>()});
 			}
 		}
-		if (auto iter = data.find("translator"); iter != data.end()) {
+		if (auto iter = json_data.find("translator"); iter != json_data.end()) {
 			D_LOG_DEBUG("  Found %" PRIu64 " translator entries.", iter->size());
 			auto kvs = iter->items();
 			for (auto kv : kvs) {
@@ -84,7 +84,7 @@ streamfx::ui::about::about() : QDialog(reinterpret_cast<QWidget*>(obs_frontend_g
 				entries.push_back(ui::about::entry{kv.key(), role_type::TRANSLATOR, "", kv.value().get<std::string>()});
 			}
 		}
-		if (auto iter = data.find("supporter"); iter != data.end()) {
+		if (auto iter = json_data.find("supporter"); iter != json_data.end()) {
 			auto data2 = *iter;
 			if (auto iter2 = data2.find("github"); iter2 != data2.end()) {
 				D_LOG_DEBUG("  Found %" PRIu64 " GitHub supporter entries.", iter2->size());

@@ -120,7 +120,7 @@ streamfx::util::threadpool::threadpool::~threadpool()
 	}
 }
 
-streamfx::util::threadpool::threadpool::threadpool(size_t minimum, size_t maximum) : _limits{minimum, maximum}, _workers_lock(), _worker_count(0), _workers(), _tasks_lock(), _tasks_cv(), _tasks()
+streamfx::util::threadpool::threadpool::threadpool(size_t minimum, size_t maximum) : _limits{minimum, maximum}, _workers_lock(), _workers(), _worker_count(0), _tasks_lock(), _tasks_cv(), _tasks()
 {
 	// Spawn the minimum number of threads.
 	spawn(_limits.first);

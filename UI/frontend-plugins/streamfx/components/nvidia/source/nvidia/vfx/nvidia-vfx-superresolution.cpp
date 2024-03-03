@@ -102,7 +102,7 @@ void streamfx::nvidia::vfx::superresolution::set_strength(float strength)
 	uint32_t value = (_strength >= .5f) ? 1u : 0u;
 	auto     gctx  = ::streamfx::obs::gs::context();
 	auto     cctx  = ::streamfx::nvidia::cuda::obs::get()->get_context()->enter();
-	if (auto res = set_float32(::streamfx::nvidia::vfx::PARAMETER_STRENGTH, value); res != ::streamfx::nvidia::cv::result::SUCCESS) {
+	if (auto res = set_float32(::streamfx::nvidia::vfx::PARAMETER_STRENGTH, static_cast<float>(value)); res != ::streamfx::nvidia::cv::result::SUCCESS) {
 		D_LOG_ERROR("Failed to set '%s' to %lu.", ::streamfx::nvidia::vfx::PARAMETER_STRENGTH, value);
 	};
 }

@@ -116,6 +116,8 @@ streamfx::obs::gs::texture::texture(std::string file)
 		throw std::runtime_error("Failed to load texture.");
 }
 
+streamfx::obs::gs::texture::texture(const streamfx::obs::gs::texture& other) : _texture(const_cast<gs_texture*>(other.get_object())), _is_owner(false) {}
+
 streamfx::obs::gs::texture::~texture()
 {
 	if (_is_owner && _texture) {
@@ -142,6 +144,11 @@ void streamfx::obs::gs::texture::load(int32_t unit)
 }
 
 gs_texture_t* streamfx::obs::gs::texture::get_object()
+{
+	return _texture;
+}
+
+const gs_texture_t* streamfx::obs::gs::texture::get_object() const
 {
 	return _texture;
 }
