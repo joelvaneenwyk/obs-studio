@@ -1,19 +1,27 @@
 # Custom Dictionary Words
 adoc
+AUTOMOC
+AUTORCC
 autostash
+AUTOUIC
 cmds
 deinit
 dshow
 endlocal
 ERRORLEVEL
 gitmodules
+kwargs
 libdshowcapture
 msbuild
 msvc
 nlohmann
+OBJC
+pargs
 pkill
 redist
+RPATH
 setlocal
+SOVERSION
 startdir
 STARTDIR
 streamfx
