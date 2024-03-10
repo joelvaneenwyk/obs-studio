@@ -35,9 +35,9 @@ tasks:
     cmds:
       # https://github.com/obsproject/obs-studio/wiki/build-instructions-for-windows
       - cmd: "{{.GIT}} submodule update --init --recursive"
-      - cmd: cmake --preset "{{.PRESET}}"
+      - cmd: cmake -DCMAKE_INSTALL_PREFIX:PATH=./bin --preset "{{.PRESET}}"
       # - cmd: cmake --build --preset "{{.PRESET}}" --Wno-dev
-      - cmd: cmake --build --preset "{{.PRESET}}" --target install --config RelWithDebInfo
+      - cmd: cmake -DCMAKE_INSTALL_PREFIX:PATH=./bin --build --preset "{{.PRESET}}"
     silent: false
 
   run:
