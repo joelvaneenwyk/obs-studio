@@ -12,7 +12,6 @@
 # - Explore RESOURCE property: https://cmake.org/cmake/help/latest/prop_tgt/RESOURCE.html
 # - Explore PUBLIC_HEADER property: https://cmake.org/cmake/help/latest/prop_tgt/PUBLIC_HEADER.html
 
-
 # CMake Setup
 cmake_minimum_required(VERSION 3.26)
 list(APPEND CMAKE_MESSAGE_INDENT "[StreamFX] ")
@@ -33,8 +32,10 @@ set(CMAKE_MODULE_PATH
 # Include required Modules
 # - Stock
 include("CheckIPOSupported")
+
 # - Custom
 include("util")
+
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cmake/version/version.cmake")
 	include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/version/version.cmake")
 else()
@@ -59,12 +60,14 @@ endif()
 
 # Check if this is standalone or bundled.
 set(STANDALONE ON)
+
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_LIST_DIR}")
 	set(GROUPED OFF)
 	set(PREFIX "")
 else()
 	set(GROUPED ON)
 	set(PREFIX "StreamFX_")
+
 	if(GROUPED AND((TARGET libobs) OR(TARGET OBS::libobs)))
 		set(STANDALONE OFF)
 	endif()
@@ -98,14 +101,17 @@ set(ARCH_INST "")
 
 # - Bitness
 list(FIND ARCH_INSTR_32 "${CMAKE_SYSTEM_PROCESSOR}" FOUND)
+
 if(FOUND GREATER -1)
 	set(ARCH_BITS 32)
 endif()
 
 list(FIND ARCH_INSTR_64 "${CMAKE_SYSTEM_PROCESSOR}" FOUND)
+
 if(FOUND GREATER -1)
 	set(ARCH_BITS 64)
 endif()
+
 set(D_PLATFORM_BITS ${ARCH_BITS})
 
 # - Pointer Size (bits)
@@ -114,6 +120,7 @@ set(D_PLATFORM_BITS_PTR ${ARCH_BITS_POINTER})
 
 # - Basic Instruction Set
 list(FIND ARCH_INSTR_X86 "${CMAKE_SYSTEM_PROCESSOR}" FOUND)
+
 if(FOUND GREATER -1)
 	list(APPEND ARCH_INST "x86")
 	set(D_PLATFORM_INSTR_X86 ON)
@@ -121,6 +128,7 @@ if(FOUND GREATER -1)
 endif()
 
 list(FIND ARCH_INSTR_ARM "${CMAKE_SYSTEM_PROCESSOR}" FOUND)
+
 if(FOUND GREATER -1)
 	list(APPEND ARCH_INST "ARM")
 	set(D_PLATFORM_INSTR_ARM ON)
@@ -128,6 +136,7 @@ if(FOUND GREATER -1)
 endif()
 
 list(FIND ARCH_INSTR_ITANIUM "${CMAKE_SYSTEM_PROCESSOR}" FOUND)
+
 if(FOUND GREATER -1)
 	list(APPEND ARCH_INST "Itanium")
 	set(D_PLATFORM_INSTR_ITANIUM ON)
@@ -181,11 +190,13 @@ if(EXISTS "${GIT_ROOT}/.git")
 			if(GIT_OUTPUT_PATCH MATCHES "([0-9]+)([a-zA-Z]+)([0-9]*)")
 				# Patch requires special parsing.
 				set(GIT_OUTPUT_PATCH "${CMAKE_MATCH_1}")
+
 				if(CMAKE_MATCH_3 GREATER 0)
 					set(GIT_OUTPUT_PRERELEASE "${CMAKE_MATCH_2}")
 				else()
 					set(GIT_OUTPUT_PRERELEASE "a")
 				endif()
+
 				MATH(EXPR GIT_OUTPUT_TWEAK "${GIT_OUTPUT_TWEAK} + ${CMAKE_MATCH_3}")
 
 				# Modify the global version
@@ -241,14 +252,17 @@ if(EXISTS "${GIT_ROOT}/.git")
 else()
 	message(STATUS "Not a git repository, automatic version detection disabled.")
 endif()
+
 version(PARSE _VERSION "${_VERSION}" REQUIRE "PATCH;TWEAK")
 
 # Allow manual overrides of the detected version.
 if(NOT("${${PREFIX}VERSION}" STREQUAL ""))
 	version(PARSE _VERSION_CFG "${${PREFIX}VERSION}" REQUIRE "PATCH;TWEAK")
+
 	if("${_VERSION_CFG_BUILD}" STREQUAL "")
 		set(_VERSION_CFG_BUILD "${_VERSION_BUILD}")
 	endif()
+
 	version(GENERATE _VERSION COMPRESS
 		MAJOR "${_VERSION_CFG_MAJOR}"
 		MINOR "${_VERSION_CFG_MINOR}"
@@ -260,9 +274,11 @@ if(NOT("${${PREFIX}VERSION}" STREQUAL ""))
 endif()
 
 set(_VERSION_THIN "${_VERSION_MAJOR}.${_VERSION_MINOR}.${_VERSION_PATCH}")
+
 if(NOT(_VERSION_PRERELEASE STREQUAL ""))
 	set(_VERSION_THIN "${_VERSION_THIN}${_VERSION_PRERELEASE}${_VERSION_TWEAK}")
 endif()
+
 if(NOT(VERSION_COMMIT STREQUAL ""))
 	set(_VERSION_THIN "${_VERSION_THIN}-${_VERSION_BUILD}")
 endif()
@@ -302,6 +318,7 @@ set(${PREFIX}VERSION "" CACHE STRING "Specify an override for the automatically 
 
 # Compile/Link Related
 set(${PREFIX}ENABLE_FASTMATH ON CACHE BOOL "Enable fast math optimizations, which sacrifice precision and stability.")
+
 if(D_PLATFORM_ARCH_X86)
 	set(${PREFIX}TARGET_X86_64_V4 OFF CACHE BOOL "Target x86-64-v4 (x86-64-v3, AVX512F, AVX512BW, AVX512CD, AVX512DQ, AVX512VL).")
 	set(${PREFIX}TARGET_X86_64_V3 OFF CACHE BOOL "Target x86-64-v3 (x86-64-v2, AVX, AVX2, BMI1, BMI2, F16C, FMA, LZCNT, MOVBE, OSXSAVE).")
@@ -309,6 +326,7 @@ if(D_PLATFORM_ARCH_X86)
 	set(${PREFIX}TARGET_X86_64_V2 ON CACHE BOOL "Target x86-64-v2 (x86-64, CMPXCHG16B, LAHF-SAHF, POPCNT, SSE3, SSE4.1, SSE4.2, SSSE3).")
 	set(${PREFIX}TARGET_X86_64 ON CACHE BOOL "Target x86-64 (CMOV, CX8, FPU, FXSR, MMX, OSFXSR, SCE, SSE, SSE2).")
 endif()
+
 if(NOT MSVC)
 	set(${PREFIX}TARGET_NATIVE OFF CACHE BOOL "Target the native CPU architecture. Enable it for development or personal builds, but disable it for distribution.")
 endif()
@@ -331,6 +349,7 @@ if(STANDALONE)
 	set(CURL_DIR "" CACHE PATH "Path to CURL")
 	set(FFmpeg_DIR "" CACHE PATH "Path to FFmpeg")
 endif()
+
 set(AOM_DIR "" CACHE PATH "Path to AOM library")
 
 # ###############################################################################
@@ -376,6 +395,7 @@ list(APPEND CMAKE_PREFIX_PATH
 	"${Qt6_DIR}"
 	"${QTDIR}"
 )
+
 if(D_PLATFORM_MAC)
 	list(APPEND CMAKE_PREFIX_PATH
 		"${${PREFIX}AOM_PATH}/Frameworks"
@@ -406,9 +426,11 @@ elseif(NOT TARGET OBS::libobs)
 	# Add the missing OBS::libobs alias target if possible.
 	add_library(OBS::libobs ALIAS libobs)
 endif()
+
 if(D_PLATFORM_MAC)
 	# We may need to reconstruct the include directories on MacOS.
 	get_target_property(libobs_INTERFACE_INCLUDE_DIRECTORIES OBS::libobs INTERFACE_INCLUDE_DIRECTORIES)
+
 	if("${libobs_INTERFACE_INCLUDE_DIRECTORIES}" STREQUAL "libobs_INTERFACE_INCLUDE_DIRECTORIES-NOTFOUND")
 		get_target_property(libobs_IMPORTED_LOCATION_RELEASE OBS::libobs IMPORTED_LOCATION_RELEASE)
 		get_filename_component(libobs_IMPORTED_LOCATION_RELEASE "${libobs_IMPORTED_LOCATION_RELEASE}" DIRECTORY)
@@ -429,6 +451,7 @@ if(STANDALONE)
 elseif(TARGET obs-frontend-api)
 	set(obs-frontend-api_FOUND ON)
 endif()
+
 if(NOT TARGET OBS::obs-frontend-api)
 	add_library(OBS::obs-frontend-api ALIAS obs-frontend-api)
 endif()
@@ -463,6 +486,7 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 	add_library(${TARGET_NAME} ${TARGET_TYPE})
 
 	set_target_properties(${TARGET_NAME} PROPERTIES
+
 		# Always generate position independent code.
 		POSITION_INDEPENDENT_CODE ON
 
@@ -477,14 +501,17 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 		PREFIX ""
 		IMPORT_PREFIX ""
 	)
+
 	if(D_PLATFORM_MAC)
 		set_target_properties(${TARGET_NAME} PROPERTIES
+
 			# @rpath in installed binaries
 			INSTALL_RPATH "@executable_path/../Frameworks/;@loader_path/../Frameworks/;@loader_path/../Resources/"
 		)
 
 		if(STANDALONE)
 			set_target_properties(${TARGET_NAME} PROPERTIES
+
 				# @rpath in built binaries
 				BUILD_WITH_INSTALL_RPATH ON
 			)
@@ -494,17 +521,21 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 	target_compile_definitions(${TARGET_NAME} PRIVATE
 		__STDC_WANT_LIB_EXT1__=1
 	)
+
 	if(D_PLATFORM_WINDOWS)
 		target_compile_definitions(${TARGET_NAME}
 			PUBLIC
+
 			# Microsoft Visual C++
 			_CRT_SECURE_NO_WARNINGS
 			_ENABLE_EXTENDED_ALIGNED_STORAGE
 
 			PUBLIC
+
 			# windows.h
 			# - Disable MIN/MAX macro as this breaks a lot of code.
 			NOMINMAX
+
 			# - Disable IN/OUT macro as this breaks a lot of code.
 			NOINOUT
 		)
@@ -603,7 +634,11 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 
 			# Fallthrough
 			"5262"
+
+			# Preprocessing token
+			"5103"
 		)
+
 		foreach(WARN ${DISABLED_WARNINGS})
 			target_compile_options(${TARGET_NAME} PRIVATE "/wd${WARN}")
 		endforeach()
@@ -628,6 +663,7 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 			target_compile_options(${TARGET_NAME} PRIVATE "/fp:fast")
 		else()
 			target_compile_options(${TARGET_NAME} PRIVATE "/fp:precise")
+
 			if(MSVC_VERSION GREATER 1930)
 				# Keep original behavior in VS2022 and up.
 				target_compile_options(${TARGET_NAME} PRIVATE "/fp:contract")
@@ -654,6 +690,7 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 
 		# - Disable useless warnings
 		set(DISABLED_WARNINGS
+
 			# Don't warn about unused variables, parameters, labels, functions, or typedefs.
 			"unused-function"
 			"unused-label"
@@ -663,19 +700,25 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 			"unused-const-variable"
 			"unused-variable"
 			"unused-value"
+
 			# Don't warn about unreferenced variables or parameters which are assigned/initialized.
 			"unused-but-set-parameter"
 			"unused-but-set-variable"
+
 			# Don't warn about not-explicitly-handled enumeration identifiers
 			"switch"
+
 			# Ignore automatic padding warnings.
 			"padded"
+
 			# Ignore implicit '= delete;'.
 			# Ignore extra arguments for printf
 			"format-extra-args"
+
 			# Ignore undefined, unused or unreferenced pre-processor macros
 			"unused-macros"
 		)
+
 		foreach(WARN ${DISABLED_WARNINGS})
 			target_compile_options(${TARGET_NAME} PRIVATE "-Wno-${WARN}")
 		endforeach()
@@ -715,6 +758,7 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 					"-march=x86-64"
 				)
 			endif()
+
 			if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 				target_compile_options(${TARGET_NAME} PRIVATE
 					"-mtune=generic"
@@ -754,6 +798,7 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 
 		# - Disable useless warnings
 		set(DISABLED_WARNINGS
+
 			# Don't warn about unused variables, parameters, labels, functions, or typedefs.
 			"unused-function"
 			"unused-label"
@@ -763,23 +808,28 @@ function(streamfx_add_library TARGET_NAME TARGET_TYPE)
 			"unused-const-variable"
 			"unused-variable"
 			"unused-value"
+
 			# Don't warn about unreferenced variables or parameters which are assigned/initialized.
 			"unused-but-set-parameter"
 			"unused-but-set-variable"
+
 			# Don't warn about not-explicitly-handled enumeration identifiers
 			"switch"
+
 			# Ignore automatic padding warnings.
 			"padded"
+
 			# Ignore implicit '= delete;'.
 			# Ignore extra arguments for printf
 			"format-extra-args"
+
 			# Ignore undefined, unused or unreferenced pre-processor macros
 			"unused-macros"
 		)
+
 		foreach(WARN ${DISABLED_WARNINGS})
 			target_compile_options(${TARGET_NAME} PRIVATE "-Wno-${WARN}")
 		endforeach()
-
 
 		# - Require enabled instruction sets.
 		if(${PREFIX}TARGET_NATIVE)
@@ -840,11 +890,13 @@ function(streamfx_add_component COMPONENT_NAME)
 
 	# Register the component globally.
 	get_target_property(_DEPENDS StreamFX COMPONENT_DEPENDS)
+
 	if(_DEPENDS)
 		list(APPEND _DEPENDS "${COMPONENT_SANITIZED_NAME}")
 	else()
 		set(_DEPENDS "${COMPONENT_SANITIZED_NAME}")
 	endif()
+
 	set_target_properties(StreamFX PROPERTIES
 		COMPONENT_DEPENDS "${_DEPENDS}"
 	)
@@ -945,6 +997,7 @@ function(streamfx_has_component _NAME _OUTPUT)
 	streamfx_sanitize_name("${_NAME}" _NAME _TARGET _OPTION)
 
 	set(${_OUTPUT} OFF PARENT_SCOPE)
+
 	if(TARGET "StreamFX_${_TARGET}")
 		set(${_OUTPUT} ON PARENT_SCOPE)
 	endif()
@@ -952,12 +1005,14 @@ endfunction()
 
 function(streamfx_enabled_component _NAME _OUTPUT)
 	streamfx_sanitize_name("${_NAME}" _NAME _TARGET _OPTION)
+
 	if(NOT TARGET "StreamFX_${_TARGET}")
 		message(FATAL_ERROR "Unknown component '${_NAME}'.")
 	endif()
 
 	get_target_property(_OPTION "StreamFX_${_TARGET}" COMPONENT_OPTION)
 	set(${_OUTPUT} OFF PARENT_SCOPE)
+
 	if(${_OPTION} AND NOT(${_OPTION}_DISABLED))
 		set(${_OUTPUT} ON PARENT_SCOPE)
 	endif()
@@ -974,17 +1029,21 @@ function(streamfx_add_component_dependency _NAME)
 	streamfx_sanitize_name("${_NAME}" _NAME _TARGET _OPTION)
 
 	set(DEPENDENCY "${_TARGET}")
+
 	if(_ARG_OPTIONAL)
 		list(APPEND DEPENDENCY "OPTIONAL")
 	endif()
+
 	string(REPLACE ";" "\\;" DEPENDENCY "${DEPENDENCY}")
 
 	get_target_property(DEPENDS "${COMPONENT_TARGET}" COMPONENT_DEPENDS)
+
 	if(DEPENDS)
 		list(APPEND DEPENDS "${DEPENDENCY}")
 	else()
 		set(DEPENDS "${DEPENDENCY}")
 	endif()
+
 	set_target_properties("${COMPONENT_TARGET}" PROPERTIES COMPONENT_DEPENDS "${DEPENDS}")
 endfunction()
 
@@ -997,6 +1056,7 @@ function(streamfx_disable_component _NAME)
 	)
 
 	streamfx_sanitize_name("${_NAME}" _NAME _TARGET _OPTION)
+
 	if(NOT(_TARGET MATCHES "^StreamFX_"))
 		set(_TARGET "StreamFX_${_TARGET}")
 	endif()
@@ -1011,6 +1071,7 @@ function(streamfx_disable_component _NAME)
 	get_target_property(_OPTION ${_TARGET} COMPONENT_OPTION)
 
 	CacheSet(${_OPTION}_DISABLED ON)
+
 	if(_ARG_REASON)
 		message(STATUS "[${_LABEL}] Disabled due to: ${_ARG_REASON}")
 	endif()
@@ -1051,7 +1112,9 @@ if(D_PLATFORM_WINDOWS) # Windows-exclusive
 		"${PROJECT_BINARY_DIR}/version.rc"
 	)
 endif()
+
 set_target_properties(StreamFX PROPERTIES
+
 	# Version
 	MACHO_COMPATIBILITY_VERSION ${_VERSION_MAJOR}.${_VERSION_MINOR}
 	SOVERSION ${_VERSION_MAJOR}.${_VERSION_MINOR}
@@ -1115,16 +1178,19 @@ configure_file(
 	"templates/config.hpp.in"
 	"generated/config.hpp"
 )
+
 # - version.hpp
 configure_file(
 	"templates/version.hpp.in"
 	"generated/version.hpp"
 )
+
 # - module.cpp
 configure_file(
 	"templates/module.cpp.in"
 	"generated/module.cpp"
 )
+
 # - Add all generated files
 file(GLOB_RECURSE PROJECT_PRIVATE_GENERATED FOLLOW_SYMLINKS CONFIGURE_DEPENDS "${PROJECT_BINARY_DIR}/generated/*")
 source_group(TREE "${PROJECT_BINARY_DIR}/generated" PREFIX "Private Files/Generated" FILES ${PROJECT_PRIVATE_GENERATED})
@@ -1170,13 +1236,16 @@ target_sources(StreamFX_Core PRIVATE ${PROJECT_UI})
 if(D_PLATFORM_WINDOWS)
 	# Disable/Enable a ton of things.
 	target_compile_definitions(StreamFX_Core PRIVATE
+
 		# Microsoft Visual C++
 		_CRT_SECURE_NO_WARNINGS
 		_ENABLE_EXTENDED_ALIGNED_STORAGE
+
 		# windows.h
 		WIN32_LEAN_AND_MEAN
 		NOGPICAPMASKS
 		NOVIRTUALKEYCODES
+
 		# NOWINMESSAGES
 		NOWINSTYLES
 		NOSYSMETRICS
@@ -1185,30 +1254,37 @@ if(D_PLATFORM_WINDOWS)
 		NOKEYSTATES
 		NOSYSCOMMANDS
 		NORASTEROPS
+
 		# NOSHOWWINDOW
 		NOATOM
 		NOCLIPBOARD
 		NOCOLOR
+
 		# NOCTLMGR
 		NODRAWTEXT
+
 		# NOGDI
 		NOKERNEL
+
 		# NOUSER
 		# NONLS
 		NOMB
 		NOMEMMGR
 		NOMETAFILE
 		NOMINMAX
+
 		# NOMSG
 		NOOPENFILE
 		NOSCROLL
 		NOSERVICE
 		NOSOUND
+
 		# NOTEXTMETRIC
 		NOWH
 		NOWINOFFSETS
 		NOCOMM
 		NOKANJI
+
 		# NOHELP
 		NOPROFILER
 		NODEFERWINDOWPOS
@@ -1228,6 +1304,7 @@ if(NOT TARGET StreamFX::GLAD)
 		PUBLIC
 		"${PROJECT_SOURCE_DIR}/third-party/khronos/glad/include"
 	)
+
 	if(D_PLATFORM_WINDOWS)
 		target_sources(StreamFX_GLAD
 			PRIVATE
@@ -1257,6 +1334,7 @@ target_link_libraries(StreamFX_Core PUBLIC StreamFX::GLAD)
 
 # - Registration
 file(GLOB COMPONENTS RELATIVE ${PROJECT_SOURCE_DIR} CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/components/*)
+
 foreach(COMPONENT ${COMPONENTS})
 	# Ignore directories with no CMakeLists.txt
 	if(EXISTS "${PROJECT_SOURCE_DIR}/${COMPONENT}/CMakeLists.txt")
@@ -1270,6 +1348,7 @@ set(_DISABLED "")
 
 # - Cleanup
 list(REMOVE_DUPLICATES _UNRESOLVED)
+
 foreach(_ENTITY ${_UNRESOLVED})
 	# Remove any invalid entries.
 	if(NOT TARGET "StreamFX_${_ENTITY}")
@@ -1281,8 +1360,10 @@ endforeach()
 
 # - Resolve Dependencies in a loop
 set(_UNRESOLVED_LOOP 0)
+
 while(_UNRESOLVED)
 	MATH(EXPR _UNRESOLVED_LOOP "${_UNRESOLVED_LOOP}+1")
+
 	if(_UNRESOLVED_LOOP GREATER_EQUAL 10)
 		message(FATAL_ERROR "Infinite loop while resolving components: ${_UNRESOLVED}")
 	endif()
@@ -1314,6 +1395,7 @@ while(_UNRESOLVED)
 		set(_HAS_UNRESOLVED_DEPENDS OFF)
 		set(_HAS_DISABLED_DEPENDS OFF)
 		set(_HAS_UNRESOLVED_OPTIONAL_DEPENDS OFF)
+
 		if(_DEPENDS)
 			foreach(_DEPEND ${_DEPENDS})
 				list(GET _DEPEND 0 _ENTITY2)
@@ -1326,6 +1408,7 @@ while(_UNRESOLVED)
 						message("[${_LABEL}] Required dependency '${_ENTITY2_LABEL}' is disabled.")
 						set(_HAS_DISABLED_DEPENDS ON)
 					endif()
+
 					if("${_ENTITY2}" IN_LIST _UNRESOLVED)
 						set(_HAS_UNRESOLVED_DEPENDS ON)
 					endif()
@@ -1335,10 +1418,12 @@ while(_UNRESOLVED)
 					endif()
 				endif()
 			endforeach()
+
 			list(JOIN _DEPENDS ", " _DEPENDS)
 		else()
 			set(_DEPENDS "")
 		endif()
+
 		if(_HAS_DISABLED_DEPENDS) # A required dependency is disabled, so disable this entry.
 			message(STATUS "[${_LABEL}] Disabled by dependency.")
 			list(REMOVE_ITEM _UNRESOLVED "${_ENTITY}")
@@ -1359,6 +1444,7 @@ while(_UNRESOLVED)
 			set(COMPONENT_OPTION "${_OPTION}")
 			cmake_language(CALL ${_RESOLVER})
 		endif()
+
 		if(${_OPTION}_DISABLED) # Test for resolve disabling.
 			message(STATUS "[${_LABEL}] Disabled by resolver.")
 			list(REMOVE_ITEM _UNRESOLVED "${_ENTITY}")
@@ -1385,6 +1471,7 @@ foreach(_ENTITY ${_RESOLVED})
 			set(RENTITY2 "StreamFX_${_ENTITY2}")
 
 			streamfx_enabled_component(${_ENTITY2} T_CHECK)
+
 			if(T_CHECK)
 				target_link_libraries(${RENTITY} PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,${RENTITY2}>)
 			endif()
@@ -1407,6 +1494,7 @@ target_link_libraries(StreamFX PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,StreamFX_Core
 # Data
 file(GLOB_RECURSE PROJECT_DATA "data/*")
 source_group(TREE "${PROJECT_SOURCE_DIR}/data" PREFIX "Data" FILES ${PROJECT_DATA})
+
 if(D_PLATFORM_MAC)
 	foreach(FILE IN LISTS PROJECT_DATA) # Data location
 		cmake_path(ABSOLUTE_PATH FILE OUTPUT_VARIABLE FILE_PATH)
@@ -1421,6 +1509,7 @@ endif()
 # Media
 file(GLOB_RECURSE PROJECT_MEDIA "media/*")
 source_group(TREE "${PROJECT_SOURCE_DIR}/media" PREFIX "Media" FILES ${PROJECT_MEDIA})
+
 if(D_PLATFORM_MAC)
 	# - Bundle Icon location
 	set_source_files_properties("media/icon.png" PROPERTIES
@@ -1437,7 +1526,6 @@ target_sources(StreamFX PRIVATE ${PROJECT_DATA} ${PROJECT_MEDIA})
 # ###############################################################################
 # Installation
 # ###############################################################################
-
 if(STANDALONE)
 	if(D_PLATFORM_WINDOWS)
 		install(
@@ -1449,6 +1537,7 @@ if(STANDALONE)
 			DIRECTORY "data/"
 			DESTINATION "data/obs-plugins/StreamFX/"
 		)
+
 		if(MSVC)
 			install(
 				FILES $<TARGET_PDB_FILE:StreamFX>
@@ -1515,6 +1604,7 @@ if(STANDALONE)
 else()
 	if(COMMAND setup_plugin_target)
 		setup_plugin_target(StreamFX)
+
 	# Seems like we lost the ability to customize which directoy resources are in, and instead are forced to use '/data'.
 	elseif(COMMAND install_obs_plugin_with_data)
 		install_obs_plugin_with_data(StreamFX data)
@@ -1524,7 +1614,6 @@ endif()
 # ###############################################################################
 # Packaging
 # ###############################################################################
-
 if(STANDALONE)
 	# Packaging
 	if(NOT PACKAGE_SUFFIX)
@@ -1532,6 +1621,7 @@ if(STANDALONE)
 	else()
 		set(_PACKAGE_SUFFIX_OVERRIDE "${PACKAGE_SUFFIX}")
 	endif()
+
 	set(_PACKAGE_FULL_NAME "${PACKAGE_PREFIX}/${PACKAGE_NAME}-${_PACKAGE_SUFFIX_OVERRIDE}")
 
 	if(D_PLATFORM_WINDOWS)
