@@ -15,7 +15,7 @@ vars:
   VS2019: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
   VS2022: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
   DEV_RUN: '{{if eq .OS "Windows_NT"}}cmd /d /c call "{{fromSlash .VS2022}}" -startdir="${PROJECT_ROOT}" -app_platform=Desktop -no_logo -no_ext -arch=x64 -host_arch=x64" &&{{end}}'
-  INSTALL_DIR: "{{.TASKFILE_DIR}}/dist"
+  INSTALL_DIR: "{{.TASKFILE_DIR}}/.install"
 
 env:
   InstallPath: "{{.TASKFILE_DIR}}/build_x64/install/bin/64bit"
@@ -36,14 +36,16 @@ tasks:
     cmds:
       # https://github.com/obsproject/obs-studio/wiki/build-instructions-for-windows
       - cmd: "{{.GIT}} submodule update --init --recursive"
-      - cmd: 'cmake --build "build_x64" --preset "{{.PRESET}}" --install-prefix="{{fromSlash .INSTALL_DIR}}" --config RelWithDebInfo --target install obs-studio'
+      - cmd: >
+          cmake -Wno-dev --preset "{{.PRESET}}" --install-prefix="{{fromSlash .INSTALL_DIR}}"
+      - cmd: >
+          cmake --build "build_x64" --preset "{{.PRESET}}" --config RelWithDebInfo --target ALL_BUILD obs-studio
     silent: false
 
   run:
-    # deps: [build-ci]
+    deps: [build]
     cmds:
-      - cmd: cd build_x64/rundir/RelWithDebInfo/bin/64bit/ && build_x64/rundir/RelWithDebInfo/bin/64bit/obs64.exe # "{{fromSlash .OBS_INSTALL_BIN_EXE}}"
-        dir: build_x64/rundir/RelWithDebInfo/bin/64bit/
+      - cmd: cd build_x64/rundir/RelWithDebInfo/bin/64bit/ && build_x64/rundir/RelWithDebInfo/bin/64bit/obs64.exe
 
   push:
     cmds:

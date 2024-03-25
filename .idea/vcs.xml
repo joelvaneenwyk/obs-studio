@@ -2,5 +2,12 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-browser" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-outputs/ftl-sdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-outputs/ftl-sdk/libcurl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-outputs/ftl-sdk/libjansson" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/obs-websocket" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/win-dshow/libdshowcapture" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/plugins/win-dshow/libdshowcapture/external/capture-device-support" vcs="Git" />
   </component>
 </project>
