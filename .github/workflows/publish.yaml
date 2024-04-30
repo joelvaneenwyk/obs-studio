@@ -5,7 +5,9 @@ on:
     types:
       - published
     branches:
+      - main
       - master
+      - develop
       - 'release/**'
 permissions:
   contents: read

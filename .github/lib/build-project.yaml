@@ -294,7 +294,7 @@ jobs:
           build-bundle: ${{ fromJSON(needs.check-event.outputs.package) }}
           bundle: obs-studio-flatpak-${{ needs.check-event.outputs.commitHash }}.flatpak
           manifest-path: ${{ github.workspace }}/build-aux/com.obsproject.Studio.json
-          cache: ${{ fromJSON(steps.setup.outputs.cacheHit) || (github.event_name == 'push' && github.ref_name == 'master')}}
+          cache: ${{ fromJSON(steps.setup.outputs.cacheHit) || (github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'develop'))}}
           restore-cache: ${{ fromJSON(steps.setup.outputs.cacheHit) }}
           cache-key: ${{ steps.setup.outputs.cacheKey }}
           mirror-screenshots-url: https://dl.flathub.org/media
