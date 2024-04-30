@@ -46,9 +46,10 @@ indent_size = 4
 indent_style = space
 indent_size = 4
 
-[*.yaml]
+[*.{yaml,yml,json}]
 indent_style = space
 indent_size = 2
+single_quote = true
 
 [{*.zsh,.*.zsh,build-aux/.functions/*,.github/scripts/utils.zsh/*}]
 indent_style = space
