@@ -15,13 +15,13 @@ jobs:
   check-format:
     name: Format 🔍
     if: github.ref_name == 'master'
-    uses: ./.github/workflows/check-format.yaml
+    uses: ./.github/lib/check-format.yaml
     permissions:
       contents: read
 
   build-project:
     name: Build 🧱
-    uses: ./.github/workflows/build-project.yaml
+    uses: ./.github/lib/build-project.yaml
     secrets: inherit
     permissions:
       contents: read

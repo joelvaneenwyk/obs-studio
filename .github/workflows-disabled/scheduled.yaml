@@ -84,7 +84,7 @@ jobs:
 
   build-project:
     name: Build 🧱
-    uses: ./.github/workflows/build-project.yaml
+    uses: ./.github/lib/build-project.yaml
     needs: cache-cleanup
     secrets: inherit
 

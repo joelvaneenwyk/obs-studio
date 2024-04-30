@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - '**.md'
     branches: [master]
-    types: [ opened, synchronize, reopened ]
+    types: [opened, synchronize, reopened]
 permissions:
   contents: read
 concurrency:
@@ -15,13 +15,13 @@ concurrency:
 jobs:
   check-format:
     name: Format 🔍
-    uses: ./.github/workflows/check-format.yaml
+    uses: ./.github/lib/check-format.yaml
     permissions:
       contents: read
 
   build-project:
     name: Build 🧱
-    uses: ./.github/workflows/build-project.yaml
+    uses: ./.github/lib/build-project.yaml
     secrets: inherit
     permissions:
       contents: read
