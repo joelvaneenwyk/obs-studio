@@ -65,7 +65,7 @@ jobs:
           echo "commitHash=${GITHUB_SHA:0:9}" >> $GITHUB_OUTPUT
 
   macos-build:
-    if: env.ENABLE_MACOS_BUILD == 'true'
+    if: ${{ env.ENABLE_MACOS_BUILD == 'true' }}
     name: macOS 🍏
     runs-on: macos-14
     needs: check-event
@@ -177,7 +177,7 @@ jobs:
           key: ${{ runner.os }}-ccache-${{ matrix.target }}-${{ needs.check-event.outputs.config }}
 
   ubuntu-build:
-    if: env.ENABLE_UBUNTU_BUILD == 'true'
+    if: ${{ env.ENABLE_UBUNTU_BUILD == 'true' }}
     name: Ubuntu 🐧
     runs-on: ubuntu-22.04
     needs: check-event
@@ -246,7 +246,7 @@ jobs:
           key: ${{ runner.os }}-ccache-x86_64-${{ needs.check-event.outputs.config }}
 
   flatpak-build:
-    if: env.ENABLE_FLATPAK_BUILD == 'true'
+    if: ${{ env.ENABLE_FLATPAK_BUILD == 'true' }}
     name: Flatpak 📦
     runs-on: ubuntu-22.04
     needs: check-event
@@ -335,7 +335,7 @@ jobs:
           path: repo
 
   windows-build:
-    if: env.ENABLE_WINDOWS_BUILD == 'true'
+    if: ${{ env.ENABLE_WINDOWS_BUILD == 'true' }}
     name: Windows 🪟
     runs-on: windows-2022
     needs: check-event
