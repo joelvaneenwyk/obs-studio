@@ -10,3 +10,11 @@
 [submodule "plugins/obs-websocket"]
 	path = plugins/obs-websocket
 	url = https://github.com/obsproject/obs-websocket.git
+[submodule "build-aux/vcpkg"]
+	path = build-aux/vcpkg
+	url = https://github.com/microsoft/vcpkg
+	branch = master
+[submodule "UI/frontend-plugins/stream-fx"]
+	path = UI/frontend-plugins/stream-fx
+	url = git@github.com:joelvaneenwyk/obs-streamfx.git
+	branch = develop
