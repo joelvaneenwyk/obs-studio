@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.22...3.25)
 
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/build-aux/vcpkg/scripts/buildsystems/vcpkg.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/build-aux/vcpkg/scripts/buildsystems/vcpkg.cmake" NO_POLICY_SCOPE)
+
 if(CMAKE_HOST_SYSTEM_NAME MATCHES "(Darwin)" OR OBS_CMAKE_VERSION VERSION_GREATER_EQUAL 3.0.0)
   include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/bootstrap.cmake" NO_POLICY_SCOPE)
 

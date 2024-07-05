@@ -32,8 +32,7 @@ output:
 tasks:
   default:
     cmds:
-      - task: configure
-      - task: build-release
+      - task: cmake-build
 
   build:
     vars:
@@ -242,3 +241,9 @@ tasks:
           GIT_PREFIX: "{{ .GIT_PREFIX }}"
       - cmd: git -C {{.TARGET}} submodule add --branch develop -- {{.GIT_URL}} {{.GIT_PREFIX}}
         ignore_error: true
+
+  cmake-build:
+    cmds:
+      - cmd: git submodule update --init --recursive --checkout
+      - cmd: cmake --preset "windows-x64"
+      - cmd: cmake --build --preset "windows-x64"

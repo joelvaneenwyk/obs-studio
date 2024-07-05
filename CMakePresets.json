@@ -98,8 +98,10 @@
         "rhs": "Windows"
       },
       "architecture": "x64",
-      "binaryDir": "${sourceDir}/build_x64",
+      "binaryDir": "${sourceDir}/.build/bin/x64",
+      "installDir": "${sourceDir}/.build/install",
       "generator": "Visual Studio 17 2022",
+      "toolchainFile": "${sourceDir}/build-aux/vcpkg/scripts/buildsystems/vcpkg.cmake",
       "cacheVariables": {
         "OBS_CMAKE_VERSION": {"type": "STRING", "value": "3.0.0"},
         "GPU_PRIORITY_VAL": {"type": "STRING", "value": "$penv{GPU_PRIORITY_VAL}"},
