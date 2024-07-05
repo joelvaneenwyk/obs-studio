@@ -30,11 +30,6 @@ vars:
   CMAKE_LOG_LEVEL_DEBUG: --trace
   CMAKE_SET_LOG_LEVEL: '{{ if .VERBOSE }}{{.CMAKE_LOG_LEVEL_DEBUG}}{{else}}{{end}}'
 
-output:
-  group:
-    begin: "::group::{{.TASK}}"
-    end: "::endgroup::"
-
 tasks:
   default:
     cmds:
