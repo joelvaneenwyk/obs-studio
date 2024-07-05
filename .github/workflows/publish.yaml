@@ -4,11 +4,7 @@ on:
   release:
     types:
       - published
-    branches:
-      - main
-      - master
-      - develop
-      - 'release/**'
+    branches: [main, master, develop, release/**]
 permissions:
   contents: read
 concurrency:

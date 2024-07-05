@@ -5,7 +5,7 @@ on:
   pull_request:
     paths-ignore:
       - '**.md'
-    branches: [main, master, develop]
+    branches: [main, master, develop, release/**]
     types: [opened, synchronize, reopened]
 permissions:
   contents: read
@@ -15,13 +15,13 @@ concurrency:
 jobs:
   check-format:
     name: Format 🔍
-    uses: ./.github/lib/check-format.yaml
+    uses: ./.github/workflows/check-format.yaml
     permissions:
       contents: read
 
   build-project:
     name: Build 🧱
-    uses: ./.github/lib/build-project.yaml
+    uses: ./.github/workflows/build-project.yaml
     secrets: inherit
     permissions:
       contents: read
