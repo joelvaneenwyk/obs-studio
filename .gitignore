@@ -51,3 +51,4 @@ build-aux/flatpak-github-action-modified-*
 # @joelvaneenwyk
 !/.prettierrc.json
 !/.vscode/
+!/taskfile.yaml
