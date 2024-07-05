@@ -52,3 +52,5 @@ build-aux/flatpak-github-action-modified-*
 !/.prettierrc.json
 !/.vscode/
 !/taskfile.yaml
+!/vcpkg.json
+!/cspell.config.yaml
