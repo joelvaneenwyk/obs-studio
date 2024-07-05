@@ -10,13 +10,11 @@ dotenv:
   - .env.development
 
 vars:
-  SLASH: '{{fromSlash "/"}}'
-  BUILD: '{{joinPath .ROOT_DIR ".build"}}'
-  CMAKE_SYSTEM_VERSION: '{{ .CMAKE_SYSTEM_VERSION | default "" }}'
-  CMAKE_BUILD_TYPE: '{{ .CMAKE_BUILD_TYPE | default "" }}'
   TARGET: '{{ .TARGET | default "" }}'
   GIT_PREFIX: '{{ .GIT_PREFIX | default "" }}'
-  TEMP_DIR: '{{joinPath .BUILD "tmp"}}'
+
+  BUILD_DIR: '{{ .TASKFILE_DIR }}/.build'
+  TEMP_DIR: '{{ joinPath .BUILD_DIR "tmp" }}'
 
   RUN: '{{ if eq OS "windows" }}cmd.exe /d /e:on /c{{ else }}sh -c{{ end }}'
 
@@ -28,14 +26,9 @@ vars:
   MKDIR_SH: mkdir -p
   MKDIR: '{{ if eq OS "windows" }}{{.MKDIR_CMD}}{{ else }}{{.MKDIR_SH}}{{ end }}'
 
-  BUILDSPEC: '{{ joinPath .ROOT_DIR "buildspec.json" }}'
-  BUILDSPEC_JSON_DATA:
-    sh: |
-      cat "{{ .BUILDSPEC }}"
-  BUILDSPEC_JSON:
-    ref: "fromJson .BUILDSPEC_JSON_DATA"
-  DEPENDENCIES:
-    ref: ".BUILDSPEC_JSON.dependencies"
+  CMAKE_PRESET: '{{ if eq OS "windows" }}windows-x64{{ else }}default{{ end }}'
+  CMAKE_LOG_LEVEL_DEBUG: --trace
+  CMAKE_SET_LOG_LEVEL: '{{ if .VERBOSE }}{{.CMAKE_LOG_LEVEL_DEBUG}}{{else}}{{end}}'
 
 output:
   group:
@@ -47,30 +40,64 @@ tasks:
     cmds:
       - task: cmake-build
 
+  info:
+    vars:
+      CAT: '{{ if eq OS "windows" }}type{{ else }}cat{{ end }}'
+      BUILDSPEC: '{{ joinPath .ROOT_DIR "buildspec.json" }}'
+      BUILDSPEC_JSON_DATA:
+        sh: |
+          {{.CAT}} "{{ .BUILDSPEC }}"
+      BUILDSPEC_JSON:
+        ref: "fromJson .BUILDSPEC_JSON_DATA"
+      DEPENDENCIES:
+        ref: ".BUILDSPEC_JSON.dependencies"
+    cmds:
+      - cmd: |
+          echo "Path: {{.BUILDSPEC}}"
+          echo "Dependencies: {{ fromJson .BUILDSPEC_JSON.prebuilt}}"
+
+  vcpkg-install:
+    vars:
+      VCPKG_ROOT: '{{ joinPath .ROOT_DIR "build-aux" "vcpkg" }}'
+      VCPKG_EXE: '{{ joinPath .VCPKG_ROOT "vcpkg.exe" }}'
+      VCPKG_ARGS: '{{ joinPath .VCPKG_ROOT "vcpkg.exe" }}'
+      VCPKG_BOOTSTRAP: '{{ joinPath .VCPKG_ROOT "bootstrap-vcpkg.bat" }}'
+      VCPKG_DEFAULT_ARGS: >-
+        --vcpkg-root "{{ fromSlash .VCPKG_ROOT }}"
+        --no-print-usage
+        --keep-going
+      RUN: '{{ if eq OS "windows" }}cmd.exe /d /e:on /c{{ else }}sh -c{{ end }}'
+    cmds:
+      - cmd: >-
+          {{.RUN}} "{{ fromSlash .VCPKG_BOOTSTRAP }}"
+          -disableMetrics
+      - cmd: >-
+          "{{ fromSlash .VCPKG_EXE }}"
+          install {{.VCPKG_DEFAULT_ARGS}}
+          --only-downloads
+      - cmd: >-
+          "{{ fromSlash .VCPKG_EXE }}"
+          install {{.VCPKG_DEFAULT_ARGS}}
+
   cmake-build:
-    silent: false
     cmds:
       - cmd: git submodule update --init --recursive --checkout
-      - cmd: |
-          cmd.exe /D /E:ON /C call "{{ fromSlash (joinPath .ROOT_DIR "build-aux" "vcpkg" "bootstrap-vcpkg.bat") }}"
-        env:
-          VCPKG_DISABLE_METRICS: 1
-      - cmd: cmake --preset "windows-x64" --trace
-      - cmd: cmake --build --preset "windows-x64" --trace
-
-  read-json:
-    vars:
-    silent: true
-    cmds:
-      - 'echo "Path: {{.BUILDSPEC}}"'
-      - 'echo "JSON: {{.BUILDSPEC_JSON_DATA}}"'
-      - 'echo "Prebuilt Version: {{.BUILDSPEC_JSON.dependencies.prebuilt.version}}"'
-      - 'echo "Dependencies: {{.DEPENDENCIES.prebuilt}}"'
+      - task: vcpkg-install
+      - cmd: >-
+          cmake --preset "{{ .CMAKE_PRESET }}"
+          {{ .CMAKE_SET_LOG_LEVEL }}
+      - cmd: cmake --build --preset "{{ .CMAKE_PRESET }}" --trace
 
   build:
     vars:
       BUILDSPEC_EXE: '{{ joinPath .ROOT_DIR "tools" "buildspec.js" }}'
       BUILDSPEC: '{{ joinPath .ROOT_DIR "buildspec.json" }}'
+      BUILDSPEC_JSON_DATA:
+        sh: '{{.CAT}} "{{ .BUILDSPEC }}"'
+      BUILDSPEC_JSON:
+        ref: "fromJson .BUILDSPEC_JSON_DATA"
+      DEPENDENCIES:
+        ref: ".BUILDSPEC_JSON.dependencies"
 
       OBS_DEPS:
         sh: >-
@@ -201,7 +228,6 @@ tasks:
           cmake \
           -S "{{ .ROOT_DIR }}"
           -B "{{ joinPath .BUILD "ci" | fromSlash }}"
-          -DCMAKE_SYSTEM_VERSION="{{ .CMAKE_SYSTEM_VERSION }}"
           -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
           -Dlibobs_DIR="{{ joinPath .ROOT_DIR "build/obs/install" }}"
           -DQt${{ matrix.qt }}_DIR={{ joinPath .BUILD "qt" | fromSlash }}
@@ -228,7 +254,7 @@ tasks:
     vars:
       GIT: git -C {{.TARGET}}
     preconditions:
-      - test -f "{{.TARGET}}{{.SLASH}}buildspec.json"
+      - test -f "{{.TARGET}}/buildspec.json"
     cmds:
       - cmd: "{{.GIT}} reset -- .gitmodules"
         ignore_error: true
