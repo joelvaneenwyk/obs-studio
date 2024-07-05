@@ -18,3 +18,7 @@
 	path = UI/frontend-plugins/stream-fx
 	url = git@github.com:joelvaneenwyk/obs-streamfx.git
 	branch = develop
+[submodule "build-aux/deps"]
+	path = build-aux/deps
+	url = git@github.com:joelvaneenwyk/obs-deps.git
+	branch = develop
