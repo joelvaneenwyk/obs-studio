@@ -54,3 +54,4 @@ build-aux/flatpak-github-action-modified-*
 !/taskfile.yaml
 !/vcpkg.json
 !/cspell.config.yaml
+!/.env.development

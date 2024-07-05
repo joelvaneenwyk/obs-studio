@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 8,
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 22,
@@ -92,22 +92,32 @@
       "displayName": "Windows x64",
       "description": "Default Windows build (x64)",
       "inherits": ["environmentVars"],
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      },
       "architecture": "x64",
       "binaryDir": "${sourceDir}/.build/bin/x64",
       "installDir": "${sourceDir}/.build/install",
       "generator": "Visual Studio 17 2022",
       "toolchainFile": "${sourceDir}/build-aux/vcpkg/scripts/buildsystems/vcpkg.cmake",
       "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "${sourceDir}/.build/install;${sourceDir}/build-aux/vcpkg/installed/x64-windows;${sourceDir}/build-aux/deps",
         "OBS_CMAKE_VERSION": {"type": "STRING", "value": "3.0.0"},
         "GPU_PRIORITY_VAL": {"type": "STRING", "value": "$penv{GPU_PRIORITY_VAL}"},
         "VIRTUALCAM_GUID": {"type": "STRING", "value": "A3FCE0F5-3493-419F-958A-ABA1250EC20B"},
         "ENABLE_BROWSER": true,
         "ENABLE_CCACHE": false
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "debug": {
+        "find": true,
+        "output": true,
+        "tryCompile": true
+      },
+      "trace": {
+        "format": "human",
+        "mode": "on"
       }
     },
     {

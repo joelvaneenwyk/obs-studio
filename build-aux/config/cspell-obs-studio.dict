@@ -1,6 +1,7 @@
 # Custom Dictionary Words
 Alexandre
 Anry
+APPCAST
 Arkkis
 Barnabás
 Basile
@@ -14,8 +15,12 @@ Bochkariov
 boombatower
 Boxman
 brittneysclark
+buildsystems
+CCACHE
 Cephas
 Chumak
+CLIENTID
+CODESIGN
 Colins
 columbarius
 craftwar
@@ -31,6 +36,7 @@ derrod
 Dlibobs
 Dmitry
 dodgepong
+dotenv
 Elmoussaoui
 endgroup
 Exeldro
@@ -66,6 +72,7 @@ Klettbach
 Kramlich
 Kroeber
 Lepin
+LIBDIR
 Lindvall
 Lipthay
 Litiu
@@ -83,11 +90,13 @@ nleseul
 Norihiro
 notmark
 nquah
+NVENC
 obiwac
 obsdeps
 paibox
 Palakis
 Palana
+penv
 Penwywern
 Pflugk
 pipefail
@@ -96,6 +105,7 @@ Pőcze
 prgmitchell
 Radzaquiel
 Reis
+RESTREAM
 rhuts
 Rosca
 Ruwen
@@ -110,6 +120,7 @@ Stanway
 Stavracas
 Stéphane
 Surzhynskyi
+TASKFILE
 Taymans
 Timo
 Tjienta
@@ -119,12 +130,15 @@ tududweb
 tytan
 univrsal
 Vainock
+vcpkg
 Venkatraman
 Vercetti
 Vicenzi
+VIRTUALCAM
 Wahaj
 wangshaohui
 Warchamp
+WEBRTC
 Xaymar
 Yelavich
 Yuriy

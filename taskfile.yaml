@@ -1,9 +1,13 @@
+# lsp
 # https://taskfile.dev
 
 version: "3"
 
 set: [pipefail]
 shopt: [globstar]
+
+dotenv:
+  - .env.development
 
 vars:
   SLASH: '{{fromSlash "/"}}'
@@ -24,6 +28,15 @@ vars:
   MKDIR_SH: mkdir -p
   MKDIR: '{{ if eq OS "windows" }}{{.MKDIR_CMD}}{{ else }}{{.MKDIR_SH}}{{ end }}'
 
+  BUILDSPEC: '{{ joinPath .ROOT_DIR "buildspec.json" }}'
+  BUILDSPEC_JSON_DATA:
+    sh: |
+      cat "{{ .BUILDSPEC }}"
+  BUILDSPEC_JSON:
+    ref: "fromJson .BUILDSPEC_JSON_DATA"
+  DEPENDENCIES:
+    ref: ".BUILDSPEC_JSON.dependencies"
+
 output:
   group:
     begin: "::group::{{.TASK}}"
@@ -33,6 +46,26 @@ tasks:
   default:
     cmds:
       - task: cmake-build
+
+  cmake-build:
+    silent: false
+    cmds:
+      - cmd: git submodule update --init --recursive --checkout
+      - cmd: |
+          cmd.exe /D /E:ON /C call "{{ fromSlash (joinPath .ROOT_DIR "build-aux" "vcpkg" "bootstrap-vcpkg.bat") }}"
+        env:
+          VCPKG_DISABLE_METRICS: 1
+      - cmd: cmake --preset "windows-x64" --trace
+      - cmd: cmake --build --preset "windows-x64" --trace
+
+  read-json:
+    vars:
+    silent: true
+    cmds:
+      - 'echo "Path: {{.BUILDSPEC}}"'
+      - 'echo "JSON: {{.BUILDSPEC_JSON_DATA}}"'
+      - 'echo "Prebuilt Version: {{.BUILDSPEC_JSON.dependencies.prebuilt.version}}"'
+      - 'echo "Dependencies: {{.DEPENDENCIES.prebuilt}}"'
 
   build:
     vars:
@@ -241,9 +274,3 @@ tasks:
           GIT_PREFIX: "{{ .GIT_PREFIX }}"
       - cmd: git -C {{.TARGET}} submodule add --branch develop -- {{.GIT_URL}} {{.GIT_PREFIX}}
         ignore_error: true
-
-  cmake-build:
-    cmds:
-      - cmd: git submodule update --init --recursive --checkout
-      - cmd: cmake --preset "windows-x64"
-      - cmd: cmake --build --preset "windows-x64"
