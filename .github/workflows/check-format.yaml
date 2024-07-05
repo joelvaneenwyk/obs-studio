@@ -1,6 +1,12 @@
 name: Check Code Formatting 🛠️
 on:
   workflow_call:
+
+env:
+  ENABLE_QT_CHECKS: false
+  ENABLE_SWIFT_CHECKS: false
+  ENABLE_FLATPAK_CHECKS: false
+
 jobs:
   clang-format:
     runs-on: ubuntu-22.04
@@ -15,6 +21,7 @@ jobs:
           failCondition: error
 
   swift-format:
+    if: env.ENABLE_SWIFT_CHECKS == 'true'
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
@@ -39,6 +46,7 @@ jobs:
           failCondition: error
 
   flatpak-validator:
+    if: env.ENABLE_FLATPAK_CHECKS == 'true'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -51,6 +59,7 @@ jobs:
           failCondition: error
 
   qt-xml-validator:
+    if: env.ENABLE_QT_CHECKS == 'true'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4

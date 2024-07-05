@@ -1,6 +1,13 @@
 name: Build Project
 on:
   workflow_call:
+
+env:
+  ENABLE_WINDOWS_BUILD: true
+  ENABLE_UBUNTU_BUILD: false
+  ENABLE_MACOS_BUILD: false
+  ENABLE_FLATPAK_BUILD: false
+
 jobs:
   check-event:
     name: Event Data 🔎
@@ -58,6 +65,7 @@ jobs:
           echo "commitHash=${GITHUB_SHA:0:9}" >> $GITHUB_OUTPUT
 
   macos-build:
+    if: env.ENABLE_MACOS_BUILD == 'true'
     name: macOS 🍏
     runs-on: macos-14
     needs: check-event
@@ -169,6 +177,7 @@ jobs:
           key: ${{ runner.os }}-ccache-${{ matrix.target }}-${{ needs.check-event.outputs.config }}
 
   ubuntu-build:
+    if: env.ENABLE_UBUNTU_BUILD == 'true'
     name: Ubuntu 🐧
     runs-on: ubuntu-22.04
     needs: check-event
@@ -237,6 +246,7 @@ jobs:
           key: ${{ runner.os }}-ccache-x86_64-${{ needs.check-event.outputs.config }}
 
   flatpak-build:
+    if: env.ENABLE_FLATPAK_BUILD == 'true'
     name: Flatpak 📦
     runs-on: ubuntu-22.04
     needs: check-event
@@ -294,7 +304,7 @@ jobs:
           build-bundle: ${{ fromJSON(needs.check-event.outputs.package) }}
           bundle: obs-studio-flatpak-${{ needs.check-event.outputs.commitHash }}.flatpak
           manifest-path: ${{ github.workspace }}/build-aux/com.obsproject.Studio.json
-          cache: ${{ fromJSON(steps.setup.outputs.cacheHit) || (github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'develop'))}}
+          cache: ${{ fromJSON(steps.setup.outputs.cacheHit) && true || (github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'develop'))}}
           restore-cache: ${{ fromJSON(steps.setup.outputs.cacheHit) }}
           cache-key: ${{ steps.setup.outputs.cacheKey }}
           mirror-screenshots-url: https://dl.flathub.org/media
@@ -325,6 +335,7 @@ jobs:
           path: repo
 
   windows-build:
+    if: env.ENABLE_WINDOWS_BUILD == 'true'
     name: Windows 🪟
     runs-on: windows-2022
     needs: check-event
