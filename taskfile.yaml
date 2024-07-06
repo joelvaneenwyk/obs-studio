@@ -33,7 +33,22 @@ vars:
 tasks:
   default:
     cmds:
-      - task: build-all # build-ubuntu  # cmake-build
+      - task: cmake-all  # build-all # build-ubuntu  # cmake-build
+
+  cmake-all:
+    vars:
+      RUN: '{{ if eq OS "windows" }}cmd.exe /D /C{{ else }}bash -c{{ end }}'
+      ACTIVATE: '{{ joinPath .TASKFILE_DIR ".venv/bin/activate" }}'
+      USE_PY: 'source "{{ .ACTIVATE }}" &&'
+
+    cmds:
+      - cmd: rye sync
+      - cmd: |
+          {{ .RUN }} '{{.USE_PY}} cmake -S "{{ .TASKFILE_DIR }}" --preset "ubuntu"'
+      - cmd: |
+          {{ .RUN }} '{{.USE_PY}} cmake --build --preset "ubuntu"'
+      - cmd: |
+          {{ .RUN }} '{{.USE_PY}} cmake --install --preset "ubuntu"'
 
   build-all:
     cmds:
