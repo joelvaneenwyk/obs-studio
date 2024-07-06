@@ -65,11 +65,12 @@
         "lhs": "${hostSystemName}",
         "rhs": "Linux"
       },
-      "binaryDir": "${sourceDir}/build_ubuntu",
+      "binaryDir": "${sourceDir}/.build/bin/ub",
+      "installDir": "${sourceDir}/.build/install/ub",
       "generator": "Ninja",
-      "warnings": {"dev": true, "deprecated": true},
+      "warnings": {"dev": false, "deprecated": true},
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "CMAKE_INSTALL_LIBDIR": "lib/CMAKE_SYSTEM_PROCESSOR-linux-gnu",
         "OBS_CMAKE_VERSION": {"type": "STRING", "value": "3.0.0"},
         "ENABLE_AJA": false,
@@ -82,9 +83,11 @@
     {
       "name": "ubuntu-ci",
       "inherits": ["ubuntu"],
+      "binaryDir": "${sourceDir}/.build/bin/ub-ci",
+      "installDir": "${sourceDir}/.build/install/ub-ci",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-        "CMAKE_COMPILE_WARNING_AS_ERROR": true
+        "CMAKE_COMPILE_WARNING_AS_ERROR": false
       }
     },
     {

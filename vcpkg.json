@@ -3,8 +3,9 @@
   "name": "obs-studio",
   "dependencies": [
     "ffmpeg",
+    "qtbase",
     "uthash",
     "zlib",
-    "qtbase"
+    "curl"
   ]
 }

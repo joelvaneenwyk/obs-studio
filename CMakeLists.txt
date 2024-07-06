@@ -1,6 +1,9 @@
-cmake_minimum_required(VERSION 3.22...3.25)
+cmake_minimum_required(VERSION 3.30)
 
-set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/build-aux/vcpkg/scripts/buildsystems/vcpkg.cmake")
+set(VCPKG_EXECUTABLE "${CMAKE_CURRENT_SOURCE_DIR}/build-aux/vcpkg/vcpkg")
+set(VCPKG_PARENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build-aux/vcpkg")
+set(VCPKG_FORCE_SYSTEM_BINARIES ON)
+include("${CMAKE_CURRENT_SOURCE_DIR}/build-aux/config/use-vcpkg.cmake")
 
 if(CMAKE_HOST_SYSTEM_NAME MATCHES "(Darwin)" OR OBS_CMAKE_VERSION VERSION_GREATER_EQUAL 3.0.0)
   include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/bootstrap.cmake" NO_POLICY_SCOPE)
@@ -130,5 +133,3 @@ endif()
 if(BUILD_TESTS OR ENABLE_UNIT_TESTS)
   add_subdirectory(test)
 endif()
-
-include("${CMAKE_CURRENT_SOURCE_DIR}/build-aux/vcpkg/scripts/buildsystems/vcpkg.cmake" NO_POLICY_SCOPE)

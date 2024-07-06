@@ -55,3 +55,6 @@ build-aux/flatpak-github-action-modified-*
 !/vcpkg.json
 !/cspell.config.yaml
 !/.env.development
+
+!/.python-version
+!/pyproject.toml

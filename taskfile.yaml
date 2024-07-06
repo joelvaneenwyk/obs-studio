@@ -33,30 +33,55 @@ vars:
 tasks:
   default:
     cmds:
-      - task: cmake-build
+      - task: build-ubuntu  # cmake-build
+
+  build-ubuntu:
+    aliases: [u, ubuntu, bubu]
+    status:
+      - apt-get --version
+      - sudo --version
+    sources:
+      - ./buildspec.json
+      - ./CMakeLists.txt
+    generates:
+      - ./.deps/cef_binary_5060_linux_x86_64_v3.tar.xz
+      - ./.build/bin/install/obs-studio
+    cmds:
+      # - cmd: |
+      #     sudo -n apt-get update --yes
+      #     sudo -n apt-get install --yes --no-install-recommends \
+      #       autoconf automake autoconf-archive
+      - cmd: bash -c {{ joinPath .TASKFILE_DIR ".github/scripts/build-ubuntu" | toSlash }}
+
+  run:
+    cmds:
+      - cmd: TASK_X_MAP_VARIABLES=2 task info --verbose
 
   info:
     vars:
       CAT: '{{ if eq OS "windows" }}type{{ else }}cat{{ end }}'
       BUILDSPEC: '{{ joinPath .ROOT_DIR "buildspec.json" }}'
+
+      # https://github.com/go-task/task/blob/main/testdata/vars/any2/Taskfile.yml
       BUILDSPEC_JSON_DATA:
-        sh: |
-          {{.CAT}} "{{ .BUILDSPEC }}"
+        sh: "{{ .CAT }} {{ .BUILDSPEC }}"
       BUILDSPEC_JSON:
         ref: "fromJson .BUILDSPEC_JSON_DATA"
-      DEPENDENCIES:
-        ref: ".BUILDSPEC_JSON.dependencies"
     cmds:
       - cmd: |
-          echo "Path: {{.BUILDSPEC}}"
-          echo "Dependencies: {{ fromJson .BUILDSPEC_JSON.prebuilt}}"
+          echo "Path: {{ .BUILDSPEC}} "
+          echo "Dependencies: {{ coalesce .BUILDSPEC_JSON.dependencies.prebuilt.version "DD" }}"
 
   vcpkg-install:
     vars:
+      EXE_EXT: '{{ if eq OS "windows" }}.exe{{ end }}'
+      EXT: '{{ if eq OS "windows" }}.bat{{ else }}.sh{{ end }}'
+      VCPKG_EXE_FILENAME: "vcpkg{{.EXE_EXT}}"
+      VCPKG_BOOTSTRAP_FILENAME: "bootstrap-vcpkg{{.EXT}}"
       VCPKG_ROOT: '{{ joinPath .ROOT_DIR "build-aux" "vcpkg" }}'
-      VCPKG_EXE: '{{ joinPath .VCPKG_ROOT "vcpkg.exe" }}'
-      VCPKG_ARGS: '{{ joinPath .VCPKG_ROOT "vcpkg.exe" }}'
-      VCPKG_BOOTSTRAP: '{{ joinPath .VCPKG_ROOT "bootstrap-vcpkg.bat" }}'
+      VCPKG_EXE: '{{ joinPath .VCPKG_ROOT .VCPKG_EXE_FILENAME }}'
+      VCPKG_ARGS: '{{ .VCPKG_INPUT_ARGS | default "" }}'
+      VCPKG_BOOTSTRAP: '{{ joinPath .VCPKG_ROOT .VCPKG_BOOTSTRAP_FILENAME }}'
       VCPKG_DEFAULT_ARGS: >-
         --vcpkg-root "{{ fromSlash .VCPKG_ROOT }}"
         --no-print-usage

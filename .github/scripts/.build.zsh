@@ -190,7 +190,7 @@ build() {
       popd
       ;;
     ubuntu-*)
-      local cmake_bin='/usr/bin/cmake'
+      local cmake_bin="$(command -v cmake || "/usr/bin/cmake")"
       cmake_args+=(
         --preset ubuntu-ci
         --toolchain ${project_root}/cmake/linux/toolchain-${target##*-}-gcc.cmake
@@ -205,15 +205,15 @@ build() {
       cmake_install_args+=(build_${target%%-*} --prefix ${project_root}/build_${target%%-*}/install/${config})
 
       log_group "Configuring ${product_name}..."
-      ${cmake_bin} -S ${project_root} ${cmake_args}
+      "${cmake_bin}" -S ${project_root} ${cmake_args}
 
       log_group "Building ${product_name}..."
       if (( debug )) cmake_build_args+=(--verbose)
-      ${cmake_bin} ${cmake_build_args}
+      "${cmake_bin}" ${cmake_build_args}
 
       log_group "Installing ${product_name}..."
       if (( debug )) cmake_install_args+=(--verbose)
-      ${cmake_bin} ${cmake_install_args}
+      "${cmake_bin}" ${cmake_install_args}
       ;;
   }
   popd
