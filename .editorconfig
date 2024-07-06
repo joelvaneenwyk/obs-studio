@@ -46,7 +46,7 @@ indent_size = 4
 indent_style = space
 indent_size = 4
 
-[*.{yaml,yml,json}]
+[*.{yaml,yml,json,toml}]
 indent_style = space
 indent_size = 2
 single_quote = true
