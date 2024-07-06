@@ -65,8 +65,8 @@
         "lhs": "${hostSystemName}",
         "rhs": "Linux"
       },
-      "binaryDir": "${sourceDir}/.build/bin/ub",
-      "installDir": "${sourceDir}/.build/install/ub",
+      "binaryDir": "${sourceDir}/.build/bin/ubuntu/",
+      "installDir": "${sourceDir}/.build/install/ubuntu/",
       "generator": "Ninja",
       "warnings": {"dev": false, "deprecated": true},
       "cacheVariables": {
@@ -83,8 +83,8 @@
     {
       "name": "ubuntu-ci",
       "inherits": ["ubuntu"],
-      "binaryDir": "${sourceDir}/.build/bin/ub-ci",
-      "installDir": "${sourceDir}/.build/install/ub-ci",
+      "binaryDir": "${sourceDir}/.build/bin/ubuntu-ci/",
+      "installDir": "${sourceDir}/.build/install/ubuntu-ci/",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "CMAKE_COMPILE_WARNING_AS_ERROR": false
@@ -96,8 +96,8 @@
       "description": "Default Windows build (x64)",
       "inherits": ["environmentVars"],
       "architecture": "x64",
-      "binaryDir": "${sourceDir}/.build/bin/x64",
-      "installDir": "${sourceDir}/.build/install",
+      "binaryDir": "${sourceDir}/.build/bin/windows-x64/",
+      "installDir": "${sourceDir}/.build/install/windows-x64/",
       "generator": "Visual Studio 17 2022",
       "toolchainFile": "${sourceDir}/build-aux/vcpkg/scripts/buildsystems/vcpkg.cmake",
       "cacheVariables": {
@@ -124,20 +124,11 @@
       }
     },
     {
-      "name": "default",
-      "displayName": "Windows x64",
-      "description": "Windows build (x64)",
-      "inherits": ["windows-x64"],
-      "warnings": {"dev": false, "deprecated": false},
-      "cacheVariables": {
-        "CMAKE_COMPILE_WARNING_AS_ERROR": false,
-        "ENABLE_CCACHE": true
-      }
-    },
-    {
       "name": "windows-ci-x64",
       "displayName": "Windows x64 (CI)",
       "description": "CI Windows build (x64)",
+      "binaryDir": "${sourceDir}/.build/bin/windows-x64-ci/",
+      "installDir": "${sourceDir}/.build/install/windows-x64-ci/",
       "inherits": ["windows-x64"],
       "warnings": {"dev": true, "deprecated": true},
       "cacheVariables": {
@@ -152,6 +143,20 @@
       "configurePreset": "windows-x64",
       "displayName": "Windows 64-bit",
       "description": "Windows build for 64-bit (aka x64)",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "ubuntu",
+      "configurePreset": "ubuntu",
+      "displayName": "Ubunut 64-bit",
+      "description": "Ubunut build for 64-bit (aka x64)",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "ubuntu-ci",
+      "configurePreset": "ubuntu-ci",
+      "displayName": "Ubunut 64-bit (CI)",
+      "description": "Ubunut build for 64-bit (aka x64)",
       "configuration": "RelWithDebInfo"
     }
   ]

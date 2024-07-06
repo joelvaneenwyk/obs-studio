@@ -33,7 +33,12 @@ vars:
 tasks:
   default:
     cmds:
-      - task: build-ubuntu  # cmake-build
+      - task: build-all # build-ubuntu  # cmake-build
+
+  build-all:
+    cmds:
+      - cmd: rye sync
+      - task: build-ubuntu
 
   build-ubuntu:
     aliases: [u, ubuntu, bubu]
@@ -51,7 +56,9 @@ tasks:
       #     sudo -n apt-get update --yes
       #     sudo -n apt-get install --yes --no-install-recommends \
       #       autoconf automake autoconf-archive
-      - cmd: bash -c {{ joinPath .TASKFILE_DIR ".github/scripts/build-ubuntu" | toSlash }}
+      - cmd: >-
+          bash -c
+          'source "{{ joinPath .TASKFILE_DIR ".venv/bin/activate" | toSlash }}" && "{{ joinPath .TASKFILE_DIR ".github/scripts/build-ubuntu" | toSlash }}"'
 
   run:
     cmds:

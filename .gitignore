@@ -58,3 +58,5 @@ build-aux/flatpak-github-action-modified-*
 
 !/.python-version
 !/pyproject.toml
+!/requirements.lock
+!/requirements-dev.lock

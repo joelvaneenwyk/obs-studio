@@ -1,3 +1,7 @@
 {
-  "yaml.format.singleQuote": true
+  "yaml.format.singleQuote": true,
+  "cmake.useCMakePresets": "always",
+  "cmake.allowCommentsInPresetsFile": true,
+  "cmake.allowUnsupportedPresetsVersions": true,
+  "cmake.ctest.allowParallelJobs": true
 }

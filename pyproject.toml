@@ -5,7 +5,9 @@ description = "Add your description here"
 authors = [
     { name = "Joel Van Eenwyk", email = "joel.vaneenwyk@gmail.com" }
 ]
-dependencies = []
+dependencies = [
+    "jinja2>=3.1.4",
+]
 readme = "README.md"
 requires-python = ">= 3.8"
 
