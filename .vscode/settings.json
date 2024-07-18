@@ -3,5 +3,29 @@
   "cmake.useCMakePresets": "always",
   "cmake.allowCommentsInPresetsFile": true,
   "cmake.allowUnsupportedPresetsVersions": true,
-  "cmake.ctest.allowParallelJobs": true
+  "cmake.ctest.allowParallelJobs": true,
+  "explorer.autoRevealExclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/build_x64": true,
+    "**/build_x86": true,
+    "**/vcpkg_installed": true,
+    "**/.git": true,
+    "**/.venv": true,
+    "**/.build": true
+  },
+  "files.exclude": {
+    "**/build_x64": true,
+    "**/build_x86": true,
+    "**/vcpkg_installed": true,
+    "**/.deps": true,
+    "**/.build": true,
+    "**/.venv": true,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  }
 }

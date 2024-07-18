@@ -1,4 +1,4 @@
-# lsp
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 # https://taskfile.dev
 
 version: "3"
@@ -16,7 +16,7 @@ vars:
   BUILD_DIR: '{{ .TASKFILE_DIR }}/.build'
   TEMP_DIR: '{{ joinPath .BUILD_DIR "tmp" }}'
 
-  RUN: '{{ if eq OS "windows" }}cmd.exe /d /e:on /c{{ else }}sh -c{{ end }}'
+  RUN: '{{ if eq OS "windows" }}cmd.exe /D /E:ON /C{{ else }}bash -c{{ end }}'
 
   RMDIR_CMD: rmdir /s /q
   RMDIR_SH: rm -rf
@@ -26,7 +26,13 @@ vars:
   MKDIR_SH: mkdir -p
   MKDIR: '{{ if eq OS "windows" }}{{.MKDIR_CMD}}{{ else }}{{.MKDIR_SH}}{{ end }}'
 
-  CMAKE_PRESET: '{{ if eq OS "windows" }}windows-x64{{ else }}default{{ end }}'
+  CMAKE_PRESET:
+    sh: |
+      if [ "{{OS}}" = "windows" ]; then
+        echo "windows-x64"
+      else
+        echo "ubuntu"
+      fi
   CMAKE_LOG_LEVEL_DEBUG: --trace
   CMAKE_SET_LOG_LEVEL: '{{ if .VERBOSE }}{{.CMAKE_LOG_LEVEL_DEBUG}}{{else}}{{end}}'
 
@@ -37,26 +43,29 @@ tasks:
 
   cmake-all:
     vars:
-      RUN: '{{ if eq OS "windows" }}cmd.exe /D /C{{ else }}bash -c{{ end }}'
+      RUN: '{{ if eq OS "windows" }}cmd.exe /E:ON /D /C{{ else }}bash -c{{ end }}'
       ACTIVATE: '{{ joinPath .TASKFILE_DIR ".venv/bin/activate" }}'
       USE_PY: 'source "{{ .ACTIVATE }}" &&'
+      USE_PY_VENV: '{{ if eq OS "windows" }}call ".venv\scripts\activate.bat"{{ else }}source .venv/scripts/activate{{ end }} &&'
 
     cmds:
-      - cmd: rye sync
-      - cmd: |
-          {{ .RUN }} '{{.USE_PY}} cmake -S "{{ .TASKFILE_DIR }}" --preset "ubuntu"'
-      - cmd: |
-          {{ .RUN }} '{{.USE_PY}} cmake --build --preset "ubuntu"'
-      - cmd: |
-          {{ .RUN }} '{{.USE_PY}} cmake --install --preset "ubuntu"'
+      - cmd: rye sync --universal
+      - cmd: >-
+          {{.RUN}} {{.USE_PY_VENV}} cmake -S "{{ .TASKFILE_DIR }}" --preset "{{ .CMAKE_PRESET }}"
+      #- cmd: |
+      #    {{ .RUN }} '{{.USE_PY_VENV}} cmake -S "{{ .TASKFILE_DIR }}" --preset "ubuntu"'
+      #- cmd: |
+      #    {{ .RUN }} '{{.USE_PY_VENV}} cmake --build --preset "{{ .CMAKE_PRESET }}"'
+      #- cmd: |
+      #    {{ .RUN }} '{{.USE_PY_VENV}} cmake --install --preset "{{ .CMAKE_PRESET }}"'
 
   build-all:
     cmds:
-      - cmd: rye sync
+      - cmd: rye sync --universal
       - task: build-ubuntu
 
   build-ubuntu:
-    aliases: [u, ubuntu, bubu]
+    aliases: [u, ubuntu]
     status:
       - apt-get --version
       - sudo --version
