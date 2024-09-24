@@ -1,6 +1,9 @@
 # Exclude everything
 /*
 
+!/vcpkg.json
+!/taskfile.yaml
+
 # Except for default project files
 !/.github
 !/build-aux
