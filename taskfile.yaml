@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+# https://taskfile.dev
+
+version: "3"
+
+output:
+  group:
+    begin: "::group::{{.TASK}}"
+    end: "::endgroup::"
+
+tasks:
+  default:
+    cmds:
+      - task: build
+
+  obs-studio-clone:
+    cmds:
+      - cmd: git submodule update --init --recursive --checkout --remote
+
+  build:
+    deps: [obs-studio-clone]
+    cmds:
+      - cmd: cmake --preset windows-x64 -B .build -S .
+      - cmd: cmake --build .build --config Release
