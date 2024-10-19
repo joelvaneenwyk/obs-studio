@@ -1,5 +1,13 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 # https://taskfile.dev
+#
+# OBS Studio // Taskfile
+#
+# Goal of this taskfile/makefile is to be a minimal set of tasks to
+# build and run OBS Studio on Windows, Linux, and macOS.
+#
+# cspell:ignore endgroup, taskfile
+#
 
 version: "3"
 
@@ -19,6 +27,18 @@ tasks:
 
   build:
     deps: [obs-studio-clone]
+    sources:
+      - plugins/**/*.cpp
+    generates:
+      - .build/bin/64bit/obs64.exe
     cmds:
-      - cmd: cmake --preset windows-x64 -B .build -S .
-      - cmd: cmake --build .build --config Release
+      - cmd: cmake --preset windows-x64 -B .build/tmp -S .
+      - cmd: cmake --build .build/tmp --config Release
+      - cmd: cmake --install .build/tmp --prefix .build
+
+  run:
+    deps: [build]
+    cmds:
+      - cmd: |
+          cd "{{ joinPath .TASKFILE_DIR ".build/bin/64bit" | fromSlash }}"
+          "{{ joinPath .TASKFILE_DIR ".build/bin/64bit/obs64.exe" | fromSlash }}"
