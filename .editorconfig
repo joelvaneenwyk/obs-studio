@@ -13,6 +13,8 @@ charset = utf-8
 indent_style = tab
 indent_size = 8
 
+printWidth = 120
+
 # As per notr1ch, for 3rd party code that's a part of obs-outputs.
 [plugins/obs-outputs/librtmp/*.{cpp,c,h}]
 indent_style = space
@@ -44,7 +46,7 @@ indent_size = 4
 
 [CMakePresets.json]
 indent_style = space
-indent_size = 4
+indent_size = 2
 
 [*.py]
 indent_style = space
