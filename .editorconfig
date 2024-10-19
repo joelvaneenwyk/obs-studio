@@ -42,6 +42,10 @@ indent_size = 4
 indent_style = space
 indent_size = 4
 
+[CMakePresets.json]
+indent_style = space
+indent_size = 4
+
 [*.py]
 indent_style = space
 indent_size = 4
